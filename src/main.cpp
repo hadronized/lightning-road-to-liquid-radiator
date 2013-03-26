@@ -11,9 +11,8 @@ namespace {
   int const WIDTH = 800;
   int const HEIGHT = 600;
   int const DEPTH = 32;
-  string const ROOTPATH = "./";
-  string const VSPATH = "data/vs.glsl";
-  string const FSPATH = "data/fs.glsl";
+  string const VSPATH = "./data/vs.glsl";
+  string const FSPATH = "./data/fs.glsl";
 }
 
 string load_source(string path) {
@@ -24,10 +23,13 @@ string load_source(string path) {
     stringstream ss;
     
     ss << fh.rdbuf();
-    fh.close();
     s = ss.str();
+    fh.close();
   }
 
+  cout << "---------- SHADER SOURCE ----------" << endl;
+  cout << s << endl;
+  cout << "---------- SHADER SOURCE ----------" << endl;
   return s;
 }
 
@@ -47,7 +49,7 @@ bool compile_shader(GLuint sh) {
   glCompileShader(sh);
   glGetShaderiv(sh, GL_COMPILE_STATUS, &status);
   if (status == GL_FALSE) {
-    printf("Compilation error:\n%s", compilation_log);
+    printf("Compilation error:\n%s", compilation_log(sh).c_str());
     return false;
   }
   
@@ -58,33 +60,14 @@ GLuint gen_program() {
   GLuint vs, fs, sp;
 
   vs = glCreateShader(GL_VERTEX_SHADER);
-  auto *vssource = load_source(VSPATH).c_str();
+  GLchar const *vssource = load_source(VSPATH).c_str();
   glShaderSource(vs, 1, &vssource, 0);
-  glCompileShader(vs);
-  GLint status;
-  glGetShaderiv(vs, GL_COMPILE_STATUS, &status);
-  if (status == GL_FALSE) {
-    GLint length;
-    glGetShaderiv(vs, GL_INFO_LOG_LENGTH, &length);
-    string log;
-    log.resize(length);
-    glGetShaderInfoLog(vs, length, &length, &log[0]);
-    cerr << "Vertex shader failed to compile:\n" << log << endl;
-  }
+  compile_shader(vs);
 
   fs = glCreateShader(GL_FRAGMENT_SHADER);
-  auto *fssource = load_source(FSPATH).c_str();
+  GLchar const *fssource = load_source(FSPATH).c_str();
   glShaderSource(fs, 1, &fssource, 0);
-  glCompileShader(fs);
-  glGetShaderiv(fs, GL_COMPILE_STATUS, &status);
-  if (status == GL_FALSE) {
-    GLint length;
-    glGetShaderiv(fs, GL_INFO_LOG_LENGTH, &length);
-    string log;
-    log.resize(length);
-    glGetShaderInfoLog(fs, log.size(), &length, &log[0]);
-    cerr << "Fragment shader failed to compile:\n" << log << endl;
-  }
+  compile_shader(fs);
 
   sp = glCreateProgram();
   glAttachShader(sp, vs);
@@ -93,6 +76,7 @@ GLuint gen_program() {
   glDeleteShader(vs);
   glDeleteShader(fs);
 
+  GLint status;
   glGetProgramiv(sp, GL_LINK_STATUS, &status);
   if (status == GL_FALSE) {
     GLint length;

@@ -28,5 +28,6 @@ float plasma(vec2 uv) {
 void main() {
   vec2 uv = getUV();
   float scanline = mod(gl_FragCoord.y, 2.0);
-  gl_FragColor = scanline * vec4(1.-plasma(uv)/3., 0.5-plasma(uv), plasma(uv)*sin(time), 1.);
+  //gl_FragColor = scanline * vec4(1.-plasma(uv)/3., 0.5-plasma(uv), plasma(uv)*sin(time), 1.);
 }
+
