@@ -31,6 +31,29 @@ string load_source(string path) {
   return s;
 }
 
+string compilation_log(GLuint sh) {
+  string log;
+  GLint length;
+
+  glGetShaderiv(sh, GL_INFO_LOG_LENGTH, &length);
+  log.resize(length);
+  glGetShaderInfoLog(sh, length, &length, &log[0]);
+  return log;
+}
+
+bool compile_shader(GLuint sh) {
+  GLint status;
+
+  glCompileShader(sh);
+  glGetShaderiv(sh, GL_COMPILE_STATUS, &status);
+  if (status == GL_FALSE) {
+    printf("Compilation error:\n%s", compilation_log);
+    return false;
+  }
+  
+  return true;
+}
+
 GLuint gen_program() {
   GLuint vs, fs, sp;
 
@@ -45,7 +68,7 @@ GLuint gen_program() {
     glGetShaderiv(vs, GL_INFO_LOG_LENGTH, &length);
     string log;
     log.resize(length);
-    glGetShaderInfoLog(vs, log.size(), &length, &log[0]);
+    glGetShaderInfoLog(vs, length, &length, &log[0]);
     cerr << "Vertex shader failed to compile:\n" << log << endl;
   }
 
@@ -67,6 +90,8 @@ GLuint gen_program() {
   glAttachShader(sp, vs);
   glAttachShader(sp, fs);
   glLinkProgram(sp);
+  glDeleteShader(vs);
+  glDeleteShader(fs);
 
   glGetProgramiv(sp, GL_LINK_STATUS, &status);
   if (status == GL_FALSE) {
@@ -103,6 +128,8 @@ int main() {
       }
     }
   }
+
+  glDeleteProgram(sp);
   SDL_Quit();
   return 0;
 }

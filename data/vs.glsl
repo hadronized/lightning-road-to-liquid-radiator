@@ -8,3 +8,4 @@ void main() {
   //gl_Position = projection * view * vec4(co, 1.f);
   gl_Position = vec4(co, 1.f);
 }
+
