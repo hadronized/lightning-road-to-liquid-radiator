@@ -11,8 +11,39 @@ namespace {
   int const WIDTH = 800;
   int const HEIGHT = 600;
   int const DEPTH = 32;
-  string const VSPATH = "./data/vs.glsl";
-  string const FSPATH = "./data/fs.glsl";
+  string const VSPATH = "./data/01-vs.glsl";
+  string const FSPATH = "./data/01-fs.glsl";
+  float const OFF_FACTOR = 2.f;
+  float const CUBE_VERTICES[] = {
+     1.f,  1.f,  1.f,
+     1.f, -1.f,  1.f,
+    -1.f, -1.f,  1.f,
+    -1.f,  1.f,  1.f,
+     1.f,  1.f, -1.f,
+     1.f, -1.f, -1.f,
+    -1.f, -1.f, -1.f,
+    -1.f,  1.f, -1.f
+  };
+  unsigned int const CUBE_INDICES[] = {
+    /* front */
+    0, 1, 2,
+    0, 2, 3,
+    /* back */
+    4, 5, 6,
+    4, 6, 7,
+    /* left */
+    0, 3, 6,
+    0, 6, 7,
+    /* right */
+    1, 2, 4,
+    3, 4, 5,
+    /* top */
+    0, 1, 4,
+    0, 4, 7,
+    /* back */
+    2, 3, 5,
+    3, 5, 6
+  };
 }
 
 string load_source(string const &path) {
@@ -95,6 +126,71 @@ GLint map_uniform(string const &name, GLuint sp) {
   return id;
 }
 
+GLuint gen_offscreen_tex() {
+  GLuint off;
+
+  glGenTextures(1, &off);
+  glBindTexture(GL_TEXTURE_2D, off);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1.f*WIDTH/OFF_FACTOR, 1.f*HEIGHT/OFF_FACTOR, 0, GL_RGB, GL_FLOAT, 0);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  return off;
+}
+
+GLuint gen_renderbuffer() {
+  GLuint rbfo;
+
+  glGenRenderbuffers(1, &rbfo);
+  glBindRenderbuffer(GL_RENDERBUFFER, rbfo);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1.f*WIDTH/OFF_FACTOR, 1.f*HEIGHT/OFF_FACTOR);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+  
+  return rbfo;
+}
+
+GLuint gen_framebuffer() {
+  GLuint fbo;
+
+  glGenFramebuffers(1, &fbo);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  
+  return fbo;
+}
+
+void gen_buffers(GLuint *buffers) {
+  glGenBuffers(2, buffers); /* 0 for VBO, 1 for IBO */
+  glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+  glBufferData(GL_ARRAY_BUFFER, sizeof(CUBE_VERTICES), CUBE_VERTICES, GL_STATIC_DRAW);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(CUBE_INDICES), CUBE_INDICES, GL_STATIC_DRAW);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+GLuint gen_va(GLuint sp, GLuint *buffers) {
+  GLuint va;
+  GLuint coid;
+
+  /* TODO: coid */
+  coid = glGetAttribLocation(sp, "co");
+  
+  glGenVertexArrays(1, &va);
+  glBindVertexArray(va);
+  glEnableVertexAttribArray(coid);
+  glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+  glVertexAttribPointer(va, 3, GL_FLOAT, GL_FALSE, 0, 0);
+  glBindBuffer(GL_ARRAY_BUFFER, 0);
+  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+  glBindVertexArray(0);
+
+  return va;
+}
+
 int main() {
   SDL_Surface *pScreen = 0;
   SDL_Event event;
@@ -115,11 +211,22 @@ int main() {
   if (time != -1) {
     cout << "time is active" << endl;
   }
+  
+  auto offtex = gen_offscreen_tex();
+  auto rbfo = gen_renderbuffer();
+  auto fbo = gen_framebuffer();
+  GLuint buffers[2];
+  gen_buffers(buffers);
+  auto va = gen_va(sp, buffers);
   float tf = 0.f;
   while (loop) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUniform1f(time, tf);
-    glRectf(-1.f,1.f,1.f,-1.f);
+
+    glBindVertexArray(va);
+    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+
     SDL_GL_SwapBuffers();
 
     while(SDL_PollEvent(&event)) {
@@ -127,6 +234,17 @@ int main() {
         case SDL_QUIT :
           loop = false;
           break;
+
+        case SDL_KEYUP :
+          switch (event.key.keysym.sym) {
+            case SDLK_ESCAPE :
+              loop = false;
+              break;
+            default :;
+          }
+          break;
+
+        default :;
       }
     }
     
