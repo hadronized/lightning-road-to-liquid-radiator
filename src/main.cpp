@@ -25,6 +25,8 @@ string load_source(string path) {
     ss << fh.rdbuf();
     s = ss.str();
     fh.close();
+  } else {
+    throw "file not found: " + path;
   }
 
   cout << "---------- SHADER SOURCE ----------" << endl;
@@ -100,8 +102,10 @@ int main() {
   pScreen = SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL);
 
   auto sp = gen_program();
+  glUseProgram(sp);
   while (loop) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glRectf(-1.f,1.f,1.f,-1.f);
     SDL_GL_SwapBuffers();
 
     while(SDL_PollEvent(&event)) {

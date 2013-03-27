@@ -1,11 +1,10 @@
 #version 130
 
 in vec3 co;
-uniform mat4 projection;
-uniform mat4 view;
+
+uniform vec2 res;
+uniform float time;
 
 void main() {
-  //gl_Position = projection * view * vec4(co, 1.f);
-  gl_Position = vec4(co, 1.f);
+  gl_Position = vec4(co, 1.);
 }
-
