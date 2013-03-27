@@ -1,3 +1,4 @@
+#include <cmath>
 #include <iostream>
 #include <GL/gl.h>
 #include <GL/glext.h>
@@ -8,9 +9,14 @@
 using namespace std;
 
 namespace {
+  float PI = 3.14159265359;
   int const WIDTH = 800;
   int const HEIGHT = 600;
+  float const RATIO = 1.f * WIDTH / HEIGHT;
   int const DEPTH = 32;
+  float const FOVY = PI/2;
+  float const ZNEAR = 0.01f;
+  float const ZFAR = 1000.f;
   string const VSPATH = "./data/01-vs.glsl";
   string const FSPATH = "./data/01-fs.glsl";
   float const OFF_FACTOR = 2.f;
@@ -191,6 +197,32 @@ GLuint gen_va(GLuint sp, GLuint *buffers) {
   return va;
 }
 
+struct mat44_c {
+  float _[16];
+
+  mat44_c(float *sub) {
+    copy(sub, sub+16, _);
+  }
+  
+  ~mat44_c(void) {
+  }
+};
+
+mat44_c gen_perspective(float fovy, float ratio, float znear, float zfar) {
+  float itanfovy = 1.f / tan(fovy / 2);
+  float itanfovyr = itanfovy / ratio;
+  float inf = 1.f / (znear - zfar);
+  float nfinf = (znear + zfar) * inf;
+  float m[] = {
+    itanfovyr,      0.f,   0.f,  0.f,
+          0.f, itanfovy,   0.f,  0.f,
+          0.f,      0.f,   inf, -1.f,
+          0.f,      0.f, nfinf,  1.f
+  };
+
+  return mat44_c(m);
+}
+
 int main() {
   SDL_Surface *pScreen = 0;
   SDL_Event event;
@@ -204,12 +236,18 @@ int main() {
   glUseProgram(sp);
   auto res = map_uniform("res", sp);
   auto time = map_uniform("time", sp);
+  auto proj = map_uniform("proj", sp);
   if (res != -1) {
     cout << "res is active" << endl;
     glUniform2f(res, WIDTH, HEIGHT);
   }
   if (time != -1) {
     cout << "time is active" << endl;
+  }
+  if (proj != -1) {
+    cout << "proj is active" << endl;
+    /* gen_perspective(FOVY, RATIO, ZNEAR, ZFAR)._ */
+    glUniformMatrix4fv(proj, 1, GL_FALSE, 0);
   }
   
   auto offtex = gen_offscreen_tex();
