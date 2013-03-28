@@ -236,7 +236,7 @@ int main() {
   glUseProgram(sp);
   auto res = map_uniform("res", sp);
   auto time = map_uniform("time", sp);
-  auto proj = map_uniform("proj", sp);
+  //auto proj = map_uniform("proj", sp);
   if (res != -1) {
     cout << "res is active" << endl;
     glUniform2f(res, WIDTH, HEIGHT);
@@ -244,26 +244,32 @@ int main() {
   if (time != -1) {
     cout << "time is active" << endl;
   }
+#if 0
   if (proj != -1) {
     cout << "proj is active" << endl;
-    /* gen_perspective(FOVY, RATIO, ZNEAR, ZFAR)._ */
+    auto m = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
     glUniformMatrix4fv(proj, 1, GL_FALSE, 0);
   }
+#endif
   
+  /*
   auto offtex = gen_offscreen_tex();
   auto rbfo = gen_renderbuffer();
   auto fbo = gen_framebuffer();
   GLuint buffers[2];
   gen_buffers(buffers);
   auto va = gen_va(sp, buffers);
+  */
   float tf = 0.f;
   while (loop) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUniform1f(time, tf);
+    //glUniform1f(time, tf);
 
+    /*
     glBindVertexArray(va);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
+    */
 
     SDL_GL_SwapBuffers();
 

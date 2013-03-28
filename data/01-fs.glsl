@@ -1,4 +1,3 @@
-#version 130
 
 uniform float time;
 uniform vec2 res;
