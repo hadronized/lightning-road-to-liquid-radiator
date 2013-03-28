@@ -161,9 +161,13 @@ GLuint gen_framebuffer() {
 
   glGenFramebuffers(1, &fbo);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   
   return fbo;
+}
+
+void setup_off(GLuint offtex, GLuint rbfo) {
+  glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbfo);
+  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, offtex, 0);
 }
 
 void gen_buffers(GLuint *buffers) {
@@ -245,11 +249,10 @@ int main() {
     glUniformMatrix4fv(proj, 1, GL_FALSE, m._);
   }
   
-#if 0
   auto offtex = gen_offscreen_tex();
   auto rbfo = gen_renderbuffer();
   auto fbo = gen_framebuffer();
-#endif
+  setup_off(offtex, rbfo); 
   GLuint buffers[2];
   gen_buffers(buffers);
   auto va = gen_va(sp, buffers);
@@ -258,9 +261,20 @@ int main() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUniform1f(time, tf);
 
-    glBindVertexArray(va);
-    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
+    /* offscreen */
+    glUseProgram(sp);
+    glBindTexture(GL_TEXTURE_2D, offtex);
+    glBindRenderbuffer(GL_RENDERBUFFER, rbfo);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+      glBindVertexArray(va);
+      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+      glBindVertexArray(0);
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+    /* post-process: pixelize */
+    glUseProgram(pixelizeProgram);
+    glRectf(-1.f, -1.f, -1.f, 1.f, 1.f, 1.f, 1.f, -1.f);
 
     SDL_GL_SwapBuffers();
 
