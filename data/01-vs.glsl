@@ -7,6 +7,6 @@ uniform float time;
 uniform mat4 proj;
 
 void main() {
-  gl_Position = proj * vec4(co, 1.);
+  gl_Position = proj * vec4(co.xy, co.z-2., 1.0);
 }
 

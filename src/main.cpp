@@ -178,18 +178,19 @@ void gen_buffers(GLuint *buffers) {
 
 GLuint gen_va(GLuint sp, GLuint *buffers) {
   GLuint va;
-  GLuint coid;
+  GLint coid;
 
-  /* TODO: coid */
   coid = glGetAttribLocation(sp, "co");
+  if (coid != -1)
+    cout << "co is active" << endl;
   
   glGenVertexArrays(1, &va);
   glBindVertexArray(va);
-  glEnableVertexAttribArray(coid);
-  glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
-  glVertexAttribPointer(va, 3, GL_FLOAT, GL_FALSE, 0, 0);
-  glBindBuffer(GL_ARRAY_BUFFER, 0);
-  glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
+    glEnableVertexAttribArray(coid);
+    glBindBuffer(GL_ARRAY_BUFFER, buffers[0]);
+    glVertexAttribPointer(coid, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, buffers[1]);
   glBindVertexArray(0);
 
   return va;
@@ -233,42 +234,33 @@ int main() {
   GLuint vs, fs;
   auto sp = gen_program(vs, fs);
   glUseProgram(sp);
-  auto res = map_uniform("res", sp);
   auto time = map_uniform("time", sp);
-  //auto proj = map_uniform("proj", sp);
-  if (res != -1) {
-    cout << "res is active" << endl;
-    glUniform2f(res, WIDTH, HEIGHT);
-  }
+  auto proj = map_uniform("proj", sp);
   if (time != -1) {
     cout << "time is active" << endl;
   }
-#if 0
   if (proj != -1) {
     cout << "proj is active" << endl;
     auto m = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
-    glUniformMatrix4fv(proj, 1, GL_FALSE, 0);
+    glUniformMatrix4fv(proj, 1, GL_FALSE, m._);
   }
-#endif
   
-  /*
+#if 0
   auto offtex = gen_offscreen_tex();
   auto rbfo = gen_renderbuffer();
   auto fbo = gen_framebuffer();
+#endif
   GLuint buffers[2];
   gen_buffers(buffers);
   auto va = gen_va(sp, buffers);
-  */
   float tf = 0.f;
   while (loop) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    //glUniform1f(time, tf);
+    glUniform1f(time, tf);
 
-    /*
     glBindVertexArray(va);
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+    glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-    */
 
     SDL_GL_SwapBuffers();
 
