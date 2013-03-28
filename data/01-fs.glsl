@@ -1,3 +1,4 @@
+#version 130
 
 uniform float time;
 uniform vec2 res;
@@ -29,3 +30,4 @@ void main() {
   float scanline = mod(gl_FragCoord.y, 2.0);
   frag = scanline * vec4(1.-plasma(uv)/3., 0.5-plasma(uv), plasma(uv)*sin(time), 1.);
 }
+

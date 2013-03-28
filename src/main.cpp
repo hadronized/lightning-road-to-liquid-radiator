@@ -53,18 +53,21 @@ namespace {
 }
 
 string load_source(string const &path) {
-  ifstream fh(path.c_str());
-  string s;
+  ifstream fh;
+  stringstream ss;
 
+  fh.open(path);
   if (fh) {
-    stringstream ss;
-    
     ss << fh.rdbuf();
-    s = ss.str();
     fh.close();
   } else {
     throw "file not found: " + path;
   }
+
+  auto s = ss.str();
+  cout << "---- SOURCE ----" << endl;
+  cout << s << endl;
+  cout << "---- SOURCE ----" << endl;
 
   return s;
 }
@@ -92,8 +95,8 @@ bool compile_shader(GLuint sh) {
   return true;
 }
 
-GLuint gen_program() {
-  GLuint vs, fs, sp;
+GLuint gen_program(GLuint &vs, GLuint &fs) {
+  GLuint sp;
 
   vs = glCreateShader(GL_VERTEX_SHADER);
   GLchar const *vssource = load_source(VSPATH).c_str();
@@ -109,8 +112,6 @@ GLuint gen_program() {
   glAttachShader(sp, vs);
   glAttachShader(sp, fs);
   glLinkProgram(sp);
-  glDeleteShader(vs);
-  glDeleteShader(fs);
 
   GLint status;
   glGetProgramiv(sp, GL_LINK_STATUS, &status);
@@ -232,7 +233,8 @@ int main() {
 
   pScreen = SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL);
 
-  auto sp = gen_program();
+  GLuint vs, fs;
+  auto sp = gen_program(vs, fs);
   glUseProgram(sp);
   auto res = map_uniform("res", sp);
   auto time = map_uniform("time", sp);
@@ -295,6 +297,8 @@ int main() {
     tf += 0.01f;
   }
 
+  glDeleteShader(vs);
+  glDeleteShader(fs);
   glDeleteProgram(sp);
   SDL_Quit();
   return 0;
