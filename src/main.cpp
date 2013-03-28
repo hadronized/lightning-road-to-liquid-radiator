@@ -64,12 +64,7 @@ string load_source(string const &path) {
     throw "file not found: " + path;
   }
 
-  auto s = ss.str();
-  cout << "---- SOURCE ----" << endl;
-  cout << s << endl;
-  cout << "---- SOURCE ----" << endl;
-
-  return s;
+  return ss.str();
 }
 
 string compilation_log(GLuint sh) {
@@ -99,13 +94,15 @@ GLuint gen_program(GLuint &vs, GLuint &fs) {
   GLuint sp;
 
   vs = glCreateShader(GL_VERTEX_SHADER);
-  GLchar const *vssource = load_source(VSPATH).c_str();
-  glShaderSource(vs, 1, &vssource, 0);
+  auto vsstr = load_source(VSPATH);
+  GLchar const *vsp = &vsstr[0];
+  glShaderSource(vs, 1, &vsp, 0);
   compile_shader(vs);
 
   fs = glCreateShader(GL_FRAGMENT_SHADER);
-  GLchar const *fssource = load_source(FSPATH).c_str();
-  glShaderSource(fs, 1, &fssource, 0);
+  auto fsstr = load_source(FSPATH);
+  GLchar const *fsp = &fsstr[0];
+  glShaderSource(fs, 1, &fsp, 0);
   compile_shader(fs);
 
   sp = glCreateProgram();
