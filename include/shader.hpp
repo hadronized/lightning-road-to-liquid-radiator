@@ -1,6 +1,7 @@
 #ifndef __SHADER_HPP
 #define __SHADER_HPP
 
+#include <string>
 #include "gl.hpp"
 
 class shader_c {
@@ -25,10 +26,10 @@ public :
   ~program_c(void);
 
   GLuint id() const;
-  void attach(shader const &sh);
+  void attach(shader_c const &sh);
   void link(void);
   bool linked(void) const;
-  string link_log(void) const;
+  std::string link_log(void) const;
 };
 
 #endif /* guard */

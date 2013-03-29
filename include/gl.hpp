@@ -2,8 +2,8 @@
 #define __GL_HPP
 
 #ifdef __linux__ /* linux platform */
-#  include <GL/GL.h>
-#  include <GL/GLext.h>
+#  include <GL/gl.h>
+#  include <GL/glext.h>
 #else /* win32 */
 #endif
 

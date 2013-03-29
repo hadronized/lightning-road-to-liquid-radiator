@@ -1,11 +1,11 @@
-#include "shader_c.hpp"
+#include "shader.hpp"
 
 /* =====================================
  * SHADER STAGE
  * =====================================
  */
 shader_c::shader_c(GLenum type) :
-  _(glCreateShader(type) {
+  _(glCreateShader(type)) {
 }
 
 shader_c::~shader_c() {
@@ -24,20 +24,20 @@ void shader_c::compile() {
   glCompileShader(_);
 }
 
-bool shader_c::compiled() {
+bool shader_c::compiled() const {
   GLint status;
 
   glGetShaderiv(_, GL_COMPILE_STATUS, &status);
   return status == GL_TRUE;
 }
 
-std::string shader_c::compile_log() {
-  string log;
+std::string shader_c::compile_log() const {
+  std::string log;
   GLint length;
 
   glGetShaderiv(_, GL_INFO_LOG_LENGTH, &length);
   log.resize(length);
-  getGetShaderInfoLog(_, length, &length, &log[0]);
+  glGetShaderInfoLog(_, length, &length, &log[0]);
 
   return log;
 }
@@ -58,7 +58,7 @@ GLuint program_c::id() const {
   return _;
 }
 
-void program_c::attach(shader const &sh) {
+void program_c::attach(shader_c const &sh) {
   glAttachShader(_, sh.id());
 }
 
@@ -73,8 +73,8 @@ bool program_c::linked() const {
   return status == GL_TRUE;
 }
 
-string program_c::link_log() const {
-  string log;
+std::string program_c::link_log() const {
+  std::string log;
   GLint length;
 
   glGetProgramiv(_, GL_INFO_LOG_LENGTH, &length);

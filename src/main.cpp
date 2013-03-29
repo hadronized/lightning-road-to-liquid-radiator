@@ -273,8 +273,10 @@ int main() {
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
     /* post-process: pixelize */
+#if 0
     glUseProgram(pixelizeProgram);
     glRectf(-1.f, -1.f, -1.f, 1.f, 1.f, 1.f, 1.f, -1.f);
+#endif
 
     SDL_GL_SwapBuffers();
 
