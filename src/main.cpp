@@ -6,6 +6,8 @@
 #include <fstream>
 #include <sstream>
 
+#include "shader.hpp"
+
 using namespace std;
 
 namespace {
@@ -17,8 +19,10 @@ namespace {
   float const FOVY = PI/2;
   float const ZNEAR = 0.01f;
   float const ZFAR = 1000.f;
-  string const VSPATH = "./data/01-vs.glsl";
-  string const FSPATH = "./data/01-fs.glsl";
+  string const STD_VS_PATH = "./data/01-vs.glsl";
+  string const STD_FS_PATH = "./data/01-fs.glsl";
+  string const PP_VS_PATH  = "./data/01-pp-vs.glsl";
+  string const PP_FS_PATH  = "./data/01-pp-fs.glsl";
   float const OFF_FACTOR = 2.f;
   float const CUBE_VERTICES[] = {
      1.f,  1.f,  1.f,
@@ -65,69 +69,6 @@ string load_source(string const &path) {
   }
 
   return ss.str();
-}
-
-string compilation_log(GLuint sh) {
-  string log;
-  GLint length;
-
-  glGetShaderiv(sh, GL_INFO_LOG_LENGTH, &length);
-  log.resize(length);
-  glGetShaderInfoLog(sh, length, &length, &log[0]);
-  return log;
-}
-
-bool compile_shader(GLuint sh) {
-  GLint status;
-
-  glCompileShader(sh);
-  glGetShaderiv(sh, GL_COMPILE_STATUS, &status);
-  if (status == GL_FALSE) {
-    printf("Compilation error:\n%s", compilation_log(sh).c_str());
-    return false;
-  }
-  
-  return true;
-}
-
-GLuint gen_program(GLuint &vs, GLuint &fs) {
-  GLuint sp;
-
-  vs = glCreateShader(GL_VERTEX_SHADER);
-  auto vsstr = load_source(VSPATH);
-  GLchar const *vsp = &vsstr[0];
-  glShaderSource(vs, 1, &vsp, 0);
-  compile_shader(vs);
-
-  fs = glCreateShader(GL_FRAGMENT_SHADER);
-  auto fsstr = load_source(FSPATH);
-  GLchar const *fsp = &fsstr[0];
-  glShaderSource(fs, 1, &fsp, 0);
-  compile_shader(fs);
-
-  sp = glCreateProgram();
-  glAttachShader(sp, vs);
-  glAttachShader(sp, fs);
-  glLinkProgram(sp);
-
-  GLint status;
-  glGetProgramiv(sp, GL_LINK_STATUS, &status);
-  if (status == GL_FALSE) {
-    GLint length;
-    glGetProgramiv(sp, GL_INFO_LOG_LENGTH, &length);
-    string log;
-    log.resize(length);
-    glGetProgramInfoLog(sp, log.size(), &length, &log[0]);
-    cerr << "Program failed to link:\n" << log << endl;
-  }
-
-  return sp;
-}
-
-GLint map_uniform(string const &name, GLuint sp) {
-  GLchar const *n = name.c_str();
-  GLint id = glGetUniformLocation(sp, n);
-  return id;
 }
 
 GLuint gen_offscreen_tex() {
@@ -180,7 +121,7 @@ void gen_buffers(GLuint *buffers) {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-GLuint gen_va(GLuint sp, GLuint *buffers) {
+GLuint setup_cube(GLuint sp, GLuint *buffers) {
   GLuint va;
   GLint coid;
 
@@ -226,15 +167,102 @@ mat44_c gen_perspective(float fovy, float ratio, float znear, float zfar) {
   return mat44_c(m);
 }
 
-int main() {
-  SDL_Surface *pScreen = 0;
+bool treat_events(SDL_Event &event) {
+  while(SDL_PollEvent(&event)) {
+    switch (event.type) {
+      case SDL_QUIT :
+        return false;
+
+      case SDL_KEYUP :
+        switch (event.key.keysym.sym) {
+          case SDLK_ESCAPE :
+            return false;
+
+          default :;
+        }
+        break;
+
+      default :;
+    }
+  }
+
+  return true;
+}
+
+void render_one_frame(program_c const &stdP, program_c const &postprocessEffectP, GLuint offtex, GLuint rdbf, GLuint fb, GLuint cube) {
+  /* offscreen */
+  glUseProgram(stdP.id());
+  glBindTexture(GL_TEXTURE_2D, offtex);
+  glBindRenderbuffer(GL_RENDERBUFFER, rdbf);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb);
+  glBindVertexArray(cube);
+  glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+  glBindVertexArray(0);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+  /* post-process */
+  glUseProgram(postprocessEffectP.id());
+  glRectf(-1.f, 1.f, 1.f, -1.f);
+  glUseProgram(0); /* end of frame */
+}
+
+void main_loop() {
   SDL_Event event;
   bool loop = true;
+  shader_c stdVS(GL_VERTEX_SHADER);
+  shader_c stdFS(GL_FRAGMENT_SHADER);
+  shader_c postprocessEffectVS(GL_VERTEX_SHADER);
+  shader_c postprocessEffectFS(GL_FRAGMENT_SHADER);
+  program_c stdP;
+  program_c postprocessEffectP;
 
+  stdVS.source(load_source(STD_VS_PATH).c_str());
+  stdVS.compile();
+  if (!stdVS.compiled()) {
+    cerr << "Vertex shader failed to compile:\n" << stdVS.compile_log() << endl;
+    exit(1);
+  }
+  stdFS.source(load_source(STD_FS_PATH).c_str());
+  stdFS.compile();
+  if (!stdFS.compiled()) {
+    cerr << "Fragment shader failed to compile:\n" << stdFS.compile_log() << endl;
+    exit(2);
+  }
+  stdP.attach(stdVS);
+  stdP.attach(stdFS);
+  stdP.link();
+  if (!stdP.linked()) {
+    cerr << "Program failed to link:\n" << stdP.link_log() << endl;
+    exit(3);
+  }
+  GLuint offtex = gen_offscreen_tex();
+  GLuint rdbf = gen_renderbuffer();
+  GLuint fb = gen_framebuffer();
+  setup_off(offtex, rdbf);
+  GLuint cubeBuffers[2];
+  gen_buffers(cubeBuffers);
+  GLuint cube = setup_cube(stdP.id(), cubeBuffers);
+
+  while (loop) {
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    render_one_frame(stdP, postprocessEffectP, offtex, rdbf, fb, cube);
+    SDL_GL_SwapBuffers();
+
+    if (!treat_events(event))
+      loop = false;
+  }
+}
+
+int main() {
   SDL_Init(SDL_INIT_VIDEO);
+  SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL);
+  main_loop();
+  return 0;
+}
 
-  pScreen = SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL);
-
+#if 0
   GLuint vs, fs;
   auto sp = gen_program(vs, fs);
   glUseProgram(sp);
@@ -280,25 +308,7 @@ int main() {
 
     SDL_GL_SwapBuffers();
 
-    while(SDL_PollEvent(&event)) {
-      switch (event.type) {
-        case SDL_QUIT :
-          loop = false;
-          break;
-
-        case SDL_KEYUP :
-          switch (event.key.keysym.sym) {
-            case SDLK_ESCAPE :
-              loop = false;
-              break;
-            default :;
-          }
-          break;
-
-        default :;
-      }
-    }
-    
+   
     tf += 0.01f;
   }
 
@@ -308,3 +318,4 @@ int main() {
   SDL_Quit();
   return 0;
 }
+#endif

@@ -1,3 +1,4 @@
+#include <iostream>
 #include "shader.hpp"
 
 /* =====================================
@@ -82,4 +83,11 @@ std::string program_c::link_log() const {
   glGetProgramInfoLog(_, length, &length, &log[0]);
 
   return log;
+}
+
+GLint program_c::map_uniform(char const *name) {
+  auto l = glGetUniformLocation(_, name);
+  if (l != -1)
+    std::cout << "'" << name << "' is active" << std::endl;
+  return l;
 }

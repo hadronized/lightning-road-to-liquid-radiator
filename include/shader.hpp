@@ -30,6 +30,9 @@ public :
   void link(void);
   bool linked(void) const;
   std::string link_log(void) const;
+
+  /* uniforms mapping */
+  GLint map_uniform(char const *name);
 };
 
 #endif /* guard */
