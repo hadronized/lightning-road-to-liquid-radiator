@@ -101,14 +101,14 @@ GLuint gen_framebuffer() {
   GLuint fbo;
 
   glGenFramebuffers(1, &fbo);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-  
   return fbo;
 }
 
-void setup_off(GLuint offtex, GLuint rbfo) {
+void setup_off(GLuint fbo, GLuint offtex, GLuint rbfo) {
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
   glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbfo);
   glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, offtex, 0);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
 void gen_buffers(GLuint *buffers) {
@@ -192,18 +192,22 @@ bool treat_events(SDL_Event &event) {
 void render_one_frame(program_c const &stdP, program_c const &postprocessEffectP, GLuint offtex, GLuint rdbf, GLuint fb, GLuint cube) {
   /* offscreen */
   glUseProgram(stdP.id());
+#if 0
   glBindTexture(GL_TEXTURE_2D, offtex);
   glBindRenderbuffer(GL_RENDERBUFFER, rdbf);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb);
+#endif 
   glBindVertexArray(cube);
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
+#if 0
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
   /* post-process */
   glUseProgram(postprocessEffectP.id());
   glRectf(-1.f, 1.f, 1.f, -1.f);
+#endif
   glUseProgram(0); /* end of frame */
 }
 
@@ -260,29 +264,41 @@ void main_loop() {
 
   auto offtex = gen_offscreen_tex();
   auto rdbf = gen_renderbuffer();
-  auto fb = gen_framebuffer();
-  setup_off(offtex, rdbf);
+  auto fbo = gen_framebuffer();
+  setup_off(fbo, offtex, rdbf);
   GLuint cubeBuffers[2];
   gen_buffers(cubeBuffers);
   auto cube = setup_cube(stdP.id(), cubeBuffers);
   auto projection = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
   auto projIndex = stdP.map_uniform("proj");
+  auto offFactorIndex = stdP.map_uniform("off_factor");
+  auto timeIndex = stdP.map_uniform("time");
+  glUseProgram(stdP.id());
   glUniformMatrix4fv(projIndex, 1, GL_FALSE, projection._);
+  glUniform1f(offFactorIndex, OFF_FACTOR);
+  float time = 0.f;
+
+  glEnable(GL_DEPTH_TEST);
 
   while (loop) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-    render_one_frame(stdP, postprocessEffectP, offtex, rdbf, fb, cube);
+    glUseProgram(stdP.id());
+    glUniform1f(timeIndex, time);
+    render_one_frame(stdP, postprocessEffectP, offtex, rdbf, fbo, cube);
     SDL_GL_SwapBuffers();
 
     if (!treat_events(event))
       loop = false;
+
+    time += 0.1f;
   }
 }
 
 int main() {
+  SDL_Surface *pScreen = 0;
   SDL_Init(SDL_INIT_VIDEO);
-  SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL);
+
+  pScreen = SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL);
   main_loop();
   return 0;
 }
