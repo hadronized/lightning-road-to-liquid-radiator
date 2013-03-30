@@ -14,5 +14,5 @@ vec2 computeUV() {
 }
 
 void main() {
-  frag = vec4(texture2D(offtex, uv());
+  frag = vec4(texture2D(offtex, computeUV()));
 } 

@@ -217,25 +217,47 @@ void main_loop() {
   program_c stdP;
   program_c postprocessEffectP;
 
+  /* standard program */
   stdVS.source(load_source(STD_VS_PATH).c_str());
   stdVS.compile();
   if (!stdVS.compiled()) {
-    cerr << "Vertex shader failed to compile:\n" << stdVS.compile_log() << endl;
+    cerr << "STD Vertex shader failed to compile:\n" << stdVS.compile_log() << endl;
     exit(1);
   }
   stdFS.source(load_source(STD_FS_PATH).c_str());
   stdFS.compile();
   if (!stdFS.compiled()) {
-    cerr << "Fragment shader failed to compile:\n" << stdFS.compile_log() << endl;
+    cerr << "STD Fragment shader failed to compile:\n" << stdFS.compile_log() << endl;
     exit(2);
   }
   stdP.attach(stdVS);
   stdP.attach(stdFS);
   stdP.link();
   if (!stdP.linked()) {
-    cerr << "Program failed to link:\n" << stdP.link_log() << endl;
+    cerr << "STD Program failed to link:\n" << stdP.link_log() << endl;
     exit(3);
   }
+  /* postprocess program */
+  postprocessEffectVS.source(load_source(PP_VS_PATH).c_str());
+  postprocessEffectVS.compile();
+  if (!postprocessEffectVS.compiled()) {
+    cerr << "PP Vertex shader failed to compile:\n" << postprocessEffectVS.compile_log() << endl;
+    exit(4);
+  }
+  postprocessEffectFS.source(load_source(PP_FS_PATH).c_str());
+  postprocessEffectFS.compile();
+  if (!postprocessEffectFS.compiled()) {
+    cerr << "PP Fragment shader failed to compile:\n" << postprocessEffectFS.compile_log() << endl;
+    exit(5);
+  }
+  postprocessEffectP.attach(postprocessEffectVS);
+  postprocessEffectP.attach(postprocessEffectFS);
+  postprocessEffectP.link();
+  if (!postprocessEffectP.linked()) {
+    cerr << "PP Program failed to link:\n" << postprocessEffectP.link_log() << endl;
+    exit(6);
+  }
+
   auto offtex = gen_offscreen_tex();
   auto rdbf = gen_renderbuffer();
   auto fb = gen_framebuffer();
