@@ -141,18 +141,18 @@ GLuint setup_cube(GLuint sp, GLuint *buffers) {
   return va;
 }
 
-struct mat44_c {
+struct mat4_c {
   float _[16];
 
-  mat44_c(float *sub) {
+  mat4_c(float *sub) {
     copy(sub, sub+16, _);
   }
   
-  ~mat44_c(void) {
+  ~mat4_c(void) {
   }
 };
 
-mat44_c gen_perspective(float fovy, float ratio, float znear, float zfar) {
+mat4_c gen_perspective(float fovy, float ratio, float znear, float zfar) {
   float itanfovy = 1.f / tan(fovy / 2);
   float itanfovyr = itanfovy / ratio;
   float inf = 1.f / (znear - zfar);
@@ -164,7 +164,7 @@ mat44_c gen_perspective(float fovy, float ratio, float znear, float zfar) {
           0.f,      0.f, nfinf,  1.f
   };
 
-  return mat44_c(m);
+  return mat4_c(m);
 }
 
 bool treat_events(SDL_Event &event) {
@@ -236,13 +236,16 @@ void main_loop() {
     cerr << "Program failed to link:\n" << stdP.link_log() << endl;
     exit(3);
   }
-  GLuint offtex = gen_offscreen_tex();
-  GLuint rdbf = gen_renderbuffer();
-  GLuint fb = gen_framebuffer();
+  auto offtex = gen_offscreen_tex();
+  auto rdbf = gen_renderbuffer();
+  auto fb = gen_framebuffer();
   setup_off(offtex, rdbf);
   GLuint cubeBuffers[2];
   gen_buffers(cubeBuffers);
-  GLuint cube = setup_cube(stdP.id(), cubeBuffers);
+  auto cube = setup_cube(stdP.id(), cubeBuffers);
+  auto projection = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
+  auto projIndex = stdP.map_uniform("proj");
+  glUniformMatrix4fv(projIndex, 1, GL_FALSE, projection._);
 
   while (loop) {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -261,61 +264,3 @@ int main() {
   main_loop();
   return 0;
 }
-
-#if 0
-  GLuint vs, fs;
-  auto sp = gen_program(vs, fs);
-  glUseProgram(sp);
-  auto time = map_uniform("time", sp);
-  auto proj = map_uniform("proj", sp);
-  if (time != -1) {
-    cout << "time is active" << endl;
-  }
-  if (proj != -1) {
-    cout << "proj is active" << endl;
-    auto m = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
-    glUniformMatrix4fv(proj, 1, GL_FALSE, m._);
-  }
-  
-  auto offtex = gen_offscreen_tex();
-  auto rbfo = gen_renderbuffer();
-  auto fbo = gen_framebuffer();
-  setup_off(offtex, rbfo); 
-  GLuint buffers[2];
-  gen_buffers(buffers);
-  auto va = gen_va(sp, buffers);
-  float tf = 0.f;
-  while (loop) {
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glUniform1f(time, tf);
-
-    /* offscreen */
-    glUseProgram(sp);
-    glBindTexture(GL_TEXTURE_2D, offtex);
-    glBindRenderbuffer(GL_RENDERBUFFER, rbfo);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-      glBindVertexArray(va);
-      glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-      glBindVertexArray(0);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-    /* post-process: pixelize */
-#if 0
-    glUseProgram(pixelizeProgram);
-    glRectf(-1.f, -1.f, -1.f, 1.f, 1.f, 1.f, 1.f, -1.f);
-#endif
-
-    SDL_GL_SwapBuffers();
-
-   
-    tf += 0.01f;
-  }
-
-  glDeleteShader(vs);
-  glDeleteShader(fs);
-  glDeleteProgram(sp);
-  SDL_Quit();
-  return 0;
-}
-#endif
