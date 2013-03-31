@@ -42,17 +42,17 @@ namespace {
     4, 5, 6,
     4, 6, 7,
     /* left */
-    0, 3, 6,
-    0, 6, 7,
+    2, 3, 6,
+    3, 6, 7,
     /* right */
-    1, 2, 4,
-    3, 4, 5,
-    /* top */
     0, 1, 4,
-    0, 4, 7,
+    1, 4, 5,
+    /* top */
+    0, 3, 4,
+    3, 4, 7,
     /* back */
-    2, 3, 5,
-    3, 5, 6
+    1, 2, 5,
+    2, 5, 6
   };
 }
 
@@ -192,22 +192,18 @@ bool treat_events(SDL_Event &event) {
 void render_one_frame(program_c const &stdP, program_c const &postprocessEffectP, GLuint offtex, GLuint rdbf, GLuint fb, GLuint cube) {
   /* offscreen */
   glUseProgram(stdP.id());
-#if 0
   glBindTexture(GL_TEXTURE_2D, offtex);
   glBindRenderbuffer(GL_RENDERBUFFER, rdbf);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb);
-#endif 
   glBindVertexArray(cube);
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
-#if 0
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
   /* post-process */
   glUseProgram(postprocessEffectP.id());
   glRectf(-1.f, 1.f, 1.f, -1.f);
-#endif
   glUseProgram(0); /* end of frame */
 }
 
