@@ -16,7 +16,7 @@ namespace {
   int const HEIGHT = 600;
   float const RATIO = 1.f * WIDTH / HEIGHT;
   int const DEPTH = 32;
-  float const FOVY = PI/2;
+  float const FOVY = 75.*PI/180.;
   float const ZNEAR = 0.01f;
   float const ZFAR = 1000.f;
   string const STD_VS_PATH = "./data/01-vs.glsl";
@@ -290,7 +290,7 @@ void main_loop() {
     if (!treat_events(event))
       loop = false;
 
-    time += 0.1f;
+    time += 0.01f;
   }
 }
 
