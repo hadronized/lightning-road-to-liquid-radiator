@@ -16,12 +16,12 @@ void main() {
   coZ.y = co.x*sin(time)+co.y*cos(time);
   /* around Y */
   vec3 coYZ = coZ;
-  coYZ.x = coZ.x*cos(time)-coZ.y*sin(time);
-  coYZ.z = coZ.x*sin(time)+coZ.y*cos(time);
+  coYZ.x = coZ.x*cos(time)+coZ.z*sin(time);
+  coYZ.z = -coZ.x*sin(time)+coZ.z*cos(time);
   /* around X */
   vec3 coXYZ = coYZ;
-  coXYZ.y = coYZ.x*sin(time)+coYZ.y*cos(time);
-  coXYZ.z = coYZ.x*cos(time)-coYZ.y*sin(time);
+  coXYZ.y = coYZ.y*sin(time)+coYZ.z*cos(time);
+  coXYZ.z = coYZ.y*cos(time)-coYZ.z*sin(time);
 
   coXYZ.z -= 2.;
 
