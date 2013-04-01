@@ -33,14 +33,15 @@ bool shader_c::compiled() const {
 }
 
 std::string shader_c::compile_log() const {
-  std::string log;
+  char *log;
   GLint length;
 
   glGetShaderiv(_, GL_INFO_LOG_LENGTH, &length);
-  log.resize(length);
-  glGetShaderInfoLog(_, length, &length, &log[0]);
+  log = new char[length+1];
+  log[length] = '\0';
+  glGetShaderInfoLog(_, length, &length, log);
 
-  return log;
+  return std::string(log);
 }
 
 /* =====================================
@@ -75,14 +76,15 @@ bool program_c::linked() const {
 }
 
 std::string program_c::link_log() const {
-  std::string log;
+  char *log;
   GLint length;
 
   glGetProgramiv(_, GL_INFO_LOG_LENGTH, &length);
-  log.resize(length);
-  glGetProgramInfoLog(_, length, &length, &log[0]);
+  log = new char[length+1];
+  log[length] = '\0';
+  glGetProgramInfoLog(_, length, &length, log);
 
-  return log;
+  return std::string(log);
 }
 
 GLint program_c::map_uniform(char const *name) {
