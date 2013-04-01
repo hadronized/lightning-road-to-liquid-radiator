@@ -1,13 +1,11 @@
 #version 130
 
 in vec3 co;
-out vec3 ico;
+out vec3 pos;
+out vec3 no;
 
 uniform float time;
 uniform mat4 proj;
-
-float PI = 3.14159265359;
-float rad30 = 30.*PI/180.;
 
 void main() {
   /* around Z */
@@ -23,8 +21,9 @@ void main() {
   coXYZ.y = coYZ.y*sin(time)+coYZ.z*cos(time);
   coXYZ.z = coYZ.y*cos(time)-coYZ.z*sin(time);
 
+  no = normalize(coXYZ);
+  pos = coXYZ;
   coXYZ.z -= 2.;
-
 
   gl_Position = proj * vec4(coXYZ, 1.0);
 }

@@ -2,11 +2,13 @@
 
 uniform float time;
 
-in vec3 ico;
+in vec3 pos;
+in vec3 no;
 out vec4 frag;
-    
+
 void main() {
-  float scanline = mod(gl_FragCoord.y, 2.0);
-  frag = vec4(1.f, 1.f, 1.f, 1.f);
+  vec3 lpos = vec3(0., -2., 2.8);
+  float d = dot(normalize(lpos - pos), no);
+  frag = d * vec4(1.f);
 }
 

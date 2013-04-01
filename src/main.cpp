@@ -21,6 +21,7 @@ namespace {
   float const ZFAR = 1000.f;
   string const STD_VS_PATH = "./data/01-vs.glsl";
   string const STD_FS_PATH = "./data/01-fs.glsl";
+  string const STD_GS_PATH = "./data/01-gs.glsl";
   string const PP_VS_PATH  = "./data/01-pp-vs.glsl";
   string const PP_FS_PATH  = "./data/01-pp-fs.glsl";
   float const OFF_FACTOR = 2.f;
@@ -65,7 +66,7 @@ string load_source(string const &path) {
     ss << fh.rdbuf();
     fh.close();
   } else {
-    throw "file not found: " + path;
+    throw ("file not found: " + path);
   }
 
   return ss.str();
@@ -192,12 +193,15 @@ bool treat_events(SDL_Event &event) {
 void render_one_frame(program_c const &stdP, program_c const &postprocessEffectP, GLuint offtex, GLuint rdbf, GLuint fb, GLuint cube) {
   /* offscreen */
   glUseProgram(stdP.id());
+#if 0
   glBindTexture(GL_TEXTURE_2D, offtex);
   glBindRenderbuffer(GL_RENDERBUFFER, rdbf);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb);
+#endif 
   glBindVertexArray(cube);
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
+#if 0
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
@@ -205,6 +209,7 @@ void render_one_frame(program_c const &stdP, program_c const &postprocessEffectP
   glUseProgram(postprocessEffectP.id());
   glRectf(-1.f, 1.f, 1.f, -1.f);
   glUseProgram(0); /* end of frame */
+#endif 
 }
 
 void main_loop() {
@@ -212,11 +217,13 @@ void main_loop() {
   bool loop = true;
   shader_c stdVS(GL_VERTEX_SHADER);
   shader_c stdFS(GL_FRAGMENT_SHADER);
+  shader_c stdGS(GL_GEOMETRY_SHADER);
   shader_c postprocessEffectVS(GL_VERTEX_SHADER);
   shader_c postprocessEffectFS(GL_FRAGMENT_SHADER);
   program_c stdP;
   program_c postprocessEffectP;
 
+  cout << "geometry shader ID: " << stdGS.id() << endl;
   /* standard program */
   stdVS.source(load_source(STD_VS_PATH).c_str());
   stdVS.compile();
@@ -228,34 +235,45 @@ void main_loop() {
   stdFS.compile();
   if (!stdFS.compiled()) {
     cerr << "STD Fragment shader failed to compile:\n" << stdFS.compile_log() << endl;
-    exit(2);
+    exit(1);
   }
+#if 0
+  stdGS.source(load_source(STD_GS_PATH).c_str());
+  stdGS.compile();
+  if (!stdGS.compiled()) {
+    cerr << "STD Geometry shader failed to compile:\n" << stdGS.compile_log() << endl;
+    exit(1);
+  }
+#endif
   stdP.attach(stdVS);
   stdP.attach(stdFS);
+#if 0
+  stdP.attach(stdGS);
+#endif
   stdP.link();
   if (!stdP.linked()) {
     cerr << "STD Program failed to link:\n" << stdP.link_log() << endl;
-    exit(3);
+    exit(2);
   }
   /* postprocess program */
   postprocessEffectVS.source(load_source(PP_VS_PATH).c_str());
   postprocessEffectVS.compile();
   if (!postprocessEffectVS.compiled()) {
     cerr << "PP Vertex shader failed to compile:\n" << postprocessEffectVS.compile_log() << endl;
-    exit(4);
+    exit(1);
   }
   postprocessEffectFS.source(load_source(PP_FS_PATH).c_str());
   postprocessEffectFS.compile();
   if (!postprocessEffectFS.compiled()) {
     cerr << "PP Fragment shader failed to compile:\n" << postprocessEffectFS.compile_log() << endl;
-    exit(5);
+    exit(1);
   }
   postprocessEffectP.attach(postprocessEffectVS);
   postprocessEffectP.attach(postprocessEffectFS);
   postprocessEffectP.link();
   if (!postprocessEffectP.linked()) {
     cerr << "PP Program failed to link:\n" << postprocessEffectP.link_log() << endl;
-    exit(6);
+    exit(2);
   }
 
   auto offtex = gen_offscreen_tex();
