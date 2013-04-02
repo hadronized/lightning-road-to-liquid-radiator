@@ -279,7 +279,7 @@ void main_loop() {
     cerr << "PP Fragment shader failed to compile:\n" << postprocessEffectFS.compile_log() << endl;
     exit(1);
   }
-  postprocessEffectP.attach(postprocessEffectVS);
+//  postprocessEffectP.attach(postprocessEffectVS); /* FIXME: not need at all */
   postprocessEffectP.attach(postprocessEffectFS);
   postprocessEffectP.link();
   if (!postprocessEffectP.linked()) {
