@@ -22,7 +22,10 @@ void main() {
   float d = dot(ldir, no);
   float pv = plasma();
   float scanline = mod(gl_FragCoord.y, 2.);
-  frag = vec4(1. - pv/3, 0.5 - pv, pv*sin(time), 1.) * d;
+  if (time < 10.)
+    frag = vec4(1.) * d;
+  else
+    frag = vec4(1. - pv/3, 0.5 - pv, pv*sin(time), 1.) * d;
   //frag *= scanline;
 }
 

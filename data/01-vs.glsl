@@ -23,7 +23,7 @@ void main() {
 
   no = normalize(coXYZ);
   pos = coXYZ;
-  coXYZ.z -= 2.;
+  coXYZ.z -= max(100.-time*100., 2.);
 
   gl_Position = proj * vec4(coXYZ, 1.0);
 }
