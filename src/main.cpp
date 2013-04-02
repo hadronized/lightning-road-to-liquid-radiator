@@ -81,7 +81,7 @@ GLuint gen_offscreen_tex() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, 1.f*WIDTH/OFF_FACTOR, 1.f*HEIGHT/OFF_FACTOR, 0, GL_RGB, GL_FLOAT, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1.f*WIDTH/OFF_FACTOR, 1.f*HEIGHT/OFF_FACTOR, 0, GL_RGBA, GL_FLOAT, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
 
   return off;
@@ -109,6 +109,16 @@ void setup_off(GLuint fbo, GLuint offtex, GLuint rbfo) {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
   glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbfo);
   glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, offtex, 0);
+  
+  auto ok = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+  switch (ok) {
+    case GL_FRAMEBUFFER_COMPLETE :
+      cout << "framebuffer complete" << endl;
+      break;
+
+    default :;
+  }
+      
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
@@ -190,26 +200,27 @@ bool treat_events(SDL_Event &event) {
   return true;
 }
 
-void render_one_frame(program_c const &stdP, program_c const &postprocessEffectP, GLuint offtex, GLuint rdbf, GLuint fb, GLuint cube) {
+void render_one_frame(float time, program_c const &stdP, program_c const &postprocessEffectP, GLuint offtex, GLuint rdbf, GLuint fb, GLuint cube) {
   /* offscreen */
   glUseProgram(stdP.id());
-#if 0
-  glBindTexture(GL_TEXTURE_2D, offtex);
-  glBindRenderbuffer(GL_RENDERBUFFER, rdbf);
+  auto timeIndex = stdP.map_uniform("time");
+  glUniform1f(timeIndex, time);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fb);
-#endif 
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(cube);
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
-#if 0
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-  glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
   /* post-process */
   glUseProgram(postprocessEffectP.id());
+  auto texIndex = postprocessEffectP.map_uniform("offtex");
+  auto offFactorIndex = postprocessEffectP.map_uniform("off_factor");
+  glUniform1f(offFactorIndex, OFF_FACTOR);
+  glUniform1i(texIndex, 0);
+  glBindTexture(GL_TEXTURE_2D, offtex);
   glRectf(-1.f, 1.f, 1.f, -1.f);
   glUseProgram(0); /* end of frame */
-#endif 
 }
 
 void main_loop() {
@@ -285,10 +296,13 @@ void main_loop() {
   auto cube = setup_cube(stdP.id(), cubeBuffers);
   auto projection = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
   auto projIndex = stdP.map_uniform("proj");
-  auto offFactorIndex = stdP.map_uniform("off_factor");
+  auto offtexIndex = postprocessEffectP.map_uniform("offtex");
+  auto offFactorIndex = postprocessEffectP.map_uniform("off_factor");
   auto timeIndex = stdP.map_uniform("time");
   glUseProgram(stdP.id());
   glUniformMatrix4fv(projIndex, 1, GL_FALSE, projection._);
+  glUseProgram(postprocessEffectP.id());
+  glUniform1i(offtexIndex, 0);
   glUniform1f(offFactorIndex, OFF_FACTOR);
   float time = 0.f;
 
@@ -298,7 +312,7 @@ void main_loop() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glUseProgram(stdP.id());
     glUniform1f(timeIndex, time);
-    render_one_frame(stdP, postprocessEffectP, offtex, rdbf, fbo, cube);
+    render_one_frame(time, stdP, postprocessEffectP, offtex, rdbf, fbo, cube);
     SDL_GL_SwapBuffers();
 
     if (!treat_events(event))

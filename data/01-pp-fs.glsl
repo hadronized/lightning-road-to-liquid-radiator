@@ -6,9 +6,7 @@ uniform sampler2D offtex;
 uniform float off_factor;
 
 vec2 computeUV() {
-  vec2 uv = gl_FragCoord.xy;
-  uv.x /= off_factor;
-  uv.y /= off_factor;
+  vec2 uv = vec2(gl_FragCoord.x/800./off_factor, gl_FragCoord.y/600./off_factor);
   
   return uv;
 }

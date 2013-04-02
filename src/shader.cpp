@@ -87,7 +87,7 @@ std::string program_c::link_log() const {
   return std::string(log);
 }
 
-GLint program_c::map_uniform(char const *name) {
+GLint program_c::map_uniform(char const *name) const {
   auto l = glGetUniformLocation(_, name);
   if (l != -1)
     std::cout << "'" << name << "' is active" << std::endl;

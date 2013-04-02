@@ -32,7 +32,7 @@ public :
   std::string link_log(void) const;
 
   /* uniforms mapping */
-  GLint map_uniform(char const *name);
+  GLint map_uniform(char const *name) const;
 };
 
 #endif /* guard */
