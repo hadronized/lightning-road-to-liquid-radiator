@@ -24,7 +24,6 @@ namespace {
   string const STD_GS_PATH = "./data/01-gs.glsl";
   string const PP_VS_PATH  = "./data/01-pp-vs.glsl";
   string const PP_FS_PATH  = "./data/01-pp-fs.glsl";
-  float const OFF_FACTOR = 2.f;
   float const CUBE_VERTICES[] = {
      1.f,  1.f,  1.f,
      1.f, -1.f,  1.f,
@@ -81,7 +80,7 @@ GLuint gen_offscreen_tex() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1.f*WIDTH/OFF_FACTOR, 1.f*HEIGHT/OFF_FACTOR, 0, GL_RGBA, GL_FLOAT, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
 
   return off;
@@ -92,7 +91,7 @@ GLuint gen_renderbuffer() {
 
   glGenRenderbuffers(1, &rbfo);
   glBindRenderbuffer(GL_RENDERBUFFER, rbfo);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, 1.f*WIDTH/OFF_FACTOR, 1.f*HEIGHT/OFF_FACTOR);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
   
   return rbfo;
@@ -216,8 +215,9 @@ void render_one_frame(float time, program_c const &stdP, program_c const &postpr
   glUseProgram(postprocessEffectP.id());
   auto texIndex = postprocessEffectP.map_uniform("offtex");
   auto offFactorIndex = postprocessEffectP.map_uniform("off_factor");
-  glUniform1f(offFactorIndex, OFF_FACTOR);
+  timeIndex = postprocessEffectP.map_uniform("time");
   glUniform1i(texIndex, 0);
+  glUniform1f(timeIndex, time);
   glBindTexture(GL_TEXTURE_2D, offtex);
   glRectf(-1.f, 1.f, 1.f, -1.f);
   glUseProgram(0); /* end of frame */
@@ -303,8 +303,7 @@ void main_loop() {
   glUniformMatrix4fv(projIndex, 1, GL_FALSE, projection._);
   glUseProgram(postprocessEffectP.id());
   glUniform1i(offtexIndex, 0);
-  glUniform1f(offFactorIndex, OFF_FACTOR);
-  float time = 0.f;
+  float time = 10.f;
 
   glEnable(GL_DEPTH_TEST);
 

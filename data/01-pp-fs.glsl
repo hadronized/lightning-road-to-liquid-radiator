@@ -3,10 +3,11 @@
 out vec4 frag;
 
 uniform sampler2D offtex;
-uniform float off_factor;
+uniform float time;
 
 vec2 computeUV() {
-  vec2 uv = vec2(gl_FragCoord.x/800./off_factor, (1. - gl_FragCoord.y/600.)/off_factor);
+  float f = max(1., min(80., 160. - time*40.));
+  vec2 uv = vec2(floor(gl_FragCoord.x / f) / (800./f), floor(gl_FragCoord.y / f) / (600./f));
   
   return uv;
 }
