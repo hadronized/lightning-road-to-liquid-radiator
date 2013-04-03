@@ -303,7 +303,7 @@ void main_loop() {
   glUniformMatrix4fv(projIndex, 1, GL_FALSE, projection._);
   glUseProgram(postprocessEffectP.id());
   glUniform1i(offtexIndex, 0);
-  float time = 10.f;
+  float time = 0.f;
 
   glEnable(GL_DEPTH_TEST);
 
