@@ -1,7 +1,7 @@
 #version 150
 
 layout(triangles) in;
-layout(triangle_strip, max_vertices = 3) out;
+layout(triangle_strip, max_vertices = 48) out;
 
 in vec3[] gpos;
 out vec3 pos;
@@ -26,15 +26,20 @@ void emit_triangle(vec3 a, vec3 b, vec3 c) {
 }
 
 void tess_triangle(vec3 a, vec3 b, vec3 c, int n) {
-  float gap = 1. / pow(2., n);
-  vec3 l1 = normalize(c-a)*gap;
-  vec3 l2 = nomalize(b-c)*gap;
+  int l = int(pow(2, n));
+  float gap = 1. / l;
+  vec3 l1 = (c-a)*gap;
+  vec3 l2 = (b-c)*gap;
   vec3 a2 = a;
+  vec3 t;
 
-  for (int i = 0; ;) {
-    a2
-    for (int j = 0; ;) {
-
+  for (int i = 0; i < l; ++i) {
+    a2 = a + l1*i;
+    for (int j = 0; j <= i; a2 += l2, ++j) {
+      gl_Position = proj * vec4(vec3(a2.xy, a2.z-2.), 1.); pos = a2; no = normalize(a2); EmitVertex();
+      t = a2 + l1; gl_Position = proj * vec4(vec3(t.xy, t.z-2.), 1.); pos = t; no = normalize(t); EmitVertex();
+      t += l2; gl_Position = proj * vec4(vec3(t.xy, t.z-2.), 1.); pos = t; no = normalize(t); EmitVertex();
+      EndPrimitive();
     }
   }
 }
