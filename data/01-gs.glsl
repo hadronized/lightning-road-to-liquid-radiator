@@ -16,21 +16,21 @@ void tess_triangle(vec3 a, vec3 b, vec3 c, int depth) {
 
   if (depth == 1) {
     /* emit the 4 inner triangles */
-    gl_Position = vec4(a, 1.); EmitVertex();
-    gl_Position = vec4(a2, 1.); EmitVertex();
-    gl_Position = vec4(c2, 1.); EmitVertex();
+    gl_Position = vec4(a, 1.);  no = normalize(a);  EmitVertex();
+    gl_Position = vec4(a2, 1.); no = normalize(a2); EmitVertex();
+    gl_Position = vec4(c2, 1.); no = normalize(c2); EmitVertex();
     EndPrimitive();
-    gl_Position = vec4(a2, 1.); EmitVertex();
-    gl_Position = vec4(b, 1.); EmitVertex();
-    gl_Position = vec4(b2, 1.); EmitVertex();
+    gl_Position = vec4(a2, 1.); no = normalize(a2); EmitVertex();
+    gl_Position = vec4(b, 1.);  no = normalize(b);  EmitVertex();
+    gl_Position = vec4(b2, 1.); no = normalize(b2); EmitVertex();
     EndPrimitive();
-    gl_Position = vec4(c2, 1.); EmitVertex();
-    gl_Position = vec4(b2, 1.); EmitVertex();
-    gl_Position = vec4(c, 1.); EmitVertex();
+    gl_Position = vec4(c2, 1.); no = normalize(c2); EmitVertex();
+    gl_Position = vec4(b2, 1.); no = normalize(b2); EmitVertex();
+    gl_Position = vec4(c, 1.);  no = normalize(c);  EmitVertex();
     EndPrimitive();
-    gl_Position = vec4(a2, 1.); EmitVertex();
-    gl_Position = vec4(b2, 1.); EmitVertex();
-    gl_Position = vec4(c2, 1.); EmitVertex();
+    gl_Position = vec4(a2, 1.); no = normalize(a2); EmitVertex();
+    gl_Position = vec4(b2, 1.); no = normalize(b2); EmitVertex();
+    gl_Position = vec4(c2, 1.); no = normalize(c2); EmitVertex();
     EndPrimitive();
   } else {
     /* tessellate the 4 inner virtual triangles */
@@ -43,10 +43,13 @@ void tess_triangle(vec3 a, vec3 b, vec3 c, int depth) {
 }
 
 void main() {
+  /*
   for (int i = 0; i < 3; ++i) {
     gl_Position = proj * vec4(vec3(gpos[i].xy, gpos[i].z-2.), 1.);
     pos = gpos[i];
-    no = gno[i];
+    no = normalize(gpos[i]);
     EmitVertex();
   }
+  */
+  tess_triangle(gpos[0], gpos[1], gpos[2], 1);
 }
