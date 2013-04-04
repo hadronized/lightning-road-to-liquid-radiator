@@ -1,5 +1,5 @@
 CXX= clang++
-CXXFLAGS= -W -Wall -pedantic -DGL_GLEXT_PROTOTYPES -I./include -std=c++11 -Os
+CXXFLAGS= -W -Wall -pedantic -DGL_GLEXT_PROTOTYPES -I./include -std=c++11
 LDFLAGS= -lSDL -lGL
 OBJ=main.o shader.o
 EXEC= d01

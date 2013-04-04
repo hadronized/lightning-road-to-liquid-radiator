@@ -234,7 +234,6 @@ void main_loop() {
   program_c stdP;
   program_c postprocessEffectP;
 
-  cout << "geometry shader ID: " << stdGS.id() << endl;
   /* standard program */
   stdVS.source(load_source(STD_VS_PATH).c_str());
   stdVS.compile();
@@ -248,19 +247,15 @@ void main_loop() {
     cerr << "STD Fragment shader failed to compile:\n" << stdFS.compile_log() << endl;
     exit(1);
   }
-#if 0
   stdGS.source(load_source(STD_GS_PATH).c_str());
   stdGS.compile();
   if (!stdGS.compiled()) {
     cerr << "STD Geometry shader failed to compile:\n" << stdGS.compile_log() << endl;
     exit(1);
   }
-#endif
   stdP.attach(stdVS);
   stdP.attach(stdFS);
-#if 0
   stdP.attach(stdGS);
-#endif
   stdP.link();
   if (!stdP.linked()) {
     cerr << "STD Program failed to link:\n" << stdP.link_log() << endl;
@@ -317,7 +312,7 @@ void main_loop() {
     if (!treat_events(event))
       loop = false;
 
-    time += 0.01f;
+    time += 0.001f;
   }
 }
 

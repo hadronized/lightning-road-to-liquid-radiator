@@ -1,11 +1,10 @@
 #version 130
 
 in vec3 co;
-out vec3 pos;
-out vec3 no;
+out vec3 gpos;
+out vec3 gno;
 
 uniform float time;
-uniform mat4 proj;
 
 void main() {
   /* around Z */
@@ -21,11 +20,12 @@ void main() {
   coXYZ.y = coYZ.y*sin(time)+coYZ.z*cos(time);
   coXYZ.z = coYZ.y*cos(time)-coYZ.z*sin(time);
 
-  no = normalize(coXYZ);
-  pos = coXYZ;
-  //coXYZ.z -= max(100.-time*100., 6.);
+  //gno = normalize(coXYZ);
+  gpos = coXYZ;
+  /*
   coXYZ.z -= 2.;
 
   gl_Position = proj * vec4(coXYZ, 1.0);
+  */
 }
 
