@@ -20,12 +20,6 @@ void main() {
   coXYZ.y = coYZ.y*sin(time)+coYZ.z*cos(time);
   coXYZ.z = coYZ.y*cos(time)-coYZ.z*sin(time);
 
-  //gno = normalize(coXYZ);
   gpos = coXYZ;
-  /*
-  coXYZ.z -= 2.;
-
-  gl_Position = proj * vec4(coXYZ, 1.0);
-  */
 }
 
