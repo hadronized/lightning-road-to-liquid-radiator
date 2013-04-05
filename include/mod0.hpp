@@ -1,7 +1,6 @@
 #ifndef __MOD0_HPP
 #define __MOD0_HPP
 
-#include "common.hpp"
 #include "gl.hpp"
 #include "matrix.hpp"
 #include "shader.hpp"
@@ -39,7 +38,7 @@ namespace {
   };
 }
 
-class mod0 {
+class mod0_c {
   /* shader stuff */
   shader_c _stdVS;
   shader_c _stdGS;
@@ -63,9 +62,6 @@ class mod0 {
   void _gen_buffers();
   void _gen_cube();
 
-  /* projection */
-  //mat4_c _perspective;
-
   /* uniform gates */
   GLuint _projIndex;
   GLuint _offtexIndex;
@@ -74,8 +70,10 @@ class mod0 {
   void _init_uniforms();
 
 public :
-  mod0();
-  ~mod0();
+  mod0_c();
+  ~mod0_c();
+
+  void render(float time);
 };
 
 #endif /* guard */

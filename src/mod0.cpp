@@ -1,9 +1,10 @@
 #include <iostream>
+#include "common.hpp"
 #include "mod0.hpp"
 
 using namespace std;
 
-mod0::mod0() :
+mod0_c::mod0_c() :
   _stdVS(GL_VERTEX_SHADER),
   _stdGS(GL_GEOMETRY_SHADER),
   _stdFS(GL_FRAGMENT_SHADER),
@@ -12,19 +13,19 @@ mod0::mod0() :
   _stdVS.source(load_source(STD_VS_PATH).c_str());
   _stdVS.compile();
   if (!_stdVS.compiled()) {
-    cerr << "mod0 STD Vertex shader failed to compile:\n" << _stdVS.compile_log() << endl;
+    cerr << "mod0_c STD Vertex shader failed to compile:\n" << _stdVS.compile_log() << endl;
     exit(1);
   }
   _stdGS.source(load_source(STD_GS_PATH).c_str());
   _stdGS.compile();
   if (!_stdGS.compiled()) {
-    cerr << "mod0 STD Geometry shader failed to compile:\n" << _stdGS.compile_log() << endl;
+    cerr << "mod0_c STD Geometry shader failed to compile:\n" << _stdGS.compile_log() << endl;
     exit(1);
   }
   _stdFS.source(load_source(STD_FS_PATH).c_str());
   _stdFS.compile();
   if (!_stdFS.compiled()) {
-    cerr << "mod0 STD Fragment shader failed to compile:\n" << _stdFS.compile_log() << endl;
+    cerr << "mod0_c STD Fragment shader failed to compile:\n" << _stdFS.compile_log() << endl;
     exit(1);
   }
   _stdP.attach(_stdVS);
@@ -32,7 +33,7 @@ mod0::mod0() :
   _stdP.attach(_stdFS);
   _stdP.link();
   if (!_stdP.linked()) {
-    cerr << "mod0 Program failed to link:\n" << _stdP.link_log() << endl;
+    cerr << "mod0_c Program failed to link:\n" << _stdP.link_log() << endl;
     exit(2);
   }
 
@@ -49,17 +50,24 @@ mod0::mod0() :
     cerr << "PP Program failed to link:\n" << _ppP.link_log() << endl;
     exit(2);
   }
-
   /* offscreen */
   _gen_offscreen_tex();
+  _gen_rdbf();
+  _gen_framebuffer();
+  _setup_offscreen();
+  /* cube generation */
+  _gen_buffers();
+  _gen_cube();
+  /* uniforms */
+  _init_uniforms();
 }
 
-mod0::~mod0() {
+mod0_c::~mod0_c() {
 }
 
-void mod0::_gen_offscreen_tex() {
+void mod0_c::_gen_offscreen_tex() {
   glGenTextures(1, &_offtex);
-  glBindTexture(GL_TEXTURE_2D, off);
+  glBindTexture(GL_TEXTURE_2D, _offtex);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -68,18 +76,18 @@ void mod0::_gen_offscreen_tex() {
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void mod0::_gen_rdbf() {
+void mod0_c::_gen_rdbf() {
   glGenRenderbuffers(1, &_rdbf);
   glBindRenderbuffer(GL_RENDERBUFFER, _rdbf);
   glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
-void mod0::_gen_framebuffer() {
+void mod0_c::_gen_framebuffer() {
   glGenFramebuffers(1, &_fbo);
 }
 
-void mod0::_setup_offscreen() {
+void mod0_c::_setup_offscreen() {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
   glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _rdbf);
   glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _offtex, 0);
@@ -97,7 +105,7 @@ void mod0::_setup_offscreen() {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
-void mod0::_gen_buffers() {
+void mod0_c::_gen_buffers() {
   glGenBuffers(2, _cubeBuffers); /* 0 for VBO, 1 for IBO */
   glBindBuffer(GL_ARRAY_BUFFER, _cubeBuffers[0]);
   glBufferData(GL_ARRAY_BUFFER, sizeof(CUBE_VERTICES), CUBE_VERTICES, GL_STATIC_DRAW);
@@ -107,10 +115,10 @@ void mod0::_gen_buffers() {
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
-void mod0::_gen_cube() {
+void mod0_c::_gen_cube() {
   GLint coid;
 
-  coid = stdP.map_uniform("co");
+  coid = _stdP.map_uniform("co");
   
   glGenVertexArrays(1, &_cube);
   glBindVertexArray(_cube);
@@ -122,18 +130,18 @@ void mod0::_gen_cube() {
   glBindVertexArray(0);
 }
 
-void mod0::_init_uniforms() {
+void mod0_c::_init_uniforms() {
   auto p = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
 
-  _projIndex = stdP.map_uniform("proj");
-  glUniformMatrix4fv(stdP.id(), 1, GL_FALSE, p._);
-  _offtexIndex = ppP.map_uniform("offtex");
-  glUniform1i(ppP.id(), 0);
-  _stdTimeIndex = stdP.map_uniform("time");
-  _ppTimeIndex = ppP.map_uniform("time");
+  _projIndex = _stdP.map_uniform("proj");
+  glUniformMatrix4fv(_stdP.id(), 1, GL_FALSE, p._);
+  _offtexIndex = _ppP.map_uniform("offtex");
+  glUniform1i(_ppP.id(), 0);
+  _stdTimeIndex = _stdP.map_uniform("time");
+  _ppTimeIndex = _ppP.map_uniform("time");
 }
 
-void mod0::render(float time) {
+void mod0_c::render(float time) {
   /* offscreen */
   glUseProgram(_stdP.id());
   glUniform1f(_stdTimeIndex, time);
@@ -145,8 +153,8 @@ void mod0::render(float time) {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
   /* post-process */
-  glUseProgram(ppP.id());
-  glUniform1i(texIndex, 0); /* TODO: do that earlier */
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glUseProgram(_ppP.id());
   glUniform1f(_ppTimeIndex, time);
   glBindTexture(GL_TEXTURE_2D, _offtex);
   glRectf(-1.f, 1.f, 1.f, -1.f);

@@ -1,13 +1,8 @@
-#include <cmath>
-#include <iostream>
-#include <GL/gl.h>
-#include <GL/glext.h>
-#include <SDL/SDL.h>
-#include <fstream>
-#include <sstream>
-
-#include "shader.hpp"
+#include "bootstrap.hpp"
 
 int main() {
+  bootstrap_c boot;
+  boot.init();
+  boot.run();
   return 0;
 }

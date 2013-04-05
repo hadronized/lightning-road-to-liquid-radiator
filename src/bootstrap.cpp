@@ -1,22 +1,35 @@
+#include <iostream>
 #include "common.hpp"
 #include "bootstrap.hpp"
 
-bootstrap_c::bootstrap_c() {
+using namespace std;
+
+bootstrap_c::bootstrap_c() :
+  _mod0(nullptr) {
   SDL_Init(SDL_INIT_VIDEO);
   SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL);
+  cout << "init SDL" << endl;
 }
 
 bootstrap_c::~bootstrap_c() {
+  delete _mod0;
+
   SDL_Quit();
 }
 
 void bootstrap_c::init() {
+  _mod0 = new mod0_c;
+  glEnable(GL_DEPTH_TEST);
 }
 
 void bootstrap_c::run() {
   SDL_Event event;
+  float time = 0.f;
 
   while (treat_events(event)) {
+    _mod0->render(time);
+    SDL_GL_SwapBuffers();
+    time += 0.01f;
   }
 }
 

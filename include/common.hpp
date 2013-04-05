@@ -3,7 +3,7 @@
 
 #include <string>
 
-float PI = 3.14159265359;
+float const PI = 3.14159265359;
 int const WIDTH = 800;
 int const HEIGHT = 600;
 float const RATIO = 1.f * WIDTH / HEIGHT;
