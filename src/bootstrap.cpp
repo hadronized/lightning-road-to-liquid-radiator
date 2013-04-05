@@ -13,7 +13,6 @@ bootstrap_c::bootstrap_c() :
 
 bootstrap_c::~bootstrap_c() {
   delete _mod0;
-
   SDL_Quit();
 }
 

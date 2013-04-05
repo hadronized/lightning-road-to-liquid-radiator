@@ -119,7 +119,6 @@ void mod0_c::_gen_cube() {
   GLint coid;
 
   coid = _stdP.map_uniform("co");
-  
   glGenVertexArrays(1, &_cube);
   glBindVertexArray(_cube);
     glEnableVertexAttribArray(coid);
@@ -134,7 +133,7 @@ void mod0_c::_init_uniforms() {
   auto p = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
 
   _projIndex = _stdP.map_uniform("proj");
-  glUniformMatrix4fv(_stdP.id(), 1, GL_FALSE, p._);
+  glUniformMatrix4fv(_stdP.id(), 1, GL_TRUE, p._);
   _offtexIndex = _ppP.map_uniform("offtex");
   glUniform1i(_ppP.id(), 0);
   _stdTimeIndex = _stdP.map_uniform("time");
@@ -145,13 +144,15 @@ void mod0_c::render(float time) {
   /* offscreen */
   glUseProgram(_stdP.id());
   glUniform1f(_stdTimeIndex, time);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+  //glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+  glClearColor(1.f, 0.f, 0.f, 1.f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(_cube);
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  //glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
+#if 0
   /* post-process */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glUseProgram(_ppP.id());
@@ -159,5 +160,6 @@ void mod0_c::render(float time) {
   glBindTexture(GL_TEXTURE_2D, _offtex);
   glRectf(-1.f, 1.f, 1.f, -1.f);
   glUseProgram(0); /* end of frame */
+#endif
 }
 
