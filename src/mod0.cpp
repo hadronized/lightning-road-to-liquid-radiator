@@ -29,8 +29,8 @@ mod0_c::mod0_c() :
     exit(1);
   }
   _stdP.attach(_stdVS);
-  _stdP.attach(_stdGS);
   _stdP.attach(_stdFS);
+  _stdP.attach(_stdGS);
   _stdP.link();
   if (!_stdP.linked()) {
     cerr << "mod0_c Program failed to link:\n" << _stdP.link_log() << endl;
@@ -132,12 +132,15 @@ void mod0_c::_gen_cube() {
 void mod0_c::_init_uniforms() {
   auto p = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
 
+  glUseProgram(_stdP.id());
   _projIndex = _stdP.map_uniform("proj");
-  glUniformMatrix4fv(_stdP.id(), 1, GL_TRUE, p._);
-  _offtexIndex = _ppP.map_uniform("offtex");
-  glUniform1i(_ppP.id(), 0);
   _stdTimeIndex = _stdP.map_uniform("time");
+  glUniformMatrix4fv(_projIndex, 1, GL_FALSE, p._);
+
+  glUseProgram(_ppP.id());
+  _offtexIndex = _ppP.map_uniform("offtex");
   _ppTimeIndex = _ppP.map_uniform("time");
+  glUniform1i(_offtexIndex, 0);
 }
 
 void mod0_c::render(float time) {
@@ -145,7 +148,6 @@ void mod0_c::render(float time) {
   glUseProgram(_stdP.id());
   glUniform1f(_stdTimeIndex, time);
   //glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
-  glClearColor(1.f, 0.f, 0.f, 1.f);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(_cube);
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);

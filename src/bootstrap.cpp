@@ -1,14 +1,20 @@
 #include <iostream>
 #include "common.hpp"
 #include "bootstrap.hpp"
+#include "gl.hpp"
 
 using namespace std;
 
 bootstrap_c::bootstrap_c() :
   _mod0(nullptr) {
+  GLubyte const *glstr;
+
   SDL_Init(SDL_INIT_VIDEO);
   SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL);
   cout << "init SDL" << endl;
+
+  glstr = glGetString(GL_VERSION);
+  cout << "OpenGL Version String: " << glstr << endl;
 }
 
 bootstrap_c::~bootstrap_c() {
