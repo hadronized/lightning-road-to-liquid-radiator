@@ -1,7 +1,7 @@
 CXX= clang++
 CXXFLAGS= -W -Wall -pedantic -DGL_GLEXT_PROTOTYPES -I./include -std=c++11
 LDFLAGS= -lSDL -lGL
-OBJ=main.o common.o shader.o matrix.o bootstrap.o mod0.o
+OBJ=main.o common.o shader.o matrix.o bootstrap.o mod0.o mod1.o
 EXEC= d01
 
 .PHONY: all, clean

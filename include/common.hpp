@@ -16,6 +16,7 @@ std::string const STD_FS_PATH = "./data/01-fs.glsl";
 std::string const STD_GS_PATH = "./data/01-gs.glsl";
 std::string const PP_VS_PATH  = "./data/01-pp-vs.glsl";
 std::string const PP_FS_PATH  = "./data/01-pp-fs.glsl";
+std::string const STD_TUNNEL_FS_PATH = "./data/02-fs.glsl";
 
 std::string load_source(std::string const &path);
 
