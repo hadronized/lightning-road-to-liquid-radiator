@@ -118,7 +118,10 @@ void mod0_c::_gen_buffers() {
 void mod0_c::_gen_cube() {
   GLint coid;
 
-  coid = _stdP.map_uniform("co");
+  coid = glGetAttribLocation(_stdP.id(), "co");
+  if (coid != -1)
+    cout << "'co' is active" << endl;
+
   glGenVertexArrays(1, &_cube);
   glBindVertexArray(_cube);
     glEnableVertexAttribArray(coid);
@@ -147,14 +150,13 @@ void mod0_c::render(float time) {
   /* offscreen */
   glUseProgram(_stdP.id());
   glUniform1f(_stdTimeIndex, time);
-  //glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(_cube);
   glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
-  //glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
-#if 0
   /* post-process */
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glUseProgram(_ppP.id());
@@ -162,6 +164,5 @@ void mod0_c::render(float time) {
   glBindTexture(GL_TEXTURE_2D, _offtex);
   glRectf(-1.f, 1.f, 1.f, -1.f);
   glUseProgram(0); /* end of frame */
-#endif
 }
 

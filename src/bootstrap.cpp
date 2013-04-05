@@ -34,7 +34,7 @@ void bootstrap_c::run() {
   while (treat_events(event)) {
     _mod0->render(time);
     SDL_GL_SwapBuffers();
-    time += 0.01f;
+    time += 0.001f;
   }
 }
 
