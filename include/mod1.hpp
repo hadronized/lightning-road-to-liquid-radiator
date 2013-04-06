@@ -10,6 +10,8 @@ class mod1_c {
 
   /* uniforms stuff */
   GLint _stdTimeIndex;
+  GLint _stdRes;
+  GLint _stdFovy;
   void _init_uniforms();
 
 public :

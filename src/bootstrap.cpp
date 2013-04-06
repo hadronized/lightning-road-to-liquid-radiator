@@ -19,11 +19,13 @@ bootstrap_c::bootstrap_c() :
 
 bootstrap_c::~bootstrap_c() {
   delete _mod0;
+  delete _mod1;
   SDL_Quit();
 }
 
 void bootstrap_c::init() {
   _mod0 = new mod0_c;
+  _mod1 = new mod1_c;
   glEnable(GL_DEPTH_TEST);
 }
 
@@ -32,7 +34,8 @@ void bootstrap_c::run() {
   float time = 0.f;
 
   while (treat_events(event)) {
-    _mod0->render(time);
+    //_mod0->render(time);
+    _mod1->render(time);
     SDL_GL_SwapBuffers();
     time += 0.001f;
   }

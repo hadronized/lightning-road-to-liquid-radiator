@@ -27,10 +27,16 @@ mod1_c::~mod1_c() {
 
 void mod1_c::_init_uniforms() {
   _stdTimeIndex = _stdP.map_uniform("time");
+  _stdRes = _stdP.map_uniform("res");
+  _stdFovy = _stdP.map_uniform("fovy");
+  glUseProgram(_stdP.id());
+  glUniform2f(_stdRes, WIDTH, HEIGHT);
+  glUniform1f(_stdFovy, FOVY);
 }
 
 void mod1_c::render(float time) {
   glUseProgram(_stdP.id());
   glUniform1f(_stdTimeIndex, time);
-  glRecf(-1.f, 1.f, 1.f, -1.f);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  glRectf(-1.f, 1.f, 1.f, -1.f);
 }
