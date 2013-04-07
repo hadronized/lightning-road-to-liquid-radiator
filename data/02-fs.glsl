@@ -18,9 +18,14 @@ void main() {
                             -cam.z));
   vec3 hit = tunnel(cam, ray, 2.);
   vec3 hit2 = tunnel(cam, ray, 4.);
-  float d = hit.z/200.;
-  vec3 c = vec3(d);
-  c += vec3(sin(hit.z/4.+time*4.));
-
-  frag = vec4(c, 1.);
+  float d = hit.z/100.;
+  float c = sin(hit.z*2.+time*2.);
+  c *= sin(dot(hit.xy, vec2(0., 1.))*4.);
+  if (c <= 0.4) {
+    c = sin(hit2.x) * sin(hit2.y) * sin(hit2.z+time);
+    frag = vec4(0, c, 0., 1.);
+  } else {
+    frag = vec4(c, 0., 0., 1.);
+  }
+  
 }
