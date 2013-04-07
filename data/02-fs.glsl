@@ -16,6 +16,7 @@ void main() {
   vec3 ray = normalize(vec3(2. * gl_FragCoord.x / res.x - 1.,
                             (2. * gl_FragCoord.y / res.y - 1.) / (res.x / res.y),
                             -cam.z));
+  /*
   vec3 hit = tunnel(cam, ray, 2.);
   vec3 hit2 = tunnel(cam, ray, 4.);
   float d = hit.z/100.;
@@ -27,5 +28,8 @@ void main() {
   } else {
     frag = vec4(c, 0., 0., 1.);
   }
+  */
+  float v = (1.- length(ray.xy))*sin(time)*3.;
+  frag = vec4(v, v, v, 1.);
   
 }
