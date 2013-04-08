@@ -66,6 +66,7 @@ class mod0_c {
   GLuint _projIndex;
   GLuint _offtexIndex;
   GLuint _stdTimeIndex;
+  GLuint _ppResIndex;
   GLuint _ppTimeIndex;
   void _init_uniforms();
 

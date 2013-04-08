@@ -23,7 +23,7 @@ void main() {
   vec3 r = reflect(no, normalize(pos - vec3(0., 0., 2.)));
   float s = pow(max(0., dot(-ldir,r)), 2.);
   float pv = plasma();
-  float scanline = mod(gl_FragCoord.y, 2.);
+  //float scanline = mod(gl_FragCoord.y, 2.);
 
   frag = vec4(1.) * (d+s);
 }

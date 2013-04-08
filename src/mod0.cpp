@@ -142,7 +142,9 @@ void mod0_c::_init_uniforms() {
 
   glUseProgram(_ppP.id());
   _offtexIndex = _ppP.map_uniform("offtex");
+  _ppResIndex = _ppP.map_uniform("res");
   _ppTimeIndex = _ppP.map_uniform("time");
+  glUniform2f(_ppResIndex, WIDTH, HEIGHT);
   glUniform1i(_offtexIndex, 0);
 }
 

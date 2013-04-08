@@ -3,17 +3,24 @@
 out vec4 frag;
 
 uniform sampler2D offtex;
+uniform vec2 res;
 uniform float time;
 
-vec2 computeUV() {
+vec2 uv_tex() {
   float f = max(1., min(80., 160. - time*40.));
-  vec2 uv = vec2(floor(gl_FragCoord.x / f) / (800./f), floor(gl_FragCoord.y / f) / (600./f));
+  vec2 uv = vec2(floor(gl_FragCoord.x / f) / (res.x/f), floor(gl_FragCoord.y / f) / (res.y/f));
   
   return uv;
 }
 
+vec2 get_uv() {
+  return vec2(2. * gl_FragCoord.x / res.x - 1.,
+             (2. * gl_FragCoord.y / res.y - 1.) / (res.x/res.y));
+}
+
 void main() {
-  vec2 uv = computeUV();
-  float l = (1. - uv.xy
-  frag = vec4(texture2D(offtex, uv)) * l;
+  vec2 uvtex = uv_tex();
+  vec2 uv = get_uv();
+  float c = clamp((2. - length(uv))*log(time-5.), 0., 1.);
+  frag = vec4(texture2D(offtex, uvtex)) + vec4(c, c, c*1.1, 1.);
 } 
