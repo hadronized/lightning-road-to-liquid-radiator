@@ -11,6 +11,7 @@ int const DEPTH = 32;
 float const FOVY = 75.*PI/180.;
 float const ZNEAR = 0.01f;
 float const ZFAR = 1000.f;
+std::string const TRACK_PATH         = "./data/track.ogg";
 std::string const STD_VS_PATH        = "./data/01-vs.glsl";
 std::string const STD_TCS_PATH       = "./data/01-tcs.glsl";
 std::string const STD_TES_PATH       = "./data/01-tes.glsl";

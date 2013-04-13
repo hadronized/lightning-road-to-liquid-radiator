@@ -15,25 +15,41 @@ bootstrap_c::bootstrap_c() :
 
   glstr = glGetString(GL_VERSION);
   cout << "OpenGL Version String: " << glstr << endl;
+
+  FMOD_System_Create(&_sndsys);
+  FMOD_System_Init(_sndsys, 4, FMOD_INIT_NORMAL, NULL);
+  cout << "init fmodex" << endl;
 }
 
 bootstrap_c::~bootstrap_c() {
   delete _mod0;
   delete _mod1;
   SDL_Quit();
+  FMOD_System_Release(_sndsys);
+}
+
+float bootstrap_c::_track_cursor() {
+  unsigned int i;
+  FMOD_Channel_GetPosition(_chan, &i, FMOD_TIMEUNIT_MS);
+  return i / 1000.f;
 }
 
 void bootstrap_c::init() {
+  /* init the mods */
   _mod0 = new mod0_c;
   _mod1 = new mod1_c;
-  glEnable(GL_DEPTH_TEST);
+  glEnable(GL_DEPTH_TEST); /* TODO: that should be done in the loop, at the beginning of a mod */
+  /* init the softsynth */
+  FMOD_System_CreateStream(_sndsys, TRACK_PATH.c_str(), FMOD_HARDWARE | FMOD_LOOP_OFF | FMOD_2D, 0, &_track);
+  FMOD_System_PlaySound(_sndsys, FMOD_CHANNEL_FREE, _track, 0, &_chan);
 }
 
 void bootstrap_c::run() {
   SDL_Event event;
-  float time = 0.f;
+  float time;
 
   while (treat_events(event)) {
+    time = _track_cursor();
     _mod0->render(time);
     //_mod1->render(time);
     SDL_GL_SwapBuffers();
