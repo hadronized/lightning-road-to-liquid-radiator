@@ -169,7 +169,7 @@ void mod0_c::render(float time) {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(_cube);
-  glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+  glDrawElements(GL_PATCHES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 

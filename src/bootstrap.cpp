@@ -27,10 +27,6 @@ void bootstrap_c::init() {
   _mod0 = new mod0_c;
   _mod1 = new mod1_c;
   glEnable(GL_DEPTH_TEST);
-
-  GLint m;
-  glGetIntegerv(GL_MAX_PATCH_VERTICES, &m);
-  cout << "Max tessellation output patches: " << m << endl;
 }
 
 void bootstrap_c::run() {

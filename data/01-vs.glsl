@@ -2,7 +2,6 @@
 
 in vec3 co;
 out vec3 gpos;
-out vec3 gno;
 
 uniform float time;
 
