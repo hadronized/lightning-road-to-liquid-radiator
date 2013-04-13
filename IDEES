@@ -14,5 +14,14 @@ alors lancer le mod 1.
 Mod 1 – Sphere, RGB distorsion et tunnel
 ----------------------------------------
 
-Arriver ici, on doit faire apparaître un tunnel dans lequel évolue notre sphère qui passe de sphère à cube de cube à sphère etc etc 
-assez rapidemment.
+Dans ce mod, plus de sphère. On affiche un tunnel dans lequel on évolue. Le tunnel est déjà quasiment entièrement codé, il
+faudrait juste lui rajouter un peu de complexité voire d’animation.
+
+On finit ce mod sur un effet TV qui bug et on passe au mod suivant.
+
+Mod 2 – Lava
+------------
+
+Ce mod commence au dessus d’un sol en mouvement selon un plasma, qui doit ressembler à de la lave. Le mouvement doit être le plus
+fluide possible. Sur chaque note de piano, on éclaire d’une couleur différente quelque chose qui doit être répété dans l’espace.
+Sur chaque timballe basse, on affiche un éclaire qu’on laisse allumé un certain petit bout de temps.
