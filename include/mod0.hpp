@@ -7,14 +7,14 @@
 
 namespace {
   float const CUBE_VERTICES[] = {
-    1.f,  1.f,  1.f,
-    1.f, -1.f,  1.f,
-    -1.f, -1.f,  1.f,
-    -1.f,  1.f,  1.f,
-    1.f,  1.f, -1.f,
-    1.f, -1.f, -1.f,
-    -1.f, -1.f, -1.f,
-    -1.f,  1.f, -1.f
+    0.5f,  0.5f,  0.5f,
+    0.5f, -0.5f,  0.5f,
+    -0.5f, -0.5f,  0.5f,
+    -0.5f,  0.5f,  0.5f,
+    0.5f,  0.5f, -0.5f,
+    0.5f, -0.5f, -0.5f,
+    -0.5f, -0.5f, -0.5f,
+    -0.5f,  0.5f, -0.5f
   };
   unsigned int const CUBE_INDICES[] = {
     /* front */

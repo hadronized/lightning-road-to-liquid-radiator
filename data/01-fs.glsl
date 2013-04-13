@@ -17,7 +17,7 @@ float plasma() {
 
 void main() {
   vec3 lpos = vec3(0., -1., 2.8);
-  vec3 no = pos;
+  vec3 no = normalize(pos);
   vec3 ldir = normalize(lpos - pos);
   float d = max(0., dot(ldir, no));
   vec3 r = reflect(no, normalize(pos - vec3(0., 0., 2.)));
