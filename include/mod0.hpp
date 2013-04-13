@@ -41,7 +41,8 @@ namespace {
 class mod0_c {
   /* shader stuff */
   shader_c _stdVS;
-  shader_c _stdGS;
+  shader_c _stdTCS;
+  shader_c _stdTES;
   shader_c _stdFS;
   shader_c _ppFS;
   program_c _stdP;
@@ -69,6 +70,8 @@ class mod0_c {
   GLuint _ppResIndex;
   GLuint _ppTimeIndex;
   void _init_uniforms();
+
+  void _setup_tessellation();
 
 public :
   mod0_c();

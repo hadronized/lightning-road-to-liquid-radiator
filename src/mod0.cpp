@@ -6,20 +6,26 @@ using namespace std;
 
 mod0_c::mod0_c() :
   _stdVS(GL_VERTEX_SHADER),
-  _stdGS(GL_GEOMETRY_SHADER),
+  _stdTCS(GL_TESS_CONTROL_SHADER),
+  _stdTES(GL_TESS_EVALUATION_SHADER),
   _stdFS(GL_FRAGMENT_SHADER),
   _ppFS(GL_FRAGMENT_SHADER) {
-  /* std program */
   _stdVS.source(load_source(STD_VS_PATH).c_str());
   _stdVS.compile();
   if (!_stdVS.compiled()) {
     cerr << "mod0_c STD Vertex shader failed to compile:\n" << _stdVS.compile_log() << endl;
     exit(1);
   }
-  _stdGS.source(load_source(STD_GS_PATH).c_str());
-  _stdGS.compile();
-  if (!_stdGS.compiled()) {
-    cerr << "mod0_c STD Geometry shader failed to compile:\n" << _stdGS.compile_log() << endl;
+  _stdTCS.source(load_source(STD_TCS_PATH).c_str());
+  _stdTCS.compile();
+  if (!_stdTCS.compiled()) {
+    cerr << "mod0_c STD Tessellation control shader failed to compile:\n" << _stdTCS.compile_log() << endl;
+    exit(1);
+  }
+  _stdTES.source(load_source(STD_TES_PATH).c_str());
+  _stdTES.compile();
+  if (!_stdTCS.compiled()) {
+    cerr << "mod0_c STD Tessellation evaluation shader failed to compile:\n" << _stdTES.compile_log() << endl;
     exit(1);
   }
   _stdFS.source(load_source(STD_FS_PATH).c_str());
@@ -29,8 +35,9 @@ mod0_c::mod0_c() :
     exit(1);
   }
   _stdP.attach(_stdVS);
+  _stdP.attach(_stdTCS);
+  _stdP.attach(_stdTES);
   _stdP.attach(_stdFS);
-  _stdP.attach(_stdGS);
   _stdP.link();
   if (!_stdP.linked()) {
     cerr << "mod0_c Program failed to link:\n" << _stdP.link_log() << endl;
@@ -60,6 +67,8 @@ mod0_c::mod0_c() :
   _gen_cube();
   /* uniforms */
   _init_uniforms();
+  /* tessellation */
+  _setup_tessellation();
 }
 
 mod0_c::~mod0_c() {
@@ -146,6 +155,11 @@ void mod0_c::_init_uniforms() {
   _ppTimeIndex = _ppP.map_uniform("time");
   glUniform2f(_ppResIndex, WIDTH, HEIGHT);
   glUniform1i(_offtexIndex, 0);
+}
+
+void mod0_c::_setup_tessellation() {
+  glUseProgram(_stdP.id());
+  glPatchParameteri(GL_PATCH_VERTICES, 3);
 }
 
 void mod0_c::render(float time) {
