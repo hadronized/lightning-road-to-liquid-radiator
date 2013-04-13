@@ -53,7 +53,6 @@ void bootstrap_c::run() {
     _mod0->render(time);
     //_mod1->render(time);
     SDL_GL_SwapBuffers();
-    time += 0.001f;
   }
 }
 
