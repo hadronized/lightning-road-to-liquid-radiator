@@ -50,6 +50,7 @@ void bootstrap_c::run() {
 
   while (treat_events(event)) {
     time = _track_cursor();
+    cout << "time: " << time << endl;
     _mod0->render(time);
     //_mod1->render(time);
     SDL_GL_SwapBuffers();

@@ -7,7 +7,7 @@ uniform vec2 res;
 uniform float time;
 
 vec2 uv_tex() {
-  float f = max(1., min(80., 160. - time*40.));
+  float f = max(1., min(100., 100. - (time-12.80)*80.));
   vec2 uv = vec2(floor(gl_FragCoord.x / f) / (res.x/f), floor(gl_FragCoord.y / f) / (res.y/f));
   
   return uv;
@@ -21,6 +21,6 @@ vec2 get_uv() {
 void main() {
   vec2 uvtex = uv_tex();
   vec2 uv = get_uv();
-  float c = clamp((2. - length(uv))*log(time-5.), 0., 1.);
-  frag = vec4(texture2D(offtex, uvtex)) ;//+ vec4(c, c, c*1.1, 1.);
+  float c = clamp((2. - length(uv))*log(time-23.), 0., 1.);
+  frag = vec4(texture2D(offtex, uvtex)) + vec4(c, c, c*1.1, 1.);
 } 
