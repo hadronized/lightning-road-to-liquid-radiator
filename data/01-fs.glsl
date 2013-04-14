@@ -20,12 +20,12 @@ vec3 tex(vec3 uv) {
   return vec3(v*cos(time), 0.5 + v/2., 1. - v*sin(time));
 }
 
+
 void main() {
   vec3 lpos = vec3(cos(time)*8., sin(time)*8., 8.);
   vec3 no = normalize(pos);
   vec3 ldir = normalize(lpos - pos);
   float d = max(0., dot(ldir, no));
-  //float scanline = mod(gl_FragCoord.y, 2.);
 
   frag = vec4(tex(pos), 1.) * d;
 }
