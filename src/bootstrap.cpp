@@ -34,6 +34,18 @@ float bootstrap_c::_track_cursor() {
   return i / 1000.f;
 }
 
+float bootstrap_c::_track_length() {
+  unsigned int i;
+  FMOD_Sound_GetLength(_track, &i, FMOD_TIMEUNIT_MS);
+  return i/1000.f;
+}
+void bootstrap_c::_advance_track(float t) {
+  auto c = _track_cursor();
+  /* auto l = _track_length(); */
+  /* if(c+i<l) */
+  FMOD_Channel_SetPosition(_chan, (c+t)*1000,FMOD_TIMEUNIT_MS );
+}
+
 void bootstrap_c::init() {
   /* init the mods */
   _mod0 = new mod0_c;
@@ -48,6 +60,7 @@ void bootstrap_c::run() {
   SDL_Event event;
   float time;
 
+  _advance_track(22.0f);
   while (treat_events(event)) {
     time = _track_cursor();
     cout << "time: " << time << endl;

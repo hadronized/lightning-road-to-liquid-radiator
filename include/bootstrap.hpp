@@ -17,6 +17,8 @@ class bootstrap_c {
   FMOD_CHANNEL *_chan;
 
   float _track_cursor();
+  float _track_length();
+  void _advance_track(float t);
 
 public :
   bootstrap_c();

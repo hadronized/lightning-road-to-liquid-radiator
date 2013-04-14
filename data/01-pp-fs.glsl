@@ -21,6 +21,6 @@ vec2 get_uv() {
 void main() {
   vec2 uvtex = uv_tex();
   vec2 uv = get_uv();
-  float c = clamp((2. - length(uv))*log(time-23.), 0., 1.);
-  frag = vec4(texture2D(offtex, uvtex)) + vec4(c, c, c*1.1, 1.);
+  float c = clamp((2. - length(uv))*log((time-22.)/2.), 0., 1.);
+  frag = vec4(texture2D(offtex, uvtex)) + vec4(c*1.1, c, c*1.3, 1.);
 } 
