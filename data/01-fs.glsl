@@ -16,7 +16,7 @@ float plasma() {
 }
 
 vec3 tex(vec3 uv) {
-  float v = sin(length(uv)*16.);
+  float v = sin(length(uv)*4.*time);
   return vec3(v*cos(time), 0.5 + v/2., 1. - v*sin(time));
 }
 
@@ -25,9 +25,6 @@ void main() {
   vec3 no = normalize(pos);
   vec3 ldir = normalize(lpos - pos);
   float d = max(0., dot(ldir, no));
-  vec3 r = reflect(no, normalize(pos - vec3(0., 0., 2.)));
-  float s = pow(max(0., dot(-ldir,r)), 20.);
-  float pv = plasma();
   //float scanline = mod(gl_FragCoord.y, 2.);
 
   frag = vec4(tex(pos), 1.) * d;
