@@ -5,21 +5,13 @@
 using namespace std;
 
 mod2_c::mod2_c() :
-  _stdVS(GL_VERTEX_SHADER),
   _stdFS(GL_FRAGMENT_SHADER) {
-  _stdVS.source(load_source(STD_LAVA_VS_PATH).c_str());
-  _stdVS.compile();
-  if (!_stdVS.compiled()) {
-    cerr << "STD Lava vertex shader failed to compile:\n" << _stdVS.compile_log() << endl;
-    exit(1);
-  }
   _stdFS.source(load_source(STD_LAVA_FS_PATH).c_str());
   _stdFS.compile();
   if (!_stdFS.compiled()) {
     cerr << "STD Lava fragment shader failed to compile:\n" << _stdFS.compile_log() << endl;
     exit(1);
   }
-  _stdP.attach(_stdVS);
   _stdP.attach(_stdFS);
   _stdP.link();
   if (!_stdP.linked()) {

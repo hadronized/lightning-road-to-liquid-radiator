@@ -50,6 +50,7 @@ void bootstrap_c::init() {
   /* init the mods */
   _mod0 = new mod0_c;
   _mod1 = new mod1_c;
+  _mod2 = new mod2_c;
   glEnable(GL_DEPTH_TEST); /* TODO: that should be done in the loop, at the beginning of a mod */
   /* init the softsynth */
   FMOD_System_CreateStream(_sndsys, TRACK_PATH.c_str(), FMOD_HARDWARE | FMOD_LOOP_OFF | FMOD_2D, 0, &_track);

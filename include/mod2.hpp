@@ -5,7 +5,6 @@
 
 class mod2_c {
   /* shader stuff */
-  program_c _stpVS;
   shader_c _stdFS;
   program_c _stdP;
 

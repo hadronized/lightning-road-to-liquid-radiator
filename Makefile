@@ -1,7 +1,7 @@
 CXX= clang++
 CXXFLAGS= -W -Wall -pedantic -DGL_GLEXT_PROTOTYPES -I./include -std=c++11
 LDFLAGS= -lSDL -lGL -L/usr/lib/nvidia-bumblebee -lfmodex
-OBJ=main.o common.o shader.o matrix.o bootstrap.o mod0.o mod1.o
+OBJ=main.o common.o shader.o matrix.o bootstrap.o mod0.o mod1.o mod2.o
 EXEC= d01
 
 .PHONY: all, clean
