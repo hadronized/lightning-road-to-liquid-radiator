@@ -53,10 +53,8 @@ void bootstrap_c::init() {
   _mod2 = new mod2_c;
   glEnable(GL_DEPTH_TEST); /* TODO: that should be done in the loop, at the beginning of a mod */
   /* init the softsynth */
-#if 0
   FMOD_System_CreateStream(_sndsys, TRACK_PATH.c_str(), FMOD_HARDWARE | FMOD_LOOP_OFF | FMOD_2D, 0, &_track);
   FMOD_System_PlaySound(_sndsys, FMOD_CHANNEL_FREE, _track, 0, &_chan);
-#endif
 }
 
 void bootstrap_c::run() {
