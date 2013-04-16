@@ -18,11 +18,16 @@ vec2 get_uv() {
   return uv;
 }
 
+float rand(vec2 co){
+  return fract(sin(dot(co,vec2(12.9898,78.233))) * 43758.5453);
+}
+
 float plasma(vec2 uv) {
   return
-    + sin(uv.x*10.+time) + sin(uv.y*10.)
-    + sin(length(uv)*16.) + sin(distance(uv, vec2(cos(time), sin(time)))*1.8)
-    + sin((uv.x*uv.y)*30.)
+    //+ sin(uv.x*10.+time) + sin(uv.y*10.)
+    //+ sin((uv.x+uv.y)*18.)
+    //+ sin(uv.x*8.) * sin(uv.y*8.)
+    + sin(distance(uv, vec2(0., -3.))*8.)
     ;
 }
 
@@ -34,7 +39,7 @@ float intersect_terrain(vec3 cam, vec3 ray) {
   vec3 p;
   for (float s = znear; s <= zfar; s += RAY_STEP) {
     p = cam + ray*s;
-    if (p.y <= plasma(p.xz/vec2(60., 30.))) { /* intersects with the terrain */
+    if (p.y <= plasma(p.xz/10.)) { /* intersects with the terrain */
       return s;
     }
     //d = distance(p,cam)*0.1;
@@ -60,4 +65,8 @@ void main() {
   } else {
     frag = vec4(0.);
   }
+#if 0
+  float pl = plasma(uv);
+  frag = vec4(pl, 2. - pl, 1.5 - pl/2., 1.);
+#endif
 }
