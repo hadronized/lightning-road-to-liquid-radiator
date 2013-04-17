@@ -61,7 +61,7 @@ void bootstrap_c::run() {
   SDL_Event event;
   float time;
 
-  _advance_track(26.5f);
+  _advance_track(27.5f);
   while (treat_events(event)) {
     time = _track_cursor();
     cout << "time: " << time << endl;
@@ -71,6 +71,7 @@ void bootstrap_c::run() {
     } else if (time >= 27.5) {
       _mod1->render(time);
     } else {
+
     }
 #endif
     _mod2->render(time);

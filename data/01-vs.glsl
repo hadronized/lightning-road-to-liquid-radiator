@@ -6,18 +6,19 @@ out vec3 gpos;
 uniform float time;
 
 void main() {
+  float t = time/2.;
   /* around Z */
   vec3 coZ = co;
-  coZ.x = co.x*cos(time)-co.y*sin(time);
-  coZ.y = co.x*sin(time)+co.y*cos(time);
+  coZ.x = co.x*cos(t)-co.y*sin(t);
+  coZ.y = co.x*sin(t)+co.y*cos(t);
   /* around Y */
   vec3 coYZ = coZ;
-  coYZ.x = coZ.x*cos(time)+coZ.z*sin(time);
-  coYZ.z = -coZ.x*sin(time)+coZ.z*cos(time);
+  coYZ.x = coZ.x*cos(t)+coZ.z*sin(t);
+  coYZ.z = -coZ.x*sin(t)+coZ.z*cos(t);
   /* around X */
   vec3 coXYZ = coYZ;
-  coXYZ.y = coYZ.y*sin(time)+coYZ.z*cos(time);
-  coXYZ.z = coYZ.y*cos(time)-coYZ.z*sin(time);
+  coXYZ.y = coYZ.y*sin(t)+coYZ.z*cos(t);
+  coXYZ.z = coYZ.y*cos(t)-coYZ.z*sin(t);
 
   gpos = coXYZ;
 }
