@@ -9,9 +9,29 @@ bootstrap_c::bootstrap_c() :
   _mod0(nullptr) {
   GLubyte const *glstr;
 
+#if SDL_GL_CONTEXT
   SDL_Init(SDL_INIT_VIDEO);
   SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL);
   cout << "init SDL" << endl;
+#endif
+#if GLX_GL_CONTEXT
+  _dpy = XOpenDisplay(0);
+  if (!_dpy)
+    cerr << "Failed to open X connexion" << endl;
+  auto root = DefaultRootWindow(_dpy);
+  GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+  auto vi = glXChooseVisual(_dpy, 0, att);
+  if (!vi)
+    cerr << "Failed to choose value visual" << endl;
+  auto cmap = XCreateColormap(_dpy, root, vi->visual, AllocNone);
+  XSetWindowAttributes swa;
+  swa.colormap = cmap;
+  swa.event_mask = ExposureMask | KeyPressMask;
+  _win = XCreateWindow(_dpy, root, 0, 0, 600, 600, 0, vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
+  XMapWindow(_dpy, _win);
+  _glc = glXCreateContext(_dpy, vi, NULL, GL_TRUE);
+  glXMakeCurrent(_dpy, _win, _glc);
+#endif
 
   glstr = glGetString(GL_VERSION);
   cout << "OpenGL Version String: " << glstr << endl;
@@ -24,7 +44,15 @@ bootstrap_c::bootstrap_c() :
 bootstrap_c::~bootstrap_c() {
   delete _mod0;
   delete _mod1;
+#if SDL_GL_CONTEXT
   SDL_Quit();
+#endif
+#if GLX_GL_CONTEXT
+  glXMakeCurrent(_dpy, None, NULL);
+  glXDestroyContext(_dpy, _glc);
+  XDestroyWindow(_dpy, _win);
+  XCloseDisplay(_dpy);
+#endif
   FMOD_System_Release(_sndsys);
 }
 
@@ -58,11 +86,10 @@ void bootstrap_c::init() {
 }
 
 void bootstrap_c::run() {
-  SDL_Event event;
   float time;
 
   //_advance_track(54.9f);
-  while (treat_events(event)) {
+  while (treat_events()) {
     time = _track_cursor();
     cout << "time: " << time << endl;
     if (time < 27.5f) {
@@ -72,11 +99,19 @@ void bootstrap_c::run() {
     } else {
       _mod2->render(time);
     }
+#if SDL_GL_CONTEXT
     SDL_GL_SwapBuffers();
+#endif
+#if GLX_GL_CONTEXT
+    glXSwapBuffers(_dpy, _win);
+#endif
   }
 }
 
-bool bootstrap_c::treat_events(SDL_Event &event) {
+bool bootstrap_c::treat_events() {
+#if SDL_GL_CONTEXT
+  SDL_Event event;
+
   while(SDL_PollEvent(&event)) {
     switch (event.type) {
       case SDL_QUIT :
@@ -94,6 +129,9 @@ bool bootstrap_c::treat_events(SDL_Event &event) {
       default :;
     }
   }
+#endif
+#if GLX_GL_CONTEXT
+#endif
 
   return true;
 }
