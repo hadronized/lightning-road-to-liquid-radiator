@@ -61,19 +61,17 @@ void bootstrap_c::run() {
   SDL_Event event;
   float time;
 
-  _advance_track(27.5f);
+  _advance_track(54.9f);
   while (treat_events(event)) {
     time = _track_cursor();
     cout << "time: " << time << endl;
-#if 0
-    if (time < 27.5) {
+    if (time < 27.5f) {
       _mod0->render(time);
-    } else if (time >= 27.5) {
+    } else if (time < 54.9f) {
       _mod1->render(time);
     } else {
+      _mod2->render(time);
     }
-#endif
-    _mod2->render(time);
     SDL_GL_SwapBuffers();
   }
 }
