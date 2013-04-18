@@ -19,7 +19,24 @@ bootstrap_c::bootstrap_c() :
   if (!_dpy)
     cerr << "Failed to open X connexion" << endl;
   auto root = DefaultRootWindow(_dpy);
-  GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+  //GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
+  GLint att[] =
+  {
+    GLX_X_RENDERABLE    , True,
+    GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
+    GLX_RENDER_TYPE     , GLX_RGBA_BIT,
+    GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
+    GLX_RED_SIZE        , 8,
+    GLX_GREEN_SIZE      , 8,
+    GLX_BLUE_SIZE       , 8,
+    GLX_ALPHA_SIZE      , 8,
+    GLX_DEPTH_SIZE      , 24,
+    GLX_STENCIL_SIZE    , 0,
+    GLX_DOUBLEBUFFER    , True,
+    //GLX_SAMPLE_BUFFERS  , 1,
+    //GLX_SAMPLES         , 4,
+    None
+  };
   auto vi = glXChooseVisual(_dpy, 0, att);
   if (!vi)
     cerr << "Failed to choose value visual" << endl;
