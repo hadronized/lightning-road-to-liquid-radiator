@@ -59,8 +59,8 @@ void main() {
     vec3 hit = cam + ray*terrain;
     vec3 no = vec3(0., 1., 0.);
     float pl = plasma(hit.xz/20.);
+
     frag = vec4(pl/2., 0.5 - pl/3., 0.5 + pl/2., 1.);
-    //frag *= vec4(1. - terrain/zfar);
     frag *= vec4(hit.y*0.5);
   } else {
     frag = vec4(0.);

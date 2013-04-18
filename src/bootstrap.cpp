@@ -71,7 +71,6 @@ void bootstrap_c::run() {
     } else if (time >= 27.5) {
       _mod1->render(time);
     } else {
-
     }
 #endif
     _mod2->render(time);
