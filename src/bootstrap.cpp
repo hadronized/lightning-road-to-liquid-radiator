@@ -27,7 +27,7 @@ bootstrap_c::bootstrap_c() :
   XSetWindowAttributes swa;
   swa.colormap = cmap;
   swa.event_mask = ExposureMask | KeyPressMask;
-  _win = XCreateWindow(_dpy, root, 0, 0, 600, 600, 0, vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
+  _win = XCreateWindow(_dpy, root, 0, 0, WIDTH, HEIGHT, 0, vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
   XMapWindow(_dpy, _win);
   _glc = glXCreateContext(_dpy, vi, NULL, GL_TRUE);
   glXMakeCurrent(_dpy, _win, _glc);
@@ -65,7 +65,7 @@ float bootstrap_c::_track_cursor() {
 float bootstrap_c::_track_length() {
   unsigned int i;
   FMOD_Sound_GetLength(_track, &i, FMOD_TIMEUNIT_MS);
-  return i/1000.f;
+  return i / 1000.f;
 }
 void bootstrap_c::_advance_track(float t) {
   auto c = _track_cursor();
