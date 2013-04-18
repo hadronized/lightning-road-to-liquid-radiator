@@ -30,9 +30,9 @@ void main() {
   float d = hit/100.;
   float pip = (ray.y < 0. ? -1. : 1.);
   vec2 lookup = vec2(mod(hit*0.01, 1.), acos(normalize(pip*ray.xy).x) / PI);
-  float atten = max(1., 0.1 * hit);
+  float atten = max(1., 0.2 * hit);
 
-  float f = tex(lookup+vec2(0., 0./*time/5.*/))/atten;
+  float f = tex(lookup+vec2(0., time/5.))/atten;
   frag = vec4(f/2., f*sin(time)/2., 0., 1.) * mod(gl_FragCoord.y, 2.);
   //frag *= distance(get_uv(), vec2(0.0));
 }

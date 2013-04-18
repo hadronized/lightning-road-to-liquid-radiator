@@ -41,8 +41,6 @@ float bootstrap_c::_track_length() {
 }
 void bootstrap_c::_advance_track(float t) {
   auto c = _track_cursor();
-  /* auto l = _track_length(); */
-  /* if(c+i<l) */
   FMOD_Channel_SetPosition(_chan, (c+t)*1000,FMOD_TIMEUNIT_MS );
 }
 
@@ -61,7 +59,7 @@ void bootstrap_c::run() {
   SDL_Event event;
   float time;
 
-  //_advance_track(54.9f);
+  _advance_track(27.5f);
   while (treat_events(event)) {
     time = _track_cursor();
     cout << "time: " << time << endl;
