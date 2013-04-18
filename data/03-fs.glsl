@@ -40,8 +40,6 @@ float intersect_terrain(vec3 cam, vec3 ray) {
     p = cam + ray*s;
     if (p.y <= (plasma(p.xz/20.)-3.)) { /* intersects with the terrain */
       return s;
-    } else if (p.y >= (plasma(p.zx/20.)+12.)) {
-      return s;
     }
     d *= 1.01;
   }
@@ -66,8 +64,4 @@ void main() {
   } else {
     frag = vec4(0.);
   }
-#if 0
-  float pl = plasma(uv);
-  frag = vec4(pl, 0.5 - pl/3., 0.5 + pl/2.*sin(time), 1.);
-#endif
 }
