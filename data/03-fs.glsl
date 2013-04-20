@@ -63,13 +63,14 @@ void main() {
   vec3 cam = vec3((time-54.9)*5, 4.-sin(time/2.)*4., -(time-54.9)*5.);
   float terrain = intersect_terrain(cam, ray);
   vec3 lpos = vec3(0., 8., 0.);
+  float v = max(0.1, min(1., 1.5 - pow(length(vec2(uv.x, uv.y * (res.x/res.y))), 2.)));
 
   if (terrain != 0.) {
     vec3 hit = cam + ray*terrain;
     //float sweepDist = distance(hit, vec3(cam.x, 0., cam.z));
     float sweepDist = terrain;
     float pl = plasma(hit.xz/20.);
-
+    
     frag = vec4(1. - pl/3., 0.5 - pl, pl*-0.85, 1.) * (1. - terrain/zfar);
 #if 0 /* several colors */
     frag += vec4(/* sweeps */
@@ -99,7 +100,7 @@ void main() {
       + sweep(sweepDist, 71.3659, 1.)
       + sweep(sweepDist, 71.5982, 1.)
       ) * pow(1. - terrain/zfar, 2.);
-
+      frag *= v;
   } else {
     frag = vec4(0.);
   }
