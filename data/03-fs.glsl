@@ -10,7 +10,7 @@ out vec4 frag;
 float PI = 3.14159265359;
 float fovy = PI/2.;
 const float znear = 0.;
-const float zfar = 100.;
+const float zfar = 500.;
 
 vec2 get_uv() {
   vec2 uv = 2. * gl_FragCoord.xy / res.xy - 1.;
@@ -50,8 +50,8 @@ float intersect_terrain(vec3 cam, vec3 ray) {
 
 void main() {
   vec2 uv = get_uv();
-  vec3 ray = normalize(vec3(uv.x, uv.y-0.0, -1. / tan(fovy/2.)));
-  vec3 cam = vec3(0., 0., -time*4.);
+  vec3 ray = normalize(vec3(uv.x, uv.y-max(0., 0.5*pow(sin((time-54.9)*0.1), 2)), -1. / tan(fovy/2.)));
+  vec3 cam = vec3((time-54.9)*5, 4.-sin(time/2.)*4., -(time-54.9)*5.);
   float terrain = intersect_terrain(cam, ray);
   vec3 lpos = vec3(0., 8., 0.);
 
