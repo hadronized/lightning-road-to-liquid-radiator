@@ -47,7 +47,7 @@ float intersect_terrain(vec3 cam, vec3 ray) {
 }
 
 float sweep(float d) {
-  float a = 80.*(mod(max(0., time - 68.5), 6.825));
+  float a = 80.*(mod(max(0., time - 68.6), 6.825));
   float e = 2.;
   float r = abs(d - a);
 
