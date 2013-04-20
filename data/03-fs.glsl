@@ -41,7 +41,7 @@ float intersect_terrain(vec3 cam, vec3 ray) {
     if (p.y <= (plasma(p.xz/20.)-3.)) { /* intersects with the terrain */
       return s;
     }
-    d *= 1.01;
+    d *= 1.008;
   }
   return 0.;
 }
@@ -71,6 +71,7 @@ void main() {
     float pl = plasma(hit.xz/20.);
 
     frag = vec4(1. - pl/3., 0.5 - pl, pl*-0.85, 1.) * (1. - terrain/zfar);
+#if 0 /* several colors */
     frag += vec4(/* sweeps */
         vec3(0., 0., 2.5) * (sweep(sweepDist, 68.6, 2.)
                           +  sweep(sweepDist, 72.0071, 6.) )
@@ -83,7 +84,22 @@ void main() {
                            +  sweep(sweepDist, 71.1557, 1.)
                            +  sweep(sweepDist, 71.3659, 1.)
                            +  sweep(sweepDist, 71.5982, 1.) )
-      , 1.) * (1. - terrain/zfar)*0.5;
+      , 1.) * pow(1. - terrain/zfar, 2.);
+#endif
+    frag += vec4(0., 0., 2.5, 1.) * (
+        sweep(sweepDist, 68.6, 2.)
+      + sweep(sweepDist, 72.0071, 6.)
+      + sweep(sweepDist, 69., 2)
+      + sweep(sweepDist, 69.22, 2.)
+      + sweep(sweepDist, 69.8583, 2.)
+      + sweep(sweepDist, 69.6683, 2.)
+      + sweep(sweepDist, 70.0864, 2.)
+      + sweep(sweepDist, 70.9373, 1.)
+      + sweep(sweepDist, 71.1557, 1.)
+      + sweep(sweepDist, 71.3659, 1.)
+      + sweep(sweepDist, 71.5982, 1.)
+      ) * pow(1. - terrain/zfar, 2.);
+
   } else {
     frag = vec4(0.);
   }
