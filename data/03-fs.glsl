@@ -46,13 +46,12 @@ float intersect_terrain(vec3 cam, vec3 ray) {
   return 0.;
 }
 
-float sweep(float d) {
-  float a = 80.*(mod(max(0., time - 68.6), 6.825));
-  float e = 2.;
+float sweep(float d, float dl, float t) { /* d is the sweep distance, dl the time delay and r the thickness of the sweep */
+  float a = 80.*(mod(max(0., time - dl), 6.82));
   float r = abs(d - a);
 
-  if (r <= e) {
-    return e - r;
+  if (r <= t) {
+    return t - r;
   } else {
     return 0.;
   }
@@ -67,10 +66,24 @@ void main() {
 
   if (terrain != 0.) {
     vec3 hit = cam + ray*terrain;
+    //float sweepDist = distance(hit, vec3(cam.x, 0., cam.z));
+    float sweepDist = terrain;
     float pl = plasma(hit.xz/20.);
 
     frag = vec4(1. - pl/3., 0.5 - pl, pl*-0.85, 1.) * (1. - terrain/zfar);
-    frag += vec4(0., 0.5, 1.5 - sin(terrain), 1.) * sweep(distance(hit, vec3(cam.x, 0., cam.z))) * (1. - terrain/zfar)*0.5;
+    frag += vec4(/* sweeps */
+        vec3(0., 0., 2.5) * (sweep(sweepDist, 68.6, 2.)
+                          +  sweep(sweepDist, 72.0071, 6.) )
+      + vec3(2.5, 0., 0.) * (sweep(sweepDist, 69., 2)
+                          +  sweep(sweepDist, 69.22, 2.) )
+      + vec3(0., 2.5, 0.) * (sweep(sweepDist, 69.8583, 2.)
+                          +  sweep(sweepDist, 69.6683, 2.)
+                          +  sweep(sweepDist, 70.0864, 2.) )
+      + vec3(2.5, 0., 2.5) * (sweep(sweepDist, 70.9373, 1.)
+                           +  sweep(sweepDist, 71.1557, 1.)
+                           +  sweep(sweepDist, 71.3659, 1.)
+                           +  sweep(sweepDist, 71.5982, 1.) )
+      , 1.) * (1. - terrain/zfar)*0.5;
   } else {
     frag = vec4(0.);
   }
