@@ -47,8 +47,8 @@ float intersect_terrain(vec3 cam, vec3 ray) {
 }
 
 float sweep(float d) {
-  float a = 60.*(mod(time - 68.5, 6.8));
-  float e = 3.;
+  float a = 80.*(mod(max(0., time - 68.5), 6.825));
+  float e = 2.;
   float r = abs(d - a);
 
   if (r <= e) {
@@ -69,9 +69,8 @@ void main() {
     vec3 hit = cam + ray*terrain;
     float pl = plasma(hit.xz/20.);
 
-    frag = vec4(1. - pl/3., 0.5 - pl, pl*-0.85, 1.);
-    frag *= 1. - terrain/zfar;
-    frag += vec4(sin(time/6.8), 1. - sin(time/6.8), cos(time/6.8), 1.) * sweep(distance(hit, vec3(cam.x, 0., cam.z)));
+    frag = vec4(1. - pl/3., 0.5 - pl, pl*-0.85, 1.) * (1. - terrain/zfar);
+    frag += vec4(0., 0.5, 1.5 - sin(terrain), 1.) * sweep(distance(hit, vec3(cam.x, 0., cam.z))) * (1. - terrain/zfar)*0.5;
   } else {
     frag = vec4(0.);
   }
