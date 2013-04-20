@@ -46,7 +46,17 @@ float intersect_terrain(vec3 cam, vec3 ray) {
   return 0.;
 }
 
+float sweep(float d) {
+  float a = 60.*(mod(time - 68.5, 6.8));
+  float e = 3.;
+  float r = abs(d - a);
 
+  if (r <= e) {
+    return e - r;
+  } else {
+    return 0.;
+  }
+}
 
 void main() {
   vec2 uv = get_uv();
@@ -61,6 +71,7 @@ void main() {
 
     frag = vec4(1. - pl/3., 0.5 - pl, pl*-0.85, 1.);
     frag *= 1. - terrain/zfar;
+    frag += vec4(sin(time/6.8), 1. - sin(time/6.8), cos(time/6.8), 1.) * sweep(distance(hit, vec3(cam.x, 0., cam.z)));
   } else {
     frag = vec4(0.);
   }
