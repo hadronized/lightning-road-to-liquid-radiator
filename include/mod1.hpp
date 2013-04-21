@@ -5,13 +5,21 @@
 
 class mod1_c {
   /* shader stuff */
-  shader_c _stdFS;
-  program_c _stdP;
+  /* tunnel program */
+  shader_c _tunFS;
+  shader_c _thunVS;
+  program_c _tunP;
+  /* thunders field program */
+  shader_c _thunTCS;
+  shader_c _thunTES;
+  shader_c _thunGS;
+  shader_c _thunFS;
+  program_c _thunP;
 
   /* uniforms stuff */
-  GLint _stdTimeIndex;
-  GLint _stdRes;
-  GLint _stdFovy;
+  GLint _tunTimeIndex;
+  GLint _tunRes;
+  GLint _tunFovy;
   void _init_uniforms();
 
 public :
