@@ -10,7 +10,7 @@ bootstrap_c::bootstrap_c() :
   GLubyte const *glstr;
 
   SDL_Init(SDL_INIT_VIDEO);
-  SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL);
+  SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL | (FULLSCREEN ? SDL_FULLSCREEN : 0));
   cout << "init SDL" << endl;
 
   glstr = glGetString(GL_VERSION);
@@ -59,10 +59,10 @@ void bootstrap_c::run() {
   SDL_Event event;
   float time;
 
-  //_advance_track(54.5f);
+  _advance_track(54.5f);
   while (treat_events(event)) {
     time = _track_cursor();
-    cout << "time: " << time << endl;
+  //  cout << "time: " << time << endl;
     if (time < 27.5f) {
       _mod0->render(time);
     } else if (time < 54.9f) {

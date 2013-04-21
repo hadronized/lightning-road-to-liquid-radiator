@@ -4,10 +4,11 @@
 #include <string>
 
 float const PI = 3.14159265359;
-int const WIDTH = 800;
-int const HEIGHT = 600;
+int const WIDTH = 1920;//800;
+int const HEIGHT = 1080;//600;
 float const RATIO = 1.f * WIDTH / HEIGHT;
 int const DEPTH = 32;
+bool const FULLSCREEN = true;
 float const FOVY = 75.*PI/180.;
 float const ZNEAR = 0.01f;
 float const ZFAR = 1000.f;

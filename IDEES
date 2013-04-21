@@ -4,8 +4,9 @@ Mod 0 – Introduction
 00:00, on commence avec de gros pixels en nuance de gris. On les laisse bouger un peu, en écrivant je ne sais encore où le texte
 suivant :
 
-  « skp is proud to present…
-                                                his first production ever… »
+  skp is proud to present you…
+                                              …his very first production…
+  wc
 
 À environ 00:13, on dépixélise pour faire apparaître un cube qui tourne sur lui-même éclairé par phong. On va ensuite transformer
 ce cube petit à petit pour finir en une sphère parfaite à environ 00:26, avec une vive lumière pour faire la transition. On pourra
@@ -24,7 +25,6 @@ Mod 2 – Lava
 
 Ce mod commence au dessus d’un sol en mouvement selon un plasma, qui doit ressembler à de la lave. Le mouvement doit être le plus
 fluide possible. Sur chaque note de piano, on éclaire d’une couleur différente quelque chose qui doit être répété dans l’espace.
-Sur chaque timballe basse, on affiche un éclaire qu’on laisse allumé un certain petit bout de temps.
 
 
 SYNCHRO

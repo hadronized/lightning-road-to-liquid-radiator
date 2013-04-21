@@ -67,7 +67,6 @@ void main() {
 
   if (terrain != 0.) {
     vec3 hit = cam + ray*terrain;
-    //float sweepDist = distance(hit, vec3(cam.x, 0., cam.z));
     float sweepDist = terrain;
     float pl = plasma(hit.xz/20.);
     
