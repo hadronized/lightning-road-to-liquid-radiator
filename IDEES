@@ -6,7 +6,6 @@ suivant :
 
   skp is proud to present you…
                                               …his very first production…
-  wc
 
 À environ 00:13, on dépixélise pour faire apparaître un cube qui tourne sur lui-même éclairé par phong. On va ensuite transformer
 ce cube petit à petit pour finir en une sphère parfaite à environ 00:26, avec une vive lumière pour faire la transition. On pourra
@@ -17,6 +16,9 @@ Mod 1 – Sphere, RGB distorsion et tunnel
 
 Dans ce mod, plus de sphère. On affiche un tunnel dans lequel on évolue. Le tunnel est déjà quasiment entièrement codé, il
 faudrait juste lui rajouter un peu de complexité voire d’animation.
+
+Bon on va commencer par ajouter les éclairs. Pour ça, c’est con. On va avoir le vs qui va prendre un simple point qui doit être
+généré aléatoirement sur CPU (pour l’instant). Ensuite, on normalize ce point
 
 On finit ce mod sur un effet TV qui bug et on passe au mod suivant.
 
