@@ -25,6 +25,7 @@ mod1_c::mod1_c() :
     exit(2);
   }
   /* thunders field setup */
+#if 0
   _thunVS.source(load_source(THUN_VS_PATH).c_str());
   _thunVS.compile();
   if (!_thunVS.compiled()) {
@@ -54,6 +55,7 @@ mod1_c::mod1_c() :
     cerr << "Thunder fragment shader failed to compile:\n" << _thunFS.compile_log() << endl;
     exit (1);
   }
+#endif
 
   _init_uniforms();
 }
