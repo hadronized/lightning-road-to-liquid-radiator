@@ -24,6 +24,8 @@ bootstrap_c::bootstrap_c() :
 bootstrap_c::~bootstrap_c() {
   delete _mod0;
   delete _mod1;
+  delete _mod2;
+  delete _mod3;
   SDL_Quit();
   FMOD_System_Release(_sndsys);
 }
@@ -49,6 +51,7 @@ void bootstrap_c::init() {
   _mod0 = new mod0_c;
   _mod1 = new mod1_c;
   _mod2 = new mod2_c;
+  _mod3 = new mod3_c;
   glEnable(GL_DEPTH_TEST); /* TODO: that should be done in the loop, at the beginning of a mod */
   /* init the softsynth */
   FMOD_System_CreateStream(_sndsys, TRACK_PATH.c_str(), FMOD_HARDWARE | FMOD_LOOP_OFF | FMOD_2D, 0, &_track);
@@ -67,8 +70,10 @@ void bootstrap_c::run() {
       _mod0->render(time);
     } else if (time < 54.9f) {
       _mod1->render(time);
-    } else {
+    } else if (time < 137.1812f) {
       _mod2->render(time);
+    } else {
+      _mod3->render(time);
     }
     SDL_GL_SwapBuffers();
   }

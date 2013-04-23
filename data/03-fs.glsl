@@ -16,14 +16,14 @@ const float zfar = 500.;
 
 vec2 get_uv() {
   vec2 uv = 2. * gl_FragCoord.xy / res.xy - 1.;
-  uv.y /= res.x/res.y;
+  uv.y *= res.y/res.x;
   return uv;
 }
 
 float plasma(vec2 uv) {
   return 
       sin(uv.x*8.+time) * sin(uv.y*8.)
-    + sin(length(vec2(sin(uv.x+PI_2), sin(uv.y)))*24.+time)
+    + sin(length(vec2(cos(uv.x), sin(uv.y)))*24.+time)
     + sin(uv.y*12.)
     ;
 }
@@ -43,12 +43,7 @@ float intersect_terrain(vec3 cam, vec3 ray) {
 float sweep(float d, float dl, float t) { /* d is the sweep distance, dl the time delay and r the thickness of the sweep */
   float a = 80.*(mod(max(0., time - dl), 6.82));
   float r = abs(d - a);
-
-  if (r <= t) {
-    return t - r;
-  } else {
-    return 0.;
-  }
+  return max (t - r, 0.);
 }
 
 void main() {
@@ -67,21 +62,6 @@ void main() {
     
     float atten = 1. - terrain/zfar;
     frag = vec4(1. - pl/3., 0.5 - pl, pl*-0.85, 1.) * atten;
-#if 0
-    frag += vec4(/* sweeps */
-        vec3(0., 0., 2.5) * (sweep(sweepDist, 68.6, 2.)
-                          +  sweep(sweepDist, 72.0071, 6.) )
-      + vec3(2.5, 0., 0.) * (sweep(sweepDist, 69., 2)
-                          +  sweep(sweepDist, 69.22, 2.) )
-      + vec3(0., 2.5, 0.) * (sweep(sweepDist, 69.8583, 2.)
-                          +  sweep(sweepDist, 69.6683, 2.)
-                          +  sweep(sweepDist, 70.0864, 2.) )
-      + vec3(2.5, 0., 2.5) * (sweep(sweepDist, 70.9373, 1.)
-                           +  sweep(sweepDist, 71.1557, 1.)
-                           +  sweep(sweepDist, 71.3659, 1.)
-                           +  sweep(sweepDist, 71.5982, 1.) )
-      , 1.) * pow(atten, 2.);
-#endif
     frag += vec4(0., 0., 2.5, 1.) * (
         sweep(sweepDist, 68.6, 2.)
       + sweep(sweepDist, 72.0071, 6.)
