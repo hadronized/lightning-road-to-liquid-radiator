@@ -11,7 +11,7 @@ const float PI = 3.14159265359;
 const float PI2 = 2.*PI;
 const float PI_2 = PI / 2.;
 const float fovy = PI_2;
-const float znear = 8.;
+const float znear = 6.;
 const float zfar = 500.;
 
 vec2 get_uv() {
@@ -58,7 +58,7 @@ void main() {
   vec3 cam = vec3(sinstart*5., 4.-sin(time/2.)*4., -sinstart*5.);
   float terrain = intersect_terrain(cam, ray);
   vec3 lpos = vec3(0., 8., 0.);
-  //float v = max(0.1, min(1., 1.5 - pow(length(vec2(uv.x, uv.y * (res.x/res.y))), 2.)));
+  float v = max(0.1, min(1., 1.5 - pow(length(vec2(uv.x, uv.y * (res.x/res.y))), 2.)));
 
   if (terrain != 0.) {
     vec3 hit = cam + ray*terrain;
@@ -94,9 +94,10 @@ void main() {
       + sweep(sweepDist, 71.1557, 1.)
       + sweep(sweepDist, 71.3659, 1.)
       + sweep(sweepDist, 71.5982, 1.)
-      ) * pow(atten, 2.);
-   //   frag *= v;
+      ) * pow(atten, 2);
   } else {
     frag = vec4(0.);
   }
+
+  frag *= v;
 }
