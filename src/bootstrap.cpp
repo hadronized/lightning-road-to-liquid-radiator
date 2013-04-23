@@ -62,7 +62,7 @@ void bootstrap_c::run() {
   _advance_track(57.5f);
   while (treat_events(event)) {
     time = _track_cursor();
-  //  cout << "time: " << time << endl;
+    cout << "time: " << time << endl;
     if (time < 27.5f) {
       _mod0->render(time);
     } else if (time < 54.9f) {
