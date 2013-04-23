@@ -11,8 +11,7 @@ const float PI = 3.14159265359;
 const float PI2 = 2.*PI;
 const float PI_2 = PI / 2.;
 const float fovy = PI_2;
-const float znear = 6.;
-const float zfar = 500.;
+const float zfar = 300.;
 
 vec2 get_uv() {
   vec2 uv = 2. * gl_FragCoord.xy / res.xy - 1.;
@@ -30,6 +29,8 @@ float plasma(vec2 uv) {
 
 float intersect_terrain(vec3 cam, vec3 ray) {
   vec3 p;
+  float znear = cam.y / dot(ray, vec3(0., -1., 0.));
+
   for (float s = znear, d = 1.; s <= zfar; s += (RAY_STEP*d)) {
     p = cam + ray*s;
     if (p.y <= (plasma(p.xz/20.)-3.)) { /* intersects with the terrain */
