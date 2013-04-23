@@ -34,16 +34,15 @@ float heightmap(vec2 xz) {
   return sin(xz.x+time)*sin(xz.y)/2.;
 }
 
-float intersect_terrain(vec3 cam, vec3 ray) {
+vec4 intersect_terrain(vec3 cam, vec3 ray) {
   vec3 p;
   for (float s = znear, d = 1.; s <= zfar; s += (RAY_STEP*d)) {
     p = cam + ray*s;
-    if (p.y <= (plasma(p.xz/20.)-3.)) { /* intersects with the terrain */
-      return s;
-    }
+    if (p.y <= (plasma(p.xz/20.)-3.)) /* intersects with the terrain */
+      return vec3(p, s);
     d *= 1.008;
   }
-  return 0.;
+  return vec4(0.);
 }
 
 float sweep(float d, float dl, float t) { /* d is the sweep distance, dl the time delay and r the thickness of the sweep */
@@ -61,14 +60,15 @@ void main() {
   vec2 uv = get_uv();
   vec3 ray = normalize(vec3(uv.x, uv.y-max(0., 0.5*pow(sin((time-54.9)*0.1), 2)), -1. / tan(fovy/2.)));
   vec3 cam = vec3((time-54.9)*5, 4.-sin(time/2.)*4., -(time-54.9)*5.);
-  float terrain = intersect_terrain(cam, ray);
+  vec4 hit = intersect_terrain(cam, ray);
   vec3 lpos = vec3(0., 8., 0.);
   float v = max(0.1, min(1., 1.5 - pow(length(vec2(uv.x, uv.y * (res.x/res.y))), 2.)));
 
-  if (terrain != 0.) {
-    vec3 hit = cam + ray*terrain;
-    float sweepDist = terrain;
-    float pl = plasma(hit.xz/20.);
+  if (hit.w != 0.) {
+    //vec3 hit = cam + ray*terrain;
+    float sweepDist = hit.w;
+    //float pl = plasma(hit.xz/20.);
+    float pl = hit.y;
     
     frag = vec4(1. - pl/3., 0.5 - pl, pl*-0.85, 1.) * (1. - terrain/zfar);
 #if 0 /* several colors */
@@ -98,7 +98,7 @@ void main() {
       + sweep(sweepDist, 71.1557, 1.)
       + sweep(sweepDist, 71.3659, 1.)
       + sweep(sweepDist, 71.5982, 1.)
-      ) * pow(1. - terrain/zfar, 2.);
+      ) * pow(1. - hit.w/zfar, 2.);
       frag *= v;
   } else {
     frag = vec4(0.);
