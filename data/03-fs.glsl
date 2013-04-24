@@ -3,7 +3,7 @@
 #define RAY_STEP 0.1
 
 uniform float time;
-uniform vec2 res;
+uniform vec4 res;
 
 out vec4 frag;
 
@@ -14,8 +14,8 @@ const float fovy = PI_2;
 const float zfar = 300.;
 
 vec2 get_uv() {
-  vec2 uv = 2. * gl_FragCoord.xy / res.xy - 1.;
-  uv.y *= res.y/res.x;
+  vec2 uv = 2. * gl_FragCoord.xy * res.zw - 1.;
+  uv.y *= res.x*res.z;
   return uv;
 }
 

@@ -30,7 +30,7 @@ void mod2_c::_init_uniforms() {
   _stdRes = _stdP.map_uniform("res");
   _stdFovy = _stdP.map_uniform("fovy");
   glUseProgram(_stdP.id());
-  glUniform2f(_stdRes, WIDTH, HEIGHT);
+  glUniform4f(_stdRes, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
   glUniform1f(_stdFovy, FOVY);
 }
 
