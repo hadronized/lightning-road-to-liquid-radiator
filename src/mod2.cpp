@@ -37,6 +37,5 @@ void mod2_c::_init_uniforms() {
 void mod2_c::render(float time) {
   glUseProgram(_stdP.id());
   glUniform1f(_stdTimeIndex, time);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glRectf(-1.f, 1.f, 1.f, -1.f);
 }

@@ -62,18 +62,21 @@ void bootstrap_c::run() {
   SDL_Event event;
   float time;
 
-  //_advance_track(57.5f);
-  _advance_track(135.f);
+  _advance_track(54.5f);
   while (treat_events(event)) {
     time = _track_cursor();
     cout << "time: " << time << endl;
     if (time < 27.5f) {
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       _mod0->render(time);
     } else if (time < 54.9f) {
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       _mod1->render(time);
     } else if (time < 136.9f) {
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       _mod2->render(time);
     } else {
+      glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       _mod3->render(time);
     }
     SDL_GL_SwapBuffers();

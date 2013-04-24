@@ -75,6 +75,5 @@ void mod1_c::_init_uniforms() {
 void mod1_c::render(float time) {
   glUseProgram(_tunP.id());
   glUniform1f(_tunTimeIndex, time);
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glRectf(-1.f, 1.f, 1.f, -1.f);
 }

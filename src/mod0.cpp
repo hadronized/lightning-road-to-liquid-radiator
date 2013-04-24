@@ -174,7 +174,6 @@ void mod0_c::render(float time) {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
   /* post-process */
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glUseProgram(_ppP.id());
   glUniform1f(_ppTimeIndex, time);
   glBindTexture(GL_TEXTURE_2D, _offtex);
