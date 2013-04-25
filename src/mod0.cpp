@@ -181,3 +181,10 @@ void mod0_c::render(float time) {
   glUseProgram(0); /* end of frame */
 }
 
+program_c & mod0_c::cube_program() {
+  return _stdP;
+}
+
+GLuint mod0_c::cube() {
+  return _cube;
+}

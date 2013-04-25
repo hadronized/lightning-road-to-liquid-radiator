@@ -78,6 +78,8 @@ public :
   ~mod0_c();
 
   void render(float time);
+  program_c & cube_program(void);
+  GLuint cube(void);
 };
 
 #endif /* guard */

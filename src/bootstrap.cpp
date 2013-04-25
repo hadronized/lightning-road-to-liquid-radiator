@@ -50,7 +50,7 @@ void bootstrap_c::init() {
   /* init the mods */
   _mod0 = new mod0_c;
   _mod1 = new mod1_c;
-  _mod2 = new mod2_c;
+  _mod2 = new mod2_c(_mod0->cube_program(), _mod0->cube());
   _mod3 = new mod3_c;
   glEnable(GL_DEPTH_TEST); /* TODO: that should be done in the loop, at the beginning of a mod */
   /* init the softsynth */
@@ -62,7 +62,7 @@ void bootstrap_c::run() {
   SDL_Event event;
   float time;
 
-  //_advance_track(54.5f);
+  _advance_track(100.5f);
   while (treat_events(event)) {
     time = _track_cursor();
     cout << "time: " << time << endl;

@@ -28,6 +28,12 @@ Mod 2 – Lava
 Ce mod commence au dessus d’un sol en mouvement selon un plasma, qui doit ressembler à de la lave. Le mouvement doit être le plus
 fluide possible. Sur chaque note de piano, on éclaire d’une couleur différente quelque chose qui doit être répété dans l’espace.
 
+Bon maintenant il nous faut la partie finale. Celle-ci va être assez simple : on laisse la lave telle quelle, et on rajoute
+le cube qui bouge vers la sphère vers le cube vers la sphère etc. Le cube arrivera du zfar pour venir s’écraser sur l’écran.
+L’effet n’est pas top mais on n’a plus vraiment le temps en fait… On va reprendre le vertex array, qui ne change pas puisqu’on
+utilise le même programme. Pareil, on va reprendre le même programme. Il faut juste voir les uniformes. On initialise la matrice de
+projection – qui est aussi envoyée et le temps dans le mod0. On peut donc simplement set une variable time.
+
 
 SYNCHRO
 -------
