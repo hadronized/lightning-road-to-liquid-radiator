@@ -24,11 +24,10 @@ std::string const STD_GS_PATH      = "./data/01-gs.glsl";
 std::string const PP_VS_PATH       = "./data/01-pp-vs.glsl";
 std::string const PP_FS_PATH       = "./data/01-pp-fs.glsl";
 std::string const TUNNEL_FS_PATH   = "./data/02-fs.glsl";
-std::string const THUN_VS_PATH     = "./data/02-fs.glsl";
-std::string const THUN_TCS_PATH    = "./data/02-tcs.glsl";
-std::string const THUN_TES_PATH    = "./data/02-tes.glsl";
-std::string const THUN_GS_PATH     = "./data/02-gs.glsl";
-std::string const THUN_FS_PATH     = "./data/02-fs.glsl";
+std::string const THUN_VS_PATH     = "./data/thun-fs.glsl";
+std::string const THUN_TCS_PATH    = "./data/thun-tcs.glsl";
+std::string const THUN_TES_PATH    = "./data/thun-tes.glsl";
+std::string const THUN_FS_PATH     = "./data/thun-fs.glsl";
 std::string const STD_LAVA_FS_PATH = "./data/03-fs.glsl";
 std::string const FINAL_FS_PATH    = "./data/04-fs.glsl";
 

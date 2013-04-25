@@ -6,7 +6,10 @@
 using namespace std;
 
 bootstrap_c::bootstrap_c() :
-  _mod0(nullptr) {
+    _mod0(nullptr)
+  , _mod1(nullptr)
+  , _mod2(nullptr)
+  , _mod3(nullptr) {
   GLubyte const *glstr;
 
   SDL_Init(SDL_INIT_VIDEO);
