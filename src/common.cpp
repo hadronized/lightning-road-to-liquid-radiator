@@ -11,7 +11,8 @@ std::string load_source(std::string const &path) {
     ss << fh.rdbuf();
     fh.close();
   } else {
-    throw ("file not found: " + path);
+    std::cerr << "'" << path << "' can't be open" << std::endl;
+    exit(1);
   }
 
   return ss.str();

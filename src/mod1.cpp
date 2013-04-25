@@ -32,6 +32,7 @@ mod1_c::mod1_c() :
     exit(1);
   }
   _thunTCS.source(load_source(THUN_TCS_PATH).c_str());
+  _thunTCS.compile();
   if (!_thunTCS.compiled()) {
     cerr << "Thunder tessellation control shader failed to compile:\n" << _thunTCS.compile_log() << endl;
     exit(1);

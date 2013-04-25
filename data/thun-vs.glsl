@@ -2,7 +2,7 @@
 
 out vec3 gco;
 
-uniform flooat time;
+uniform float time;
 
 float rand(vec2 co){
   return fract(sin(dot(co.xy ,vec2(12.9898,78.233))) * 43758.5453);
