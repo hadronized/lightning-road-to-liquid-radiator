@@ -2,15 +2,16 @@
 
 out vec4 frag;
 
-uniform vec2 res;
+uniform vec4 res;
 uniform float time;
 
 float PI = 3.14159265359;
 float fovy = PI/2.;
 
 vec2 get_uv() {
-  return vec2(2. * gl_FragCoord.x / res.x - 1.,
-             (2. * gl_FragCoord.y / res.y - 1.) / (res.x / res.y));
+  vec2 uv = 2. * gl_FragCoord.xy * res.zw -1.;
+  uv.y *= res.x*res.z;
+  return uv;
 }
 
 float tunnel(vec3 ray, float r) {

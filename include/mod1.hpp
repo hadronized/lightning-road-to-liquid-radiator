@@ -18,8 +18,7 @@ class mod1_c {
 
   /* uniforms stuff */
   GLint _tunTimeIndex;
-  GLint _tunRes;
-  GLint _tunFovy;
+  GLint _thunTimeIndex;
   void _init_uniforms();
 
 public :

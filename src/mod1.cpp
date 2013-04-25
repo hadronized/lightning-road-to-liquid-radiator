@@ -25,7 +25,6 @@ mod1_c::mod1_c() :
     exit(2);
   }
   /* thunders field setup */
-#if 0
   _thunVS.source(load_source(THUN_VS_PATH).c_str());
   _thunVS.compile();
   if (!_thunVS.compiled()) {
@@ -55,7 +54,6 @@ mod1_c::mod1_c() :
     cerr << "Thunder fragment shader failed to compile:\n" << _thunFS.compile_log() << endl;
     exit (1);
   }
-#endif
 
   _init_uniforms();
 }
@@ -64,16 +62,28 @@ mod1_c::~mod1_c() {
 }
 
 void mod1_c::_init_uniforms() {
-  _tunTimeIndex = _tunP.map_uniform("time");
-  _tunRes = _tunP.map_uniform("res");
-  _tunFovy = _tunP.map_uniform("fovy");
+  /* tunnel uniforms init */
+  GLint tunResIndex;
+
   glUseProgram(_tunP.id());
-  glUniform2f(_tunRes, WIDTH, HEIGHT);
-  glUniform1f(_tunFovy, FOVY);
+  _tunTimeIndex = _tunP.map_uniform("time");
+  tunResIndex = _tunP.map_uniform("res");
+  glUniform4f(tunResIndex, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
+
+  /* thunders field init */
+  glUseProgram(_thunP.id());
+  _thunTimeIndex = _thunP.map_uniform("time");
 }
 
 void mod1_c::render(float time) {
+  /* tunnel render */
   glUseProgram(_tunP.id());
   glUniform1f(_tunTimeIndex, time);
+  glRectf(-1.f, 1.f, 1.f, -1.f);
+
+  /* thunders render */
+  glUseProgram(_thunP.id());
+  glUniform1f(_thunTimeIndex, time);
+  glClear(GL_DEPTH_BUFFER_BIT);
   glRectf(-1.f, 1.f, 1.f, -1.f);
 }
