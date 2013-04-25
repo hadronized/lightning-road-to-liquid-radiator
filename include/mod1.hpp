@@ -15,6 +15,8 @@ class mod1_c {
   shader_c _thunGS;
   shader_c _thunFS;
   program_c _thunP;
+  GLuint _thunders;
+  void _init_thunders(void);
 
   /* uniforms stuff */
   GLint _tunTimeIndex;

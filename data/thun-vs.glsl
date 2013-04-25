@@ -14,5 +14,5 @@ void main() {
                 rand(vec2(gl_VertexID*3., gl_VertexID*5.)),
                 rand(vec2(gl_VertexID*7., gl_VertexID*9.)));
   p = normalize(p);
-  p.z -= sin(time);
+  p.z -= sin(time)*10.;
 }
