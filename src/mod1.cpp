@@ -97,16 +97,16 @@ void mod1_c::_init_uniforms() {
 
 void mod1_c::render(float time) {
   /* tunnel render */
+#if 0
   glUseProgram(_tunP.id());
   glUniform1f(_tunTimeIndex, time);
   glRectf(-1.f, 1.f, 1.f, -1.f);
+#endif
 
-#if 0
   /* thunders render */
   glUseProgram(_thunP.id());
   glUniform1f(_thunTimeIndex, time);
   //glClear(GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(_thunders);
   glDrawArrays(GL_PATCHES, 0, THUNDERS_VERTICES_NB);
-#endif
 }

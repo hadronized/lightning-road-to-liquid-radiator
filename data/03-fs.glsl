@@ -15,7 +15,7 @@ const float zfar = 300.;
 
 vec2 get_uv() {
   vec2 uv = 2. * gl_FragCoord.xy * res.zw - 1.;
-  uv.y *= res.x*res.z;
+  uv.y *= res.y*res.z;
   return uv;
 }
 
@@ -54,7 +54,7 @@ void main() {
   vec3 cam = vec3(sinstart*5., 4.-sin(time/2.)*4., -sinstart*5.);
   float terrain = intersect_terrain(cam, ray);
   vec3 lpos = vec3(0., 8., 0.);
-  float v = max(0.1, min(1., 1.5 - pow(length(vec2(uv.x, uv.y * (res.x/res.y))), 2.)));
+  float v = clamp(1. - pow(length(vec2(uv.x, uv.y/(res.y*res.z))/1.35), 4), 0., 1.);
 
   if (terrain != 0.) {
     vec3 hit = cam + ray*terrain;
@@ -81,4 +81,5 @@ void main() {
   }
 
   frag *= v;
+  //frag = vec4(v);
 }
