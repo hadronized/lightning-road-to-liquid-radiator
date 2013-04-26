@@ -9,6 +9,7 @@ class mod1_c {
   shader_c _tunFS;
   shader_c _thunVS;
   program_c _tunP;
+
   /* thunders field program */
   shader_c _thunTCS;
   shader_c _thunTES;
