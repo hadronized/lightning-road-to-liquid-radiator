@@ -22,11 +22,13 @@ class mod1_c {
   /* uniforms stuff */
   GLint _tunTimeIndex;
   GLint _thunTimeIndex;
-  void _init_uniforms();
+  void _init_uniforms(void);
+
+  void _init_tessellation(void);
 
 public :
-  mod1_c();
-  ~mod1_c();
+  mod1_c(void);
+  ~mod1_c(void);
 
   void render(float time);
 };

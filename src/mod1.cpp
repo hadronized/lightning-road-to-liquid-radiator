@@ -7,9 +7,8 @@
 using namespace std;
 
 namespace {
-  int const THUNDERS_NB = 50;
+  int const THUNDERS_NB = 1;
   int const THUNDERS_VERTICES_NB = THUNDERS_NB*2; 
-  int const THUNDERS_VERTICES_NB_BYTES = THUNDERS_VERTICES_NB*3;
 }
 
 mod1_c::mod1_c() :
@@ -39,7 +38,6 @@ mod1_c::mod1_c() :
     cerr << "Thunder vertex shader failed to compile:\n" << _thunVS.compile_log() << endl;
     exit(1);
   }
-#if 0
   _thunTCS.source(load_source(THUN_TCS_PATH).c_str());
   _thunTCS.compile();
   if (!_thunTCS.compiled()) {
@@ -52,7 +50,6 @@ mod1_c::mod1_c() :
     cerr << "Thunder tessellation evaluation shader failed to compile:\n" << _thunTES.compile_log() << endl;
     exit(1);
   }
-#endif
   _thunFS.source(load_source(THUN_FS_PATH).c_str());
   _thunFS.compile();
   if (!_thunFS.compiled()) {
@@ -60,8 +57,8 @@ mod1_c::mod1_c() :
     exit(1);
   }
   _thunP.attach(_thunVS);
-//  _thunP.attach(_thunTCS);
-  //_thunP.attach(_thunTES);
+  _thunP.attach(_thunTCS);
+  _thunP.attach(_thunTES);
   _thunP.attach(_thunFS);
   _thunP.link();
   if (!_thunP.linked()) {
@@ -70,6 +67,7 @@ mod1_c::mod1_c() :
   }
   _init_uniforms();
   _init_thunders();
+  _init_tessellation();
 }
 
 mod1_c::~mod1_c() {
@@ -80,6 +78,9 @@ void mod1_c::_init_thunders() {
   glBindVertexArray(_thunders);
   //glBindBuffer(GL_ARRAY_BUFFER, b);
   glBindVertexArray(0);
+}
+
+void mod1_c::_init_tessellation() {
 }
 
 void mod1_c::_init_uniforms() {
@@ -110,9 +111,10 @@ void mod1_c::render(float time) {
 
   /* thunders render */
   glUseProgram(_thunP.id());
+  glPatchParameteri(GL_PATCH_VERTICES, 2);
   glUniform1f(_thunTimeIndex, time);
   //glClear(GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(_thunders);
-  glDrawArrays(GL_LINES, 0, THUNDERS_VERTICES_NB);
+  glDrawArrays(GL_PATCHES, 0, THUNDERS_VERTICES_NB);
   glBindVertexArray(0);
 }
