@@ -7,7 +7,7 @@
 using namespace std;
 
 namespace {
-  int const THUNDERS_NB = 1;
+  int const THUNDERS_NB = 50;
   int const THUNDERS_VERTICES_NB = THUNDERS_NB*2; 
   int const THUNDERS_VERTICES_NB_BYTES = THUNDERS_VERTICES_NB*3;
 }
@@ -113,6 +113,6 @@ void mod1_c::render(float time) {
   glUniform1f(_thunTimeIndex, time);
   //glClear(GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(_thunders);
-  glDrawArrays(GL_LINES, 0, 2);
+  glDrawArrays(GL_LINES, 0, THUNDERS_VERTICES_NB);
   glBindVertexArray(0);
 }
