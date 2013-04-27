@@ -7,7 +7,7 @@
 using namespace std;
 
 namespace {
-  int const THUNDERS_NB = 1;
+  int const THUNDERS_NB = 5;
   int const THUNDERS_VERTICES_NB = THUNDERS_NB*2; 
 }
 
