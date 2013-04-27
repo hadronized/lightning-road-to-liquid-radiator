@@ -19,6 +19,16 @@ class mod1_c {
   GLuint _thunders;
   void _init_thunders(void);
 
+  /* thunders blur program */
+  shader_c _thunBlurFS;
+  program_c _thunBlurP;
+
+  /* offscreen */ 
+  GLuint _offtex;
+  GLuint _rdbf;
+  GLuint _fbo;
+  void _setup_offscreen(void);
+
   /* uniforms stuff */
   GLint _tunTimeIndex;
   GLint _thunTimeIndex;

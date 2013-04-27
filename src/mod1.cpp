@@ -17,7 +17,8 @@ mod1_c::mod1_c() :
   _thunTCS(GL_TESS_CONTROL_SHADER),
   _thunTES(GL_TESS_EVALUATION_SHADER),
   _thunGS(GL_GEOMETRY_SHADER),
-  _thunFS(GL_FRAGMENT_SHADER) {
+  _thunFS(GL_FRAGMENT_SHADER),
+  _thunBlurFS(GL_FRAGMENT_SHADER) {
   /* tunnel setup */
   _tunFS.source(load_source(TUNNEL_FS_PATH).c_str());
   _tunFS.compile();
@@ -73,6 +74,42 @@ mod1_c::mod1_c() :
 mod1_c::~mod1_c() {
 }
 
+void mod1_c::_setup_offscreen() {
+  /* prepare the offscreen texture */
+  glGenTextures(1, &_offtex);
+  glBindTexture(GL_TEXTURE_2D, _offtex);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  /* prepare the renderbuffer */
+  glGenRenderbuffers(1, &_rdbf);
+  glBindRenderbuffer(GL_RENDERBUFFER, _rdbf);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+  /* prepare the FBO */
+  glGenFramebuffers(1, &_fbo);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+  glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _rdbf);
+  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _offtex, 0);
+
+  auto ok = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+  switch (ok) {
+    case GL_FRAMEBUFFER_COMPLETE :
+      cout << "framebuffer complete" << endl;
+      break;
+
+    default :
+      cerr << "framebuffer incomplete" << endl;
+  }
+
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+}
+
 void mod1_c::_init_thunders() {
   glGenVertexArrays(1, &_thunders);
   glBindVertexArray(_thunders);
@@ -110,11 +147,16 @@ void mod1_c::render(float time) {
 #endif
 
   /* thunders render */
+  /* offscreen render */
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
   glUseProgram(_thunP.id());
   glPatchParameteri(GL_PATCH_VERTICES, 2);
   glUniform1f(_thunTimeIndex, time);
-  //glClear(GL_DEPTH_BUFFER_BIT);
+  glClear(GL_GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(_thunders);
   glDrawArrays(GL_PATCHES, 0, THUNDERS_VERTICES_NB);
   glBindVertexArray(0);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+  /* blur */
 }
