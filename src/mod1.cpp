@@ -162,6 +162,9 @@ void mod1_c::_init_uniforms() {
 }
 
 void mod1_c::render(float time) {
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_ONE, GL_ONE);
+
   /* tunnel render */
   glUseProgram(_tunP.id());
   glUniform1f(_tunTimeIndex, time);

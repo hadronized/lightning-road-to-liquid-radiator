@@ -42,11 +42,13 @@ void mod2_c::_init_uniforms() {
 }
 
 void mod2_c::render(float time) {
+  glDisable(GL_BLEND);
   glUseProgram(_stdP.id());
   glUniform1f(_stdTimeIndex, time);
   glRectf(-1.f, 1.f, 1.f, -1.f);
 
   if (time >= 109.7) { /* WOOUH THAT'S DIRTY! DO YOU THINK SO, WELL I BETTER NOT SHOW YOU WHERE’S THE LIMONADE IS MADE, SWEET LIMONADE */
+    glPatchParameteri(GL_PATCH_VERTICES, 3);
     glUseProgram(_cubeP.id());
     glUniform1f(_cubeTimeIndex, time);
     glClear(GL_DEPTH_BUFFER_BIT);

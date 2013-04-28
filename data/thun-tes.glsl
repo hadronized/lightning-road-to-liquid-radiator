@@ -28,7 +28,6 @@ vec3 displace(vec3 p) {
 }
 
 void main() {
-  float id = gl_TessCoord.x+time/100.;
   pos = interpolate2(tco[0], tco[1]);
   /* displacement */
   pos = displace(pos);
