@@ -19,7 +19,7 @@ float rand(vec2 co) {
 }
 
 vec3 displace(vec3 p) {
-  float id = gl_PrimitiveID + 1;// + time/5.;
+  float id = gl_PrimitiveID + 1 + time/5.;
   float pc = 1. - abs(1. - 2*gl_TessCoord.x); /* displacement contribution along the line */
   float md = 0.28; /* max displacement */
   vec3 disp = vec3(rand(vec2(pc, id*2.)), rand(vec2(-id*3., pc*5.)), rand(vec2(-pc,pc*7.))); /* displacement value */

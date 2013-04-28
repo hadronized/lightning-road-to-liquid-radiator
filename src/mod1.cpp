@@ -7,8 +7,9 @@
 using namespace std;
 
 namespace {
-  int const THUNDERS_NB = 5;
+  int const THUNDERS_NB = 25;
   int const THUNDERS_VERTICES_NB = THUNDERS_NB*2; 
+  int const BLUR_PASSES = 5;
 }
 
 mod1_c::mod1_c() :
@@ -91,13 +92,15 @@ mod1_c::~mod1_c() {
 
 void mod1_c::_setup_offscreen() {
   /* prepare the offscreen texture */
-  glGenTextures(1, &_offtex);
-  glBindTexture(GL_TEXTURE_2D, _offtex);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
+  glGenTextures(2, _offtex);
+  for (int i = 0; i < 2; ++i) {
+    glBindTexture(GL_TEXTURE_2D, _offtex[i]);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
+  }
   glBindTexture(GL_TEXTURE_2D, 0);
 
   /* prepare the renderbuffer */
@@ -107,19 +110,21 @@ void mod1_c::_setup_offscreen() {
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
   /* prepare the FBO */
-  glGenFramebuffers(1, &_fbo);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
-  glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _rdbf);
-  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _offtex, 0);
+  glGenFramebuffers(2, _fbo);
+  for (int i = 0; i < 2; ++i) {
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[i]);
+    glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _rdbf);
+    glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _offtex[i], 0);
 
-  auto ok = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
-  switch (ok) {
-    case GL_FRAMEBUFFER_COMPLETE :
-      cout << "framebuffer complete" << endl;
-      break;
+    auto ok = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+    switch (ok) {
+      case GL_FRAMEBUFFER_COMPLETE :
+        cout << "framebuffer complete" << endl;
+        break;
 
-    default :
-      cerr << "framebuffer incomplete" << endl;
+      default :
+        cerr << "framebuffer incomplete" << endl;
+    }
   }
 
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
@@ -158,15 +163,13 @@ void mod1_c::_init_uniforms() {
 
 void mod1_c::render(float time) {
   /* tunnel render */
-#if 0
   glUseProgram(_tunP.id());
   glUniform1f(_tunTimeIndex, time);
   glRectf(-1.f, 1.f, 1.f, -1.f);
-#endif
 
   /* thunders render */
   /* offscreen render */
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[0]);
   glUseProgram(_thunP.id());
   glPatchParameteri(GL_PATCH_VERTICES, 2);
   glUniform1f(_thunTimeIndex, time);
@@ -174,10 +177,19 @@ void mod1_c::render(float time) {
   glBindVertexArray(_thunders);
   glDrawArrays(GL_PATCHES, 0, THUNDERS_VERTICES_NB);
   glBindVertexArray(0);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
   /* blur */
   glUseProgram(_thunBlurP.id());
-  glBindTexture(GL_TEXTURE_2D, _offtex);
+  for (int i = 0, id = 0; i < BLUR_PASSES-1; ++i) {
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[1 - id]);
+    glBindTexture(GL_TEXTURE_2D, _offtex[id]);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glRectf(-1.f, 1.f, 1.f, -1.f);
+    id = 1 - id;
+  }
+
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glBindTexture(GL_TEXTURE_2D, _offtex[BLUR_PASSES-1 & 1]);
+  glClear(GL_DEPTH_BUFFER_BIT);
   glRectf(-1.f, 1.f, 1.f, -1.f);
 }

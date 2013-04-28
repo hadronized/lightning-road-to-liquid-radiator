@@ -24,9 +24,9 @@ class mod1_c {
   program_c _thunBlurP;
 
   /* offscreen */ 
-  GLuint _offtex;
+  GLuint _offtex[2];
   GLuint _rdbf;
-  GLuint _fbo;
+  GLuint _fbo[2];
   void _setup_offscreen(void);
 
   /* uniforms stuff */
