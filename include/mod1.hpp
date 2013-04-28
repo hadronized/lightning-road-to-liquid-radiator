@@ -34,8 +34,6 @@ class mod1_c {
   GLint _thunTimeIndex;
   void _init_uniforms(void);
 
-  void _init_tessellation(void);
-
 public :
   mod1_c(void);
   ~mod1_c(void);

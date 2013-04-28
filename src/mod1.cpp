@@ -32,6 +32,7 @@ mod1_c::mod1_c() :
     cerr << "Tunnel shader program failed to link:\n" << _tunP.link_log() << endl;
     exit(2);
   }
+
   /* thunders field setup */
   _thunVS.source(load_source(THUN_VS_PATH).c_str());
   _thunVS.compile();
@@ -66,9 +67,23 @@ mod1_c::mod1_c() :
     cerr << "Thunder program failed to link:\n" << _thunP.link_log() << endl;
     exit(2);
   }
+
+  /* thunders blur */
+  _thunBlurFS.source(load_source(THUN_BLUR_FS_PATH).c_str());
+  _thunBlurFS.compile();
+  if (!_thunBlurFS.compiled()) {
+    cerr << "Thunder blur fragment shader failed to compile:\n" << _thunBlurFS.compile_log() << endl;
+    exit(1);
+  }
+  _thunBlurP.attach(_thunBlurFS);
+  _thunBlurP.link();
+  if (!_thunBlurP.linked()) {
+    cerr << "Thunder blur program failed to link:\n" << _thunBlurP.link_log() << endl;
+    exit(2);
+  }
   _init_uniforms();
   _init_thunders();
-  _init_tessellation();
+  _setup_offscreen();
 }
 
 mod1_c::~mod1_c() {
@@ -113,11 +128,7 @@ void mod1_c::_setup_offscreen() {
 void mod1_c::_init_thunders() {
   glGenVertexArrays(1, &_thunders);
   glBindVertexArray(_thunders);
-  //glBindBuffer(GL_ARRAY_BUFFER, b);
   glBindVertexArray(0);
-}
-
-void mod1_c::_init_tessellation() {
 }
 
 void mod1_c::_init_uniforms() {
@@ -136,6 +147,13 @@ void mod1_c::_init_uniforms() {
 
   glUniformMatrix4fv(projIndex, 1, GL_FALSE, p._);
   _thunTimeIndex = _thunP.map_uniform("time");
+
+  /* thunders blur init */
+  glUseProgram(_thunBlurP.id());
+  auto texBlurIndex = _thunBlurP.map_uniform("offtex");
+  auto thunBlurResIndex = _thunBlurP.map_uniform("res");
+  glUniform4f(thunBlurResIndex, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
+  glUniform1i(texBlurIndex, 0);
 }
 
 void mod1_c::render(float time) {
@@ -152,11 +170,14 @@ void mod1_c::render(float time) {
   glUseProgram(_thunP.id());
   glPatchParameteri(GL_PATCH_VERTICES, 2);
   glUniform1f(_thunTimeIndex, time);
-  glClear(GL_GL_DEPTH_BUFFER_BIT);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(_thunders);
   glDrawArrays(GL_PATCHES, 0, THUNDERS_VERTICES_NB);
   glBindVertexArray(0);
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
   /* blur */
+  glUseProgram(_thunBlurP.id());
+  glBindTexture(GL_TEXTURE_2D, _offtex);
+  glRectf(-1.f, 1.f, 1.f, -1.f);
 }
