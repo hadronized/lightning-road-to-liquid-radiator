@@ -14,7 +14,7 @@ void main() {
                 rand(vec2(id*3., id*5.)),
                 rand(vec2(id*7., id*9.)));
   p = vec3(normalize(p.xy), p.z);
-  p.z = -mod(gl_VertexID*2.-time*3., 50.);
-  //p.z = -0.2;
+  //p.z = -mod(gl_VertexID-time*3., 50.);
+  p.z = mod(-gl_VertexID/2.+(time-27.8)*3, -20.);
   gco = p;
 }
