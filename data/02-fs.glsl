@@ -35,4 +35,5 @@ void main() {
 
   float f = tex(lookup+vec2(0., time/5.))/atten;
   frag = vec4(f/2., f*sin(time)/2., 0., 1.) * mod(gl_FragCoord.y, 2.);
+  frag += vec4(atten/max(0., 20.*(time-27.5)));
 }
