@@ -17,6 +17,17 @@ class mod2_c {
   GLint _stdFovy;
   GLuint _cubeTimeIndex;
 
+  /* RGBA distor */
+  shader_c _rgbaFS;
+  program_c _rgbaP;
+  GLuint _rgbaTimeIndex;
+
+  /* offtex */
+  GLuint _offtex;
+  GLuint _rdbf;
+  GLuint _fbo;
+  void _setup_offscreen();
+
   void _init_uniforms();
 
 public :

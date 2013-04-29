@@ -30,6 +30,7 @@ std::string const THUN_TES_PATH     = "./data/thun-tes.glsl";
 std::string const THUN_FS_PATH      = "./data/thun-fs.glsl";
 std::string const THUN_BLUR_FS_PATH = "./data/thun-blur-fs.glsl";
 std::string const STD_LAVA_FS_PATH  = "./data/03-fs.glsl";
+std::string const LAVA_RGBA_FS_PATH = "./data/lava-rgba-fs.glsl";
 std::string const FINAL_FS_PATH     = "./data/04-fs.glsl";
 
 std::string load_source(std::string const &path);

@@ -55,7 +55,7 @@ void bootstrap_c::init() {
   _mod1 = new mod1_c;
   _mod2 = new mod2_c(_mod0->cube_program(), _mod0->cube());
   _mod3 = new mod3_c;
-  glEnable(GL_DEPTH_TEST); /* TODO: that should be done in the loop, at the beginning of a mod */
+  glEnable(GL_DEPTH_TEST);
   /* init the softsynth */
   FMOD_System_CreateStream(_sndsys, TRACK_PATH.c_str(), FMOD_HARDWARE | FMOD_LOOP_OFF | FMOD_2D, 0, &_track);
   FMOD_System_PlaySound(_sndsys, FMOD_CHANNEL_FREE, _track, 0, &_chan);
@@ -65,7 +65,7 @@ void bootstrap_c::run() {
   SDL_Event event;
   float time;
 
-  _advance_track(24.5f);
+  _advance_track(54.5f);
   while ((time = _track_cursor()) <= 158.f && treat_events(event)) {
     cout << "time: " << time << endl;
     if (time < 27.5f) {
