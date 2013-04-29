@@ -162,6 +162,7 @@ void mod1_c::_init_uniforms() {
 }
 
 void mod1_c::render(float time) {
+  /* active blending between frames */
   glEnable(GL_BLEND);
   glBlendFunc(GL_ONE, GL_ONE);
 
@@ -183,7 +184,7 @@ void mod1_c::render(float time) {
 
   /* blur */
   glUseProgram(_thunBlurP.id());
-  for (int i = 0, id = 0; i < BLUR_PASSES-1; ++i) {
+  for (int i = 0, id = 0; i < BLUR_PASSES; ++i) {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[1 - id]);
     glBindTexture(GL_TEXTURE_2D, _offtex[id]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -192,7 +193,7 @@ void mod1_c::render(float time) {
   }
 
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-  glBindTexture(GL_TEXTURE_2D, _offtex[BLUR_PASSES-1 & 1]);
+  glBindTexture(GL_TEXTURE_2D, _offtex[(BLUR_PASSES-1) & 1]);
   glClear(GL_DEPTH_BUFFER_BIT);
   glRectf(-1.f, 1.f, 1.f, -1.f);
 }
