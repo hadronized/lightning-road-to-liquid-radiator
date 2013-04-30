@@ -17,6 +17,8 @@ class mod1_c {
   shader_c _thunFS;
   program_c _thunP;
   GLuint _thunders;
+  GLint _tunTimeIndex;
+  GLint _thunTimeIndex;
   void _init_thunders(void);
 
   /* thunders blur program */
@@ -24,14 +26,16 @@ class mod1_c {
   program_c _thunBlurP;
 
   /* offscreen */ 
-  GLuint _offtex[2];
+  GLuint _offtex[3];
   GLuint _rdbf;
-  GLuint _fbo[2];
+  GLuint _fbo[3];
   void _setup_offscreen(void);
 
-  /* uniforms stuff */
-  GLint _tunTimeIndex;
-  GLint _thunTimeIndex;
+  /* swap lines */
+  shader_c _swapLinesFS;
+  program_c _swapLinesP;
+  GLint _swapLinesTimeIndex;
+
   void _init_uniforms(void);
 
 public :
