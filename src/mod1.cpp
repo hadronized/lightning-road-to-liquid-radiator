@@ -187,12 +187,12 @@ void mod1_c::_init_uniforms() {
 }
 
 void mod1_c::render(float time) {
+  glEnable(GL_BLEND); /* maybe we'll need to place that in the bootstrap's initialization */
+  glBlendFunci(_fbo[2], GL_ONE, GL_ONE);
+
   /* active blending between frames */
   /* tunnel render */
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[2]);
-  glEnable(GL_BLEND);
-  glBlendFunc(GL_ONE, GL_ONE);
-
   glUseProgram(_tunP.id());
   glUniform1f(_tunTimeIndex, time);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -228,5 +228,6 @@ void mod1_c::render(float time) {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   glUseProgram(_swapLinesP.id());
   glUniform1f(_swapLinesTimeIndex, time);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glRectf(-1.f, 1.f, 1.f, -1.f);
 }
