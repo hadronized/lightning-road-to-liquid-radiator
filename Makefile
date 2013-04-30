@@ -4,6 +4,7 @@ LDFLAGS= -lSDL -lGL -L/usr/lib/nvidia-bumblebee -lfmodex
 OBJ=main.o common.o shader.o matrix.o bootstrap.o mod0.o mod1.o mod2.o mod3.o
 EXEC= d01
 PACKER= $(EXEC).bin
+COMPRESS_LVL= 6
 
 .PHONY: all, intro, clean
 
@@ -13,7 +14,7 @@ all: $(OBJ)
 intro: all
 	strip -s $(EXEC)
 	cp packer $(PACKER)
-	xz -9eck $(EXEC) >> $(PACKER)
+	xz -$(COMPRESS_LVL)ck $(EXEC) >> $(PACKER)
 	chmod +x $(PACKER)
 
 main.o: src/main.cpp
