@@ -4,6 +4,9 @@
 #include "matrix.hpp"
 #include "mod1.hpp"
 
+/* shaders sources */
+#include "data/tunnel-fs.hpp"
+
 using namespace std;
 
 namespace {
@@ -22,7 +25,10 @@ mod1_c::mod1_c() :
   _thunBlurFS(GL_FRAGMENT_SHADER),
   _swapLinesFS(GL_FRAGMENT_SHADER) {
   /* tunnel setup */
+#if 0
   _tunFS.source(load_source(TUNNEL_FS_PATH).c_str());
+#endif
+  _tunFS.source(SHD_TUNNEL_FS.c_str());
   _tunFS.compile();
   if (!_tunFS.compiled()) {
     cerr << "Tunnel fragment shader failed to compile:\n" << _tunFS.compile_log() << endl;

@@ -1,4 +1,4 @@
-#version 330
+#version 330 core
 
 out vec4 frag;
 
@@ -27,7 +27,6 @@ void main() {
   vec3 cam = vec3(0., 0., 1. / tan(fovy/2.));
   vec3 ray = normalize(vec3(uv, 0.) - cam);
   float hit = tunnel(ray, 1.);
-  float dd = ray.z;
   float d = hit/100.;
   float pip = (ray.y < 0. ? -1. : 1.);
   vec2 lookup = vec2(mod(hit*0.01, 1.), acos(normalize(pip*ray.xy).x) / PI);

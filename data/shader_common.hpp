@@ -30,9 +30,10 @@ std::string const SHD_FRAG             = "frag";
 std::string const SHD_GET_UV           =
 "vec2 get_uv(){"
 "vec2 uv=2.*gl_FragCoord.xy*res.zw-1.;"
-"uv.y*=uv.y*res.z;"
+"uv.y*=res.y*res.z;"
 "return uv;"
 "}";
+std::string const SHD_PI               = "float PI = 3.14159265359;";
 
 #endif /* guard */
 
