@@ -1,6 +1,6 @@
-#version 400
+#version 400 core
 
-layout (vertices = 3) out;
+layout(vertices=3)out;
 
 in vec3 gpos[];
 out vec3 tpos[];

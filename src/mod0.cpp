@@ -4,6 +4,7 @@
 
 /* shaders sources */
 #include "data/cube-vs.hpp"
+#include "data/cube-tcs.hpp"
 
 using namespace std;
 
@@ -22,7 +23,10 @@ mod0_c::mod0_c() :
     cerr << "mod0_c STD Vertex shader failed to compile:\n" << _stdVS.compile_log() << endl;
     exit(1);
   }
+#if 0
   _stdTCS.source(load_source(STD_TCS_PATH).c_str());
+#endif
+  _stdTCS.source(SHD_CUBE_TCS.c_str());
   _stdTCS.compile();
   if (!_stdTCS.compiled()) {
     cerr << "mod0_c STD Tessellation control shader failed to compile:\n" << _stdTCS.compile_log() << endl;
