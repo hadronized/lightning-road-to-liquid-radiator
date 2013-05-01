@@ -181,7 +181,7 @@ void mod1_c::_init_uniforms() {
   glUseProgram(_swapLinesP.id());
   auto swapLinesRes = _swapLinesP.map_uniform("res");
   auto swapLinesOfftexIndex = _swapLinesP.map_uniform("offtex");
-  _swapLinesTimeIndex = _swapLinesP.map_uniform("index");
+  _swapLinesTimeIndex = _swapLinesP.map_uniform("time");
   glUniform4f(swapLinesRes, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
   glUniform1i(swapLinesOfftexIndex, 0);
 }

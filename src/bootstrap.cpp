@@ -65,7 +65,7 @@ void bootstrap_c::run() {
   SDL_Event event;
   float time;
 
-  _advance_track(26.5f);
+  _advance_track(52.5f);
   while ((time = _track_cursor()) <= 158.f && treat_events(event)) {
     cout << "time: " << time << endl;
     if (time < 27.5f) {
