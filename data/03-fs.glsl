@@ -42,7 +42,7 @@ float intersect_terrain(vec3 cam, vec3 ray) {
 }
 
 float sweep(float d, float dl, float t) { /* d is the sweep distance, dl the time delay and r the thickness of the sweep */
-  float a = 80.*(mod(max(0., time - dl), 6.82));
+  float a = 80.*(mod(max(-1., time - dl), 6.82));
   float r = abs(d - a);
   return max (t - r, 0.);
 }
