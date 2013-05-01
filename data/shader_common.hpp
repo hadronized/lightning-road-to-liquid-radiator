@@ -14,8 +14,10 @@ std::string const SHD_OUT_POS          = "out vec3 pos;";
 std::string const SHD_IN_POS           = "in vec3 pos;";
 std::string const SHD_OUT_FRAG         = "out vec4 frag;";
 std::string const SHD_GL_POSITION      = "gl_Position";
-std::string const SHD_UNIFORM_PROJ     = "uniform mat4 proj;";
+std::string const SHD_UNIFORM_RES      = "uniform vec4 res;";
 std::string const SHD_UNIFORM_TIME     = "uniform float time;";
+std::string const SHD_UNIFORM_PROJ     = "uniform mat4 proj;";
+std::string const SHD_UNIFORM_OFFTEX   = "uniform sampler2D offtex;";
 std::string const SHD_MAIN_FUNC        = "void main(){";
 std::string const SHD_VEC2             = "vec2";
 std::string const SHD_VEC3             = "vec3";
@@ -25,6 +27,12 @@ std::string const SHD_GL_TESS_LVL_OUT  = "gl_TessLevelOuter";
 std::string const SHD_GL_TESS_LVL_IN   = "gl_TessLevelInner";
 std::string const SHD_RETURN           = "return";
 std::string const SHD_FRAG             = "frag";
+std::string const SHD_GET_UV           =
+"vec2 get_uv(){"
+"vec2 uv=2.*gl_FragCoord.xy*res.zw-1.;"
+"uv.y*=uv.y*res.z;"
+"return uv;"
+"}";
 
 #endif /* guard */
 

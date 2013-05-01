@@ -7,6 +7,7 @@
 #include "data/cube-tcs.hpp"
 #include "data/cube-tes.hpp"
 #include "data/cube-fs.hpp"
+#include "data/cube-pp-fs.hpp"
 
 using namespace std;
 
@@ -63,7 +64,10 @@ mod0_c::mod0_c() :
   }
 
   /* post-process program */
+#if 0
   _ppFS.source(load_source(PP_FS_PATH).c_str());
+#endif
+  _ppFS.source(SHD_CUBE_PP_FS.c_str());
   _ppFS.compile();
   if (!_ppFS.compiled()) {
     cerr << "PP Fragment shader failed to compile:\n" << _ppFS.compile_log() << endl;
@@ -171,7 +175,7 @@ void mod0_c::_init_uniforms() {
   _offtexIndex = _ppP.map_uniform("offtex");
   _ppResIndex = _ppP.map_uniform("res");
   _ppTimeIndex = _ppP.map_uniform("time");
-  glUniform2f(_ppResIndex, WIDTH, HEIGHT);
+  glUniform4f(_ppResIndex, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
   glUniform1i(_offtexIndex, 0);
 }
 
