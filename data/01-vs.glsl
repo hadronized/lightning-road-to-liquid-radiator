@@ -1,4 +1,4 @@
-#version 130
+#version 330
 
 in vec3 co;
 out vec3 gpos;

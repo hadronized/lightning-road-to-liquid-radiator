@@ -2,6 +2,9 @@
 #include "common.hpp"
 #include "mod0.hpp"
 
+/* shaders sources */
+#include "data/cube-vs.hpp"
+
 using namespace std;
 
 mod0_c::mod0_c() :
@@ -10,7 +13,10 @@ mod0_c::mod0_c() :
   _stdTES(GL_TESS_EVALUATION_SHADER),
   _stdFS(GL_FRAGMENT_SHADER),
   _ppFS(GL_FRAGMENT_SHADER) {
+#if 0
   _stdVS.source(load_source(STD_VS_PATH).c_str());
+#endif
+  _stdVS.source(SHD_CUBE_VS.c_str());
   _stdVS.compile();
   if (!_stdVS.compiled()) {
     cerr << "mod0_c STD Vertex shader failed to compile:\n" << _stdVS.compile_log() << endl;
