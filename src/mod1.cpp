@@ -188,9 +188,8 @@ void mod1_c::_init_uniforms() {
 
 void mod1_c::render(float time) {
   glEnable(GL_BLEND); /* maybe we'll need to place that in the bootstrap's initialization */
-  glBlendFunci(_fbo[2], GL_ONE, GL_ONE);
+  glBlendFunc(GL_ONE, GL_ONE);
 
-  /* active blending between frames */
   /* tunnel render */
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[2]);
   glUseProgram(_tunP.id());
@@ -198,7 +197,7 @@ void mod1_c::render(float time) {
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glRectf(-1.f, 1.f, 1.f, -1.f);
 
-  /* offscreen render */
+  /* thunders render */
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[0]);
   glUseProgram(_thunP.id());
   glPatchParameteri(GL_PATCH_VERTICES, 2);
@@ -208,7 +207,7 @@ void mod1_c::render(float time) {
   glDrawArrays(GL_PATCHES, 0, THUNDERS_VERTICES_NB);
   glBindVertexArray(0);
 
-  /* blur */
+  /* thuneders blur */
   glUseProgram(_thunBlurP.id());
   for (int i = 0, id = 0; i < BLUR_PASSES; ++i) {
     glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[1 - id]);
@@ -227,6 +226,7 @@ void mod1_c::render(float time) {
   /* swap lines */
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   glUseProgram(_swapLinesP.id());
+  glBindTexture(GL_TEXTURE_2D, _offtex[2]);
   glUniform1f(_swapLinesTimeIndex, time);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glRectf(-1.f, 1.f, 1.f, -1.f);
