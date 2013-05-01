@@ -1,4 +1,4 @@
-#version 400
+#version 400 core
 
 layout (triangles, equal_spacing, cw) in;
 

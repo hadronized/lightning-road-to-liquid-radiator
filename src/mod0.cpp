@@ -5,6 +5,7 @@
 /* shaders sources */
 #include "data/cube-vs.hpp"
 #include "data/cube-tcs.hpp"
+#include "data/cube-tes.hpp"
 
 using namespace std;
 
@@ -32,7 +33,10 @@ mod0_c::mod0_c() :
     cerr << "mod0_c STD Tessellation control shader failed to compile:\n" << _stdTCS.compile_log() << endl;
     exit(1);
   }
+#if 0
   _stdTES.source(load_source(STD_TES_PATH).c_str());
+#endif
+  _stdTES.source(SHD_CUBE_TES.c_str());
   _stdTES.compile();
   if (!_stdTCS.compiled()) {
     cerr << "mod0_c STD Tessellation evaluation shader failed to compile:\n" << _stdTES.compile_log() << endl;
