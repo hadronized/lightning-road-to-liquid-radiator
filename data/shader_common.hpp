@@ -11,6 +11,8 @@ std::string const SHD_IN_GPOS          = "in vec3 gpos[];";
 std::string const SHD_OUT_TPOS         = "out vec3 tpos[];";
 std::string const SHD_IN_TPOS          = "in vec3 tpos[];";
 std::string const SHD_OUT_POS          = "out vec3 pos;";
+std::string const SHD_IN_POS           = "in vec3 pos;";
+std::string const SHD_OUT_FRAG         = "out vec4 frag;";
 std::string const SHD_GL_POSITION      = "gl_Position";
 std::string const SHD_UNIFORM_PROJ     = "uniform mat4 proj;";
 std::string const SHD_UNIFORM_TIME     = "uniform float time;";
@@ -22,6 +24,7 @@ std::string const SHD_GL_INVOC_ID      = "gl_InvocationID";
 std::string const SHD_GL_TESS_LVL_OUT  = "gl_TessLevelOuter";
 std::string const SHD_GL_TESS_LVL_IN   = "gl_TessLevelInner";
 std::string const SHD_RETURN           = "return";
+std::string const SHD_FRAG             = "frag";
 
 #endif /* guard */
 
