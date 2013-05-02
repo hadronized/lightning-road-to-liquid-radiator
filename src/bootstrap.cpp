@@ -66,7 +66,7 @@ void bootstrap_c::run() {
   float time;
 
   _advance_track(27.5f);
-  while ((time = _track_cursor()) <= 156.f && treat_events(event)) {
+  while ((time = _track_cursor()) <= 159.f && treat_events(event)) {
     cout << "time: " << time << endl;
     if (time < 27.5f) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
