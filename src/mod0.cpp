@@ -67,7 +67,7 @@ mod0_c::mod0_c() :
 #if 0
   _ppFS.source(load_source(PP_FS_PATH).c_str());
 #endif
-  _ppFS.source(SHD_CUBE_PP_FS.c_str());
+  _ppFS.source(SHD_CUBE_PP_FS);
   _ppFS.compile();
   if (!_ppFS.compiled()) {
     cerr << "PP Fragment shader failed to compile:\n" << _ppFS.compile_log() << endl;
