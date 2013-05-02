@@ -20,7 +20,7 @@ mod0_c::mod0_c() :
 #if 0
   _stdVS.source(load_source(STD_VS_PATH).c_str());
 #endif
-  _stdVS.source(SHD_CUBE_VS.c_str());
+  _stdVS.source(SHD_CUBE_VS);
   _stdVS.compile();
   if (!_stdVS.compiled()) {
     cerr << "mod0_c STD Vertex shader failed to compile:\n" << _stdVS.compile_log() << endl;

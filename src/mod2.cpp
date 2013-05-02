@@ -34,7 +34,7 @@ mod2_c::mod2_c(program_c &cubeP, GLuint cube) :
 #if 0
   _rgbaFS.source(load_source(LAVA_RGBA_FS_PATH).c_str());
 #endif
-  _rgbaFS.source(SHD_LAVA_RGBA_FS.c_str());
+  _rgbaFS.source(SHD_LAVA_RGBA_FS);
   _rgbaFS.compile();
   if (!_rgbaFS.compiled()) {
     cerr << "Lava RGBA shader program failed to link:\n" << _rgbaFS.compile_log() << endl;

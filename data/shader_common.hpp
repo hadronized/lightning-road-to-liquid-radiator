@@ -3,6 +3,7 @@
 
 #include <string>
 
+/* TODO: to erase and only use char const*. This below is bullshit. */
 std::string const SHD_VERSION_330_CORE = "#version 330 core\n";
 std::string const SHD_VERSION_400_CORE = "#version 400 core\n";
 std::string const SHD_IN_CO            = "in vec3 co;";
