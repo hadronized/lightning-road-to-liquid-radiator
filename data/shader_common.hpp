@@ -35,6 +35,10 @@ std::string const SHD_GET_UV           =
   "uv.y*=res.y*res.z;"
   "return uv;"
 "}";
+std::string const SHD_GET_TEXCO        =
+"vec2 get_texco() {"
+  "return gl_FragCoord.xy * res.zw;"
+"}";
 std::string const SHD_RAND             =
 "float rand(vec2 a){"
   "return sin(dot(a.xy,vec2(12.9898,78.233)))*43758.5453;"

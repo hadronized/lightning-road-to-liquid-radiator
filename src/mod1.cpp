@@ -10,6 +10,8 @@
 #include "data/thun-tcs.hpp"
 #include "data/thun-tes.hpp"
 #include "data/thun-fs.hpp"
+#include "data/thun-blur-fs.hpp"
+#include "data/swap_lines-fs.hpp"
 
 using namespace std;
 
@@ -93,7 +95,10 @@ mod1_c::mod1_c() :
   }
 
   /* thunders blur */
+#if 0
   _thunBlurFS.source(load_source(THUN_BLUR_FS_PATH).c_str());
+#endif
+  _thunBlurFS.source(SHD_THUN_BLUR_FS.c_str());
   _thunBlurFS.compile();
   if (!_thunBlurFS.compiled()) {
     cerr << "Thunder blur fragment shader failed to compile:\n" << _thunBlurFS.compile_log() << endl;
@@ -107,7 +112,10 @@ mod1_c::mod1_c() :
   }
 
   /* swap lines */
+#if 0
   _swapLinesFS.source(load_source(SWAP_LINES_PATH_FS).c_str());
+#endif
+  _swapLinesFS.source(SHD_SWAP_LINES_FS.c_str());
   _swapLinesFS.compile();
   if (!_swapLinesFS.compiled()) {
     cerr << "Swap lines fragment shader failed to compile:\n" << _swapLinesFS.compile_log() << endl;
