@@ -29,7 +29,7 @@ mod0_c::mod0_c() :
 #if 0
   _stdTCS.source(load_source(STD_TCS_PATH).c_str());
 #endif
-  _stdTCS.source(SHD_CUBE_TCS.c_str());
+  _stdTCS.source(SHD_CUBE_TCS);
   _stdTCS.compile();
   if (!_stdTCS.compiled()) {
     cerr << "mod0_c STD Tessellation control shader failed to compile:\n" << _stdTCS.compile_log() << endl;
@@ -38,7 +38,7 @@ mod0_c::mod0_c() :
 #if 0
   _stdTES.source(load_source(STD_TES_PATH).c_str());
 #endif
-  _stdTES.source(SHD_CUBE_TES.c_str());
+  _stdTES.source(SHD_CUBE_TES);
   _stdTES.compile();
   if (!_stdTCS.compiled()) {
     cerr << "mod0_c STD Tessellation evaluation shader failed to compile:\n" << _stdTES.compile_log() << endl;
@@ -47,7 +47,7 @@ mod0_c::mod0_c() :
 #if 0
   _stdFS.source(load_source(STD_FS_PATH).c_str());
 #endif
-  _stdFS.source(SHD_CUBE_FS.c_str());
+  _stdFS.source(SHD_CUBE_FS);
   _stdFS.compile();
   if (!_stdFS.compiled()) {
     cerr << "mod0_c STD Fragment shader failed to compile:\n" << _stdFS.compile_log() << endl;
