@@ -6,6 +6,9 @@
 
 /* shaders sources */
 #include "data/tunnel-fs.hpp"
+#include "data/thun-vs.hpp"
+#include "data/thun-tcs.hpp"
+#include "data/thun-tes.hpp"
 
 using namespace std;
 
@@ -42,19 +45,28 @@ mod1_c::mod1_c() :
   }
 
   /* thunders field setup */
+#if 0
   _thunVS.source(load_source(THUN_VS_PATH).c_str());
+#endif
+  _thunVS.source(SHD_THUN_VS.c_str());
   _thunVS.compile();
   if (!_thunVS.compiled()) {
     cerr << "Thunder vertex shader failed to compile:\n" << _thunVS.compile_log() << endl;
     exit(1);
   }
+#if 0
   _thunTCS.source(load_source(THUN_TCS_PATH).c_str());
+#endif
+  _thunTCS.source(SHD_THUN_TCS.c_str());
   _thunTCS.compile();
   if (!_thunTCS.compiled()) {
     cerr << "Thunder tessellation control shader failed to compile:\n" << _thunTCS.compile_log() << endl;
     exit(1);
   }
+#if 0
   _thunTES.source(load_source(THUN_TES_PATH).c_str());
+#endif
+  _thunTES.source(SHD_THUN_TES.c_str());
   _thunTES.compile();
   if (!_thunTES.compiled()) {
     cerr << "Thunder tessellation evaluation shader failed to compile:\n" << _thunTES.compile_log() << endl;

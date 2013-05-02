@@ -23,15 +23,21 @@ std::string const SHD_VEC2             = "vec2";
 std::string const SHD_VEC3             = "vec3";
 std::string const SHD_VEC4             = "vec4";
 std::string const SHD_GL_INVOC_ID      = "gl_InvocationID";
+std::string const SHD_GL_VERTEX_ID     = "gl_VertexID";
+std::string const SHD_PRIMITIVE_ID     = "gl_PrimitiveID";
 std::string const SHD_GL_TESS_LVL_OUT  = "gl_TessLevelOuter";
 std::string const SHD_GL_TESS_LVL_IN   = "gl_TessLevelInner";
 std::string const SHD_RETURN           = "return";
 std::string const SHD_FRAG             = "frag";
 std::string const SHD_GET_UV           =
 "vec2 get_uv(){"
-"vec2 uv=2.*gl_FragCoord.xy*res.zw-1.;"
-"uv.y*=res.y*res.z;"
-"return uv;"
+  "vec2 uv=2.*gl_FragCoord.xy*res.zw-1.;"
+  "uv.y*=res.y*res.z;"
+  "return uv;"
+"}";
+std::string const SHD_RAND             =
+"float rand(vec2 a){"
+  "return sin(dot(a.xy,vec2(12.9898,78.233)))*43758.5453;"
 "}";
 std::string const SHD_PI               = "float PI = 3.14159265359;";
 
