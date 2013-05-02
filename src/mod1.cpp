@@ -9,6 +9,7 @@
 #include "data/thun-vs.hpp"
 #include "data/thun-tcs.hpp"
 #include "data/thun-tes.hpp"
+#include "data/thun-fs.hpp"
 
 using namespace std;
 
@@ -72,7 +73,10 @@ mod1_c::mod1_c() :
     cerr << "Thunder tessellation evaluation shader failed to compile:\n" << _thunTES.compile_log() << endl;
     exit(1);
   }
+#if 0
   _thunFS.source(load_source(THUN_FS_PATH).c_str());
+#endif
+  _thunFS.source(SHD_THUN_FS.c_str());
   _thunFS.compile();
   if (!_thunFS.compiled()) {
     cerr << "Thunder fragment shader failed to compile:\n" << _thunFS.compile_log() << endl;
