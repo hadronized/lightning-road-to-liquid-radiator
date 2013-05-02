@@ -1,6 +1,8 @@
 #include "common.hpp"
 #include "mod3.hpp"
 
+/* shader sources */
+//#include "data/?.hpp"
 using namespace std;
 
 mod3_c::mod3_c() :
