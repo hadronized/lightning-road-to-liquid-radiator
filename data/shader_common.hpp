@@ -43,7 +43,7 @@ std::string const SHD_RAND             =
 "float rand(vec2 a){"
   "return sin(dot(a.xy,vec2(12.9898,78.233)))*43758.5453;"
 "}";
-std::string const SHD_PI               = "float PI = 3.14159265359;";
+std::string const SHD_PI               = "const float PI=3.14159265359;";
 
 #endif /* guard */
 

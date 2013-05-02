@@ -128,7 +128,6 @@ mod1_c::mod1_c() :
     exit(2);
   }
 
-  /* hihi */
   _init_uniforms();
   _init_thunders();
   _setup_offscreen();

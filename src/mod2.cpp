@@ -2,6 +2,9 @@
 #include "common.hpp"
 #include "mod2.hpp"
 
+/* shaders sources */
+#include "data/lava-fs.hpp"
+
 using namespace std;
 
 mod2_c::mod2_c(program_c &cubeP, GLuint cube) :
@@ -9,7 +12,11 @@ mod2_c::mod2_c(program_c &cubeP, GLuint cube) :
   , _cubeP(cubeP)
   , _cube(cube)
   , _rgbaFS(GL_FRAGMENT_SHADER) {
+  /* lava */
+#if 0
   _stdFS.source(load_source(STD_LAVA_FS_PATH).c_str());
+#endif
+  _stdFS.source(SHD_LAVA_FS.c_str());
   _stdFS.compile();
   if (!_stdFS.compiled()) {
     cerr << "STD Lava fragment shader failed to compile:\n" << _stdFS.compile_log() << endl;
@@ -21,6 +28,8 @@ mod2_c::mod2_c(program_c &cubeP, GLuint cube) :
     cerr << "STD Lava shader program failed to link:\n" << _stdP.link_log() << endl;
     exit(2);
   }
+
+  /* rgba distor effect */
   _rgbaFS.source(load_source(LAVA_RGBA_FS_PATH).c_str());
   _rgbaFS.compile();
   if (!_rgbaFS.compiled()) {
