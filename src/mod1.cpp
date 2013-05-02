@@ -98,7 +98,7 @@ mod1_c::mod1_c() :
 #if 0
   _thunBlurFS.source(load_source(THUN_BLUR_FS_PATH).c_str());
 #endif
-  _thunBlurFS.source(SHD_THUN_BLUR_FS.c_str());
+  _thunBlurFS.source(SHD_THUN_BLUR_FS);
   _thunBlurFS.compile();
   if (!_thunBlurFS.compiled()) {
     cerr << "Thunder blur fragment shader failed to compile:\n" << _thunBlurFS.compile_log() << endl;
@@ -115,7 +115,7 @@ mod1_c::mod1_c() :
 #if 0
   _swapLinesFS.source(load_source(SWAP_LINES_PATH_FS).c_str());
 #endif
-  _swapLinesFS.source(SHD_SWAP_LINES_FS.c_str());
+  _swapLinesFS.source(SHD_SWAP_LINES_FS);
   _swapLinesFS.compile();
   if (!_swapLinesFS.compiled()) {
     cerr << "Swap lines fragment shader failed to compile:\n" << _swapLinesFS.compile_log() << endl;
