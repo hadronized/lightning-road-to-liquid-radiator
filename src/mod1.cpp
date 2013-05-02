@@ -34,7 +34,7 @@ mod1_c::mod1_c() :
 #if 0
   _tunFS.source(load_source(TUNNEL_FS_PATH).c_str());
 #endif
-  _tunFS.source(SHD_TUNNEL_FS.c_str());
+  _tunFS.source(SHD_TUNNEL_FS);
   _tunFS.compile();
   if (!_tunFS.compiled()) {
     cerr << "Tunnel fragment shader failed to compile:\n" << _tunFS.compile_log() << endl;
@@ -51,7 +51,7 @@ mod1_c::mod1_c() :
 #if 0
   _thunVS.source(load_source(THUN_VS_PATH).c_str());
 #endif
-  _thunVS.source(SHD_THUN_VS.c_str());
+  _thunVS.source(SHD_THUN_VS);
   _thunVS.compile();
   if (!_thunVS.compiled()) {
     cerr << "Thunder vertex shader failed to compile:\n" << _thunVS.compile_log() << endl;
@@ -60,7 +60,7 @@ mod1_c::mod1_c() :
 #if 0
   _thunTCS.source(load_source(THUN_TCS_PATH).c_str());
 #endif
-  _thunTCS.source(SHD_THUN_TCS.c_str());
+  _thunTCS.source(SHD_THUN_TCS);
   _thunTCS.compile();
   if (!_thunTCS.compiled()) {
     cerr << "Thunder tessellation control shader failed to compile:\n" << _thunTCS.compile_log() << endl;
@@ -69,7 +69,7 @@ mod1_c::mod1_c() :
 #if 0
   _thunTES.source(load_source(THUN_TES_PATH).c_str());
 #endif
-  _thunTES.source(SHD_THUN_TES.c_str());
+  _thunTES.source(SHD_THUN_TES);
   _thunTES.compile();
   if (!_thunTES.compiled()) {
     cerr << "Thunder tessellation evaluation shader failed to compile:\n" << _thunTES.compile_log() << endl;
@@ -78,7 +78,7 @@ mod1_c::mod1_c() :
 #if 0
   _thunFS.source(load_source(THUN_FS_PATH).c_str());
 #endif
-  _thunFS.source(SHD_THUN_FS.c_str());
+  _thunFS.source(SHD_THUN_FS);
   _thunFS.compile();
   if (!_thunFS.compiled()) {
     cerr << "Thunder fragment shader failed to compile:\n" << _thunFS.compile_log() << endl;
