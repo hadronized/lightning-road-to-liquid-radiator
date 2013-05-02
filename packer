@@ -1,2 +1,2 @@
 #!/bin/sh
-tail -n+3 $0 | xzcat > ./d01;chmod +x ./d01;./d01;rm ./d01;exit 0
+tail -n+3 $0 | xzcat > ./d01;chmod +x ./d01;./d01 $*;rm ./d01;exit 0
