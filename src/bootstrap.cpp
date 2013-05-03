@@ -6,15 +6,15 @@
 using namespace std;
 
 bootstrap_c::bootstrap_c() :
-    _mod0(nullptr)
+    _pWin(nullptr)
+  , _mod0(nullptr)
   , _mod1(nullptr)
   , _mod2(nullptr)
   , _mod3(nullptr) {
   GLubyte const *glstr;
 
-  SDL_Init(SDL_INIT_VIDEO);
-  SDL_SetVideoMode(WIDTH, HEIGHT, DEPTH, SDL_HWSURFACE | SDL_OPENGL | (FULLSCREEN ? SDL_FULLSCREEN : 0));
-  cout << "init SDL" << endl;
+  _pWin = new window_c(WIDTH, HEIGHT, FULLSCREEN);
+  cout << "init window" << endl;
 
   glstr = glGetString(GL_VERSION);
   cout << "OpenGL Version String: " << glstr << endl;
@@ -29,7 +29,7 @@ bootstrap_c::~bootstrap_c() {
   delete _mod1;
   delete _mod2;
   delete _mod3;
-  SDL_Quit();
+  delete _pWin;
   FMOD_System_Release(_sndsys);
 }
 
@@ -50,6 +50,8 @@ void bootstrap_c::_advance_track(float t) {
 }
 
 void bootstrap_c::init() {
+  /* init the lol */
+  _pWin = new window_c(WIDTH, HEIGHT, FULLSCREEN);
   /* init the mods */
   _mod0 = new mod0_c;
   _mod1 = new mod1_c;
@@ -62,11 +64,10 @@ void bootstrap_c::init() {
 }
 
 void bootstrap_c::run() {
-  SDL_Event event;
   float time;
 
   _advance_track(27.5f);
-  while ((time = _track_cursor()) <= 159.f && treat_events(event)) {
+  while ((time = _track_cursor()) <= 159.f && treat_events()) {
     cout << "time: " << time << endl;
     if (time < 27.5f) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -80,23 +81,24 @@ void bootstrap_c::run() {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       _mod3->render(time);
     }
-    SDL_GL_SwapBuffers();
+    _pWin->swap_buffers();
   }
 }
 
-bool bootstrap_c::treat_events(SDL_Event &event) {
-  while(SDL_PollEvent(&event)) {
+bool bootstrap_c::treat_events() {
+  XEvent event;
+  auto disp = _pWin->display();
+
+  while (XPending(disp)) {
+    XNextEvent(disp, &event);
     switch (event.type) {
-      case SDL_QUIT :
+      case KeyPress :
+        if (XKeycodeToKeysym(disp, event.xkey.keycode, 0) == XK_Escape)
+          return false;
+        break;
+
+      case DestroyNotify :
         return false;
-
-      case SDL_KEYUP :
-        switch (event.key.keysym.sym) {
-          case SDLK_ESCAPE :
-            return false;
-
-          default :;
-        }
         break;
 
       default :;

@@ -1,7 +1,7 @@
 CXX= clang++
 CXXFLAGS= -W -Wall -pedantic -DGL_GLEXT_PROTOTYPES -I./include -I./ -std=c++11
-LDFLAGS= -lSDL -lGL -L/usr/lib/nvidia-bumblebee -lfmodex
-OBJ=main.o common.o shader.o matrix.o bootstrap.o mod0.o mod1.o mod2.o mod3.o
+LDFLAGS= -lX11 -lGL -L/usr/lib/nvidia-bumblebee -lfmodex
+OBJ=main.o window.o common.o shader.o matrix.o bootstrap.o mod0.o mod1.o mod2.o mod3.o
 EXEC= d01
 PACKER= $(EXEC).bin
 COMPRESS_LVL= 6
