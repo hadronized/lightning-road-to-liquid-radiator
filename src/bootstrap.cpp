@@ -6,7 +6,8 @@
 using namespace std;
 
 bootstrap_c::bootstrap_c() :
-  _mod0(nullptr) {
+  _mod0(nullptr),
+  _pWin(nullptr) {
   GLubyte const *glstr;
 
 #if SDL_GL_CONTEXT
@@ -15,39 +16,6 @@ bootstrap_c::bootstrap_c() :
   cout << "init SDL" << endl;
 #endif
 #if GLX_GL_CONTEXT
-  _dpy = XOpenDisplay(0);
-  if (!_dpy)
-    cerr << "Failed to open X connexion" << endl;
-  auto root = DefaultRootWindow(_dpy);
-  //GLint att[] = { GLX_RGBA, GLX_DEPTH_SIZE, 24, GLX_DOUBLEBUFFER, None };
-  GLint att[] =
-  {
-    GLX_X_RENDERABLE    , True,
-    GLX_DRAWABLE_TYPE   , GLX_WINDOW_BIT,
-    GLX_RENDER_TYPE     , GLX_RGBA_BIT,
-    GLX_X_VISUAL_TYPE   , GLX_TRUE_COLOR,
-    GLX_RED_SIZE        , 8,
-    GLX_GREEN_SIZE      , 8,
-    GLX_BLUE_SIZE       , 8,
-    GLX_ALPHA_SIZE      , 8,
-    GLX_DEPTH_SIZE      , 24,
-    GLX_STENCIL_SIZE    , 0,
-    GLX_DOUBLEBUFFER    , True,
-    //GLX_SAMPLE_BUFFERS  , 1,
-    //GLX_SAMPLES         , 4,
-    None
-  };
-  auto vi = glXChooseVisual(_dpy, 0, att);
-  if (!vi)
-    cerr << "Failed to choose value visual" << endl;
-  auto cmap = XCreateColormap(_dpy, root, vi->visual, AllocNone);
-  XSetWindowAttributes swa;
-  swa.colormap = cmap;
-  swa.event_mask = ExposureMask | KeyPressMask;
-  _win = XCreateWindow(_dpy, root, 0, 0, WIDTH, HEIGHT, 0, vi->depth, InputOutput, vi->visual, CWColormap | CWEventMask, &swa);
-  XMapWindow(_dpy, _win);
-  _glc = glXCreateContext(_dpy, vi, NULL, GL_TRUE);
-  glXMakeCurrent(_dpy, _win, _glc);
 #endif
 
   glstr = glGetString(GL_VERSION);
@@ -65,10 +33,7 @@ bootstrap_c::~bootstrap_c() {
   SDL_Quit();
 #endif
 #if GLX_GL_CONTEXT
-  glXMakeCurrent(_dpy, None, NULL);
-  glXDestroyContext(_dpy, _glc);
-  XDestroyWindow(_dpy, _win);
-  XCloseDisplay(_dpy);
+  delete _pWin;
 #endif
   FMOD_System_Release(_sndsys);
 }
@@ -92,6 +57,8 @@ void bootstrap_c::_advance_track(float t) {
 }
 
 void bootstrap_c::init() {
+  /* init the lol */
+  _pWin = new window_c(WIDTH, HEIGHT, FULLSCREEN);
   /* init the mods */
   _mod0 = new mod0_c;
   _mod1 = new mod1_c;
@@ -120,7 +87,7 @@ void bootstrap_c::run() {
     SDL_GL_SwapBuffers();
 #endif
 #if GLX_GL_CONTEXT
-    glXSwapBuffers(_dpy, _win);
+    _pWin->swap_buffers();
 #endif
   }
 }
@@ -148,6 +115,24 @@ bool bootstrap_c::treat_events() {
   }
 #endif
 #if GLX_GL_CONTEXT
+  XEvent event;
+  auto disp = _pWin->display();
+
+  while (XPending(disp)) {
+    XNextEvent(disp, &event);
+    switch (event.type) {
+      case KeyPress :
+        if (XKeycodeToKeysym(disp, event.xkey.keycode, 0) == XK_Escape)
+          return false;
+        break;
+
+      case DestroyNotify :
+        return false;
+        break;
+
+      default :;
+    }
+  }
 #endif
 
   return true;

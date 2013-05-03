@@ -5,8 +5,7 @@
 #  include <SDL/SDL.h>
 #endif
 #if GLX_GL_CONTEXT
-#  include <X11/Xlib.h>
-#  include <GL/glx.h>
+#include "window.hpp"
 #endif
 #include <fmodex/fmod.h>
 #include "mod0.hpp"
@@ -15,9 +14,7 @@
 
 class bootstrap_c {
 #if GLX_GL_CONTEXT
-  Display *_dpy;
-  Window _win;
-  GLXContext _glc;
+  window_c *_pWin;
 #endif
 
   /* all the mods go here */
