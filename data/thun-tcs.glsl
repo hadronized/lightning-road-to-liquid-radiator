@@ -8,7 +8,7 @@ out vec3 tco[];
 void main() {
   tco[gl_InvocationID] =  gco[gl_InvocationID];
   if (gl_InvocationID == 0) {
-    float t = 6.;
+    float t = 20.;
     gl_TessLevelOuter[0] = 1.;
     gl_TessLevelOuter[1] = t;
   }

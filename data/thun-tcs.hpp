@@ -10,7 +10,7 @@ char const *SHD_THUN_TCS =
   "tpos[gl_InvocationID]=gpos[gl_InvocationID];"
   "if(gl_InvocationID==0){"
     "gl_TessLevelOuter[0]=1.;"
-    "gl_TessLevelOuter[1]=6.;"
+    "gl_TessLevelOuter[1]=10.;"
   "}"
 "}";
 

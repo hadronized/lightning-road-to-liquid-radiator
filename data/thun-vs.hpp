@@ -11,10 +11,9 @@ char const *SHD_THUN_VS =
 "void main(){"
   "int id=10*gl_VertexID+1;"
   "vec3 p=vec3(rand(vec2(id,id*2.)),"
-              "rand(vec2(id*3.,id*5.)),"
-              "rand(vec2(id*7.,id*9.)));"
+              "rand(vec2(-id*3.,id*5.)),"
+              "rand(vec2(id*7.,-id*9.)));"
   "p=vec3(normalize(p.xy),p.z);"
-  //p.z = -mod(gl_VertexID-time*3., 50.);
   "p.z=mod(-gl_VertexID/2.+(time-27.8)*3,-20.);"
   "gpos=p;"
 "}";
