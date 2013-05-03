@@ -16,7 +16,7 @@
 using namespace std;
 
 namespace {
-  int const THUNDERS_NB = 35;
+  int const THUNDERS_NB = 50;
   int const THUNDERS_VERTICES_NB = THUNDERS_NB*2; 
   int const BLUR_PASSES = 5;
 }

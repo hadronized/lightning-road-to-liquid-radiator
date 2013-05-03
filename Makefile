@@ -6,7 +6,7 @@ EXEC= d01
 PACKER= $(EXEC).bin
 COMPRESS_LVL= 6
 
-.PHONY: all, intro, clean
+.PHONY: all, intro, clean, rebuild
 
 all: $(OBJ)
 	$(CXX) $^ -o $(EXEC) $(CXXFLAGS) $(LDFLAGS)
@@ -22,6 +22,8 @@ main.o: src/main.cpp
 
 %.o: src/%.cpp include/%.hpp
 	$(CXX) -c $< -o $@ $(CXXFLAGS)
+
+rebuild: clean all
 
 clean:
 	@rm -f *.o $(EXEC) $(PACKER)
