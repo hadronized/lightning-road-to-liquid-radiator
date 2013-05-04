@@ -2,7 +2,7 @@
 #include "common.hpp"
 
 namespace {
-  char const *TITLE = "-- ENTER NAME OF COMPO HERE --";
+  char const TITLE[] = "Lightning Road To Liquid Sun";
   int /* const */ DOUBLE_BUFF_VISUAL[] = {
       GLX_RGBA
     , GLX_DEPTH_SIZE, 24

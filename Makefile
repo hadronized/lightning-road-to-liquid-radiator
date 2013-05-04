@@ -1,9 +1,10 @@
 CXX= clang++
 CXXFLAGS= -W -Wall -pedantic -DGL_GLEXT_PROTOTYPES -I./include -I./ -std=c++11
 LDFLAGS= -lX11 -lGL -L/usr/lib/nvidia-bumblebee -lfmodex
-OBJ=main.o window.o common.o shader.o matrix.o bootstrap.o mod0.o mod1.o mod2.o mod3.o
-EXEC= d01
-PACKER= $(EXEC).bin
+OBJ=main.o window.o text_writer.o common.o shader.o matrix.o bootstrap.o mod0.o mod1.o mod2.o mod3.o
+INTRO_NAME= lr2ls# Lightning Road To Liquid Sun
+EXEC= $(INTRO_NAME).bin
+PACKER= $(INTRO_NAME)
 COMPRESS_LVL= 6
 
 .PHONY: all, intro, clean, rebuild
