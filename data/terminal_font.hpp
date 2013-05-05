@@ -18,8 +18,12 @@ glyph_t FNT_u     = { 0x00, 0x20, 0x49, 0x92, 0xA5, 0x00 }; /* u */
 glyph_t FNT_excl  = { 0x84, 0xE3, 0x10, 0x04, 0x40, 0x00 }; /* (!) */
 glyph_t FNT_sharp = { 0x80, 0xF2, 0x29, 0xCA, 0xA7, 0x00 }; /* (#) */
 glyph_t FNT_comma = { 0x00, 0x00, 0x00, 0x00, 0xC3, 0x20 }; /* (,) */
+glyph_t FNT_dash  = { 0x00, 0x00, 0x7C, 0x00, 0x00, 0x00 }; /* (-) */
+glyph_t FNT_dot   = { 0x00, 0x00, 0x00, 0x00, 0xC3, 0x00 }; /* (.) */
+glyph_t FNT_0     = { 0x4c, 0x34, 0x55, 0x59, 0xE4, 0x00 }; /* (0) */
+glyph_t FNT_1     = { 0x04, 0x43, 0x10, 0x04, 0xE1, 0x00 }; /* (1) */
 
-glyph_t *FNT_glyphs[43] = {
+glyph_t *FNT_glyphs[] = {
     /* ASCII start at 33, (!) */
     &FNT_excl  /* (!) */
   , nullptr    /* (") */
@@ -31,6 +35,11 @@ glyph_t *FNT_glyphs[43] = {
   , nullptr    /* (*) */
   , nullptr    /* (+) */
   , &FNT_comma /* (,) */
+  , &FNT_dash  /* (-) */
+  , &FNT_dot   /* (.) */
+  , nullptr    /* (/) */
+  , &FNT_0     /* (0) */
+  , &FNT_1     /* (1) */
 };
      
 #endif /* guard */
