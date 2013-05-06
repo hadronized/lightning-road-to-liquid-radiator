@@ -13,13 +13,6 @@ class mod3_c {
   /* TODO: to move away */
   text_writer_c _writer;
 
-  /* shader stuff */
-  shader_c _ppFS;
-  program_c _ppP;
-
-  /* uniforms stuff */
-  void _init_uniforms();
-
 public :
   mod3_c();
   ~mod3_c();
