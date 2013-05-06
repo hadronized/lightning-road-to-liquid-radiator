@@ -3,6 +3,7 @@
 
 size_t const GLYPH_WIDTH        = 6; /* max width of a glyph */
 size_t const GLYPH_HEIGHT       = 8; /* max height of a glyph */
+float  const GLYPH_RATIO        = 1.f * GLYPH_WIDTH / GLYPH_HEIGHT;
 size_t const GLYPH_SIZE         = GLYPH_WIDTH * GLYPH_HEIGHT; /* glyph size */
 size_t const FNT_TBL_START      = 31; /* ASCII table start */
 typedef unsigned char const glyph_t[GLYPH_SIZE]; /* glyph type */
@@ -105,7 +106,7 @@ glyph_t FNT_y     = { 0x00, 0x04, 0x92, 0x48, 0xE1, 0x18 }; /* (y) */
 glyph_t FNT_z     = { 0x00, 0x07, 0x82, 0x31, 0x03, 0x80 }; /* (z) */
 
 
-glyph_t *FNT_glyphs[] = {
+glyph_t * const FNT_glyphs[] = {
     /* ASCII start at 33 (!), but we use 31 and 32 for the music signs (respectively US and Space) */
     &FNT_musc1 /* ( ) */
   , &FNT_musc2 /* ( ) */
@@ -199,5 +200,7 @@ glyph_t *FNT_glyphs[] = {
   , &FNT_z     /* (z) */
 };
      
+size_t const GLYPH_NB = sizeof(FNT_glyphs) / sizeof(glyph_t*);
+
 #endif /* guard */
 

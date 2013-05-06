@@ -6,8 +6,9 @@
 #include "data/terminal_font.hpp" /* font to use */
 
 class text_writer_c {
-  static size_t const GLYPH_NB = sizeof(FNT_glyphs) / sizeof(glyph_t*);
   GLuint _glyphTextures[GLYPH_NB];
+
+  void _unpack_texels(glyph_t const &packed, float *unpacked) const;
 
 public :
   text_writer_c(void);
@@ -16,7 +17,7 @@ public :
   /* return the glyph index for lookup the c character */
   static size_t glyph_index(char c);
   /* draw text at the given position */
-  void draw_string(char const *text, float x, float y) const;
+  void draw_string(char const *text, float x, float y, float w) const;
 };
 
 #endif /* guard */

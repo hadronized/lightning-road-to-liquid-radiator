@@ -2,12 +2,13 @@
 #include "mod3.hpp"
 
 /* shader sources */
-//#include "data/?.hpp"
+#include "data/final-fs.hpp"
+
 using namespace std;
 
 mod3_c::mod3_c() :
   _ppFS(GL_FRAGMENT_SHADER) {
-  _ppFS.source(load_source(FINAL_FS_PATH).c_str());
+  _ppFS.source(SHD_FINAL_FS);
   _ppFS.compile();
   if (!_ppFS.compiled()) {
     cerr << "Final fragment shader failed to compile:\n" << _ppFS.compile_log() << endl;
@@ -27,15 +28,15 @@ mod3_c::~mod3_c() {
 }
 
 void mod3_c::_init_uniforms() {
-  _ppRes = _ppP.map_uniform("res");
-  _ppTime = _ppP.map_uniform("time");
   glUseProgram(_ppP.id());
-  glUniform4f(_ppRes, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
+  auto ppResIndex = _ppP.map_uniform("res");
+  auto ppTexIndex = _ppP.map_uniform("tex");
+  glUniform2f(ppResIndex, 1.f / GLYPH_WIDTH, 1.f / GLYPH_HEIGHT);
+  glUniform1i(ppTexIndex, 0);
 }
 
 
-void mod3_c::render(float time) {
+void mod3_c::render(float) {
   glUseProgram(_ppP.id());
-  glUniform1f(_ppTime, time);
-  glRectf(-1.f, 1.f, 1.f, -1.f);
+  _writer.draw_string("skypers", -0.25, 0.25, 0.8);
 }

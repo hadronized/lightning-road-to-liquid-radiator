@@ -3,18 +3,21 @@
 
 #include "gl.hpp"
 #include "shader.hpp"
+#include "text_writer.hpp"
 
 namespace {
 }
 
 class mod3_c {
+  /* text writer */
+  /* TODO: to move away */
+  text_writer_c _writer;
+
   /* shader stuff */
   shader_c _ppFS;
   program_c _ppP;
 
   /* uniforms stuff */
-  GLint _ppRes;
-  GLint _ppTime;
   void _init_uniforms();
 
 public :

@@ -66,7 +66,7 @@ void bootstrap_c::init() {
 void bootstrap_c::run() {
   float time;
 
-  _advance_track(25.5f);
+  _advance_track(130.5f);
   while ((time = _track_cursor()) <= 159.f && treat_events()) {
     cout << "time: " << time << endl;
     if (time < 27.5f) {
