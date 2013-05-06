@@ -1,8 +1,10 @@
 #ifndef __TERMINAL_FONT_HPP
 #define __TERMINAL_FONT_HPP
 
-size_t const GLYPH_HEIGHT       = 6; /* max height of a glyph */
-size_t const GLYPH_SIZE         = GLYPH_HEIGHT * sizeof(char); /* glyph size */
+size_t const GLYPH_WIDTH        = 6; /* max width of a glyph */
+size_t const GLYPH_HEIGHT       = 8; /* max height of a glyph */
+size_t const GLYPH_SIZE         = GLYPH_WIDTH * GLYPH_HEIGHT; /* glyph size */
+size_t const FNT_TBL_START      = 31; /* ASCII table start */
 typedef unsigned char const glyph_t[GLYPH_SIZE]; /* glyph type */
 
 //glyph_t FNT_musc1 = { 0x84, 0x51, 0x10, 0x0C, 0x87, 0x01 }; /* ( ) */
