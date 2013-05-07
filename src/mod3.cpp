@@ -13,7 +13,7 @@ mod3_c::~mod3_c() {
 }
 
 void mod3_c::render(float) {
-  char const *str = "v x z";
+  char const *str = "x z";
   _writer.start_draw();
   _writer.draw_string(str, -1.f, 0.f, 0.5f);
   _writer.end_draw();
