@@ -21,15 +21,16 @@ namespace {
   int const BLUR_PASSES = 5;
 }
 
-mod1_c::mod1_c() :
-  _tunFS(GL_FRAGMENT_SHADER),
-  _thunVS(GL_VERTEX_SHADER),
-  _thunTCS(GL_TESS_CONTROL_SHADER),
-  _thunTES(GL_TESS_EVALUATION_SHADER),
-  _thunGS(GL_GEOMETRY_SHADER),
-  _thunFS(GL_FRAGMENT_SHADER),
-  _thunBlurFS(GL_FRAGMENT_SHADER),
-  _swapLinesFS(GL_FRAGMENT_SHADER) {
+mod1_c::mod1_c(text_writer_c &writer) :
+    _textWriter(writer)
+  , _tunFS(GL_FRAGMENT_SHADER)
+  , _thunVS(GL_VERTEX_SHADER)
+  , _thunTCS(GL_TESS_CONTROL_SHADER)
+  , _thunTES(GL_TESS_EVALUATION_SHADER)
+  , _thunGS(GL_GEOMETRY_SHADER)
+  , _thunFS(GL_FRAGMENT_SHADER)
+  , _thunBlurFS(GL_FRAGMENT_SHADER)
+  , _swapLinesFS(GL_FRAGMENT_SHADER) {
   /* tunnel setup */
 #if 0
   _tunFS.source(load_source(TUNNEL_FS_PATH).c_str());
@@ -259,4 +260,11 @@ void mod1_c::render(float time) {
   glUniform1f(_swapLinesTimeIndex, time);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glRectf(-1.f, 1.f, 1.f, -1.f);
+
+  /* intro title */
+  float t = time - 27.5f;
+  _textWriter.start_draw();
+  glClear(GL_DEPTH_BUFFER_BIT);
+  _textWriter.draw_string("Lightning Road To Liquid Radiator", 1.f-t, 0.5f, 0.2f);
+  _textWriter.end_draw();
 }

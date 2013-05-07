@@ -58,7 +58,7 @@ void bootstrap_c::init() {
   _textWriter = new text_writer_c;
   /* init the mods */
   _mod0 = new mod0_c(*_textWriter);
-  _mod1 = new mod1_c;
+  _mod1 = new mod1_c(*_textWriter);
   _mod2 = new mod2_c(_mod0->cube_program(), _mod0->cube());
   _mod3 = new mod3_c(*_textWriter);
   glEnable(GL_DEPTH_TEST);
@@ -70,7 +70,7 @@ void bootstrap_c::init() {
 void bootstrap_c::run() {
   float time;
 
-  //_advance_track(135.5f);
+  _advance_track(25.5f);
   while ((time = _track_cursor()) <= 159.f && treat_events()) {
     cout << "time: " << time << endl;
     if (time < 27.5f) {

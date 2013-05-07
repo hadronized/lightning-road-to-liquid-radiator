@@ -2,9 +2,12 @@
 #define __MOD1_HPP
 
 #include "shader.hpp"
+#include "text_writer.hpp"
 
 class mod1_c {
-  /* shader stuff */
+  /* text writer */
+  text_writer_c &_textWriter;
+
   /* tunnel program */
   shader_c _tunFS;
   shader_c _thunVS;
@@ -39,7 +42,7 @@ class mod1_c {
   void _init_uniforms(void);
 
 public :
-  mod1_c(void);
+  mod1_c(text_writer_c &writer);
   ~mod1_c(void);
 
   void render(float time);
