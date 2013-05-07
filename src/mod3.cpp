@@ -13,8 +13,8 @@ mod3_c::~mod3_c() {
 }
 
 void mod3_c::render(float) {
-  char const *str = "N";
+  char const *str = "so much fun, glyph...";
   _writer.start_draw();
-  _writer.draw_string(str, -1.f, 0.f, 0.5f);
+  _writer.draw_string(str, -1.f, 0.f, 0.05f);
   _writer.end_draw();
 }

@@ -10,7 +10,7 @@ char const *SHD_GLYPH_FS =
 "uniform int v;"
 "void main(){"
   "float f=texture2D(tex,vec2(uv.x,(1.-uv.y)));"
-  "frag=vec4(f*sin(float(v*v)),f,f,1.);"
+  "frag=vec4(f*sin(float(v)*10.),f*v*100.,f*sin(float(v)),1.);"
 "}";
 
 #endif /* guard */
