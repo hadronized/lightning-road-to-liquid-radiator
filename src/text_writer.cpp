@@ -40,7 +40,7 @@ void text_writer_c::_generate_glyphs() {
     std::cout << "glyph is:" << std::endl;
     for (int i = 0; i < 8; ++i) {
       for (int j = 0; j < 6; ++j)
-        std::cout << (texels[i*6+j] ? 'X' : ' ');
+        std::cout << (texels[i*6+j] ? 'X' : '_');
       std::cout << std::endl;
     }
     glBindTexture(GL_TEXTURE_2D, _glyphTextures[i]);
@@ -78,6 +78,7 @@ void text_writer_c::_init_shader() {
 void text_writer_c::_init_uniforms() {
   glUseProgram(_ps.id());
   _pIndex = _ps.map_uniform("p");
+  _pValue = _ps.map_uniform("v");
   auto gResIndex = _ps.map_uniform("gres");
   auto texIndex = _ps.map_uniform("tex");
   glUniform4f(gResIndex, GLYPH_WIDTH, GLYPH_HEIGHT, 1.f/GLYPH_WIDTH, 1.f/GLYPH_HEIGHT);
@@ -113,19 +114,19 @@ void text_writer_c::draw_string(char const *text, float x, float y, float h) con
         ox += w;
         break;
 
-#if 0
       case '\n' :
         ox = 0;
-        oy += GLYPH_HEIGHT;
+        oy -= h;
         break;
-#endif
 
       default :
         glBindTexture(GL_TEXTURE_2D, _glyphTextures[glyph_index(*text)]);
         glBindVertexArray(_va);
         glUniform4f(_pIndex, x+ox, y+oy, w, h);
+        glUniform1i(_pValue, *text);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
+        ox += w;
         break;
     }
   }
