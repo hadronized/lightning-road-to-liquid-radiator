@@ -90,7 +90,6 @@ void text_writer_c::_unpack_texels(glyph_t const &packed, float *unpacked) const
   /* FIXME: 6 is completely magic here. Coincidence? */
   for (int i = 0; i < 6; ++i) {
     std::bitset<8> bits = packed[i];
-    //std::cout << bits << std::endl;
     for (int j = 0; j < 8; ++j, ++k)
       unpacked[k] = bits[7 - j];
   }

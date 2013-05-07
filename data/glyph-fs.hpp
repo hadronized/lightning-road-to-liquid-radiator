@@ -8,8 +8,8 @@ char const *SHD_GLYPH_FS =
 "uniform vec4 gres;" /* glyph resolution */
 "uniform sampler2D tex;" /* texture of the glyph */
 "void main(){"
-  "frag=texture2D(tex,vec2(floor(uv.x*gres.x)*gres.z,floor(uv.y*gres.y)*gres.w));"
-  //"frag=vec4(vec2(floor(uv.x*gres.x)*gres.z,floor(uv.y*gres.y)*gres.w), 0., 1.);"
+  "frag=texture2D(tex,vec2(floor(uv.x*gres.x)*gres.z,(1.-floor(uv.y*gres.y)*gres.w))*(gres.y*gres.z));"
+  //"frag=vec4(vec2(floor(uv.x*gres.x)*gres.z,1.-floor(uv.y*gres.y)*gres.w), 0., 1.);"
 "}";
 
 #endif /* guard */

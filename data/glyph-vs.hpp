@@ -13,7 +13,7 @@ char const *SHD_GLYPH_VS =
 ");"
 "void main(){"
   "gl_Position=vec4(co[gl_VertexID], 0., 1.);"
-  "uv=co[gl_VertexID] / p.zw;"
+  "uv=(co[gl_VertexID]-p.xy) / p.zw;"
 "}";
 
 #endif /* guard */
