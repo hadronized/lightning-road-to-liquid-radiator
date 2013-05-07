@@ -78,7 +78,6 @@ void text_writer_c::_init_shader() {
 void text_writer_c::_init_uniforms() {
   glUseProgram(_ps.id());
   _pIndex = _ps.map_uniform("p");
-  _pValue = _ps.map_uniform("v");
   auto gResIndex = _ps.map_uniform("gres");
   auto texIndex = _ps.map_uniform("tex");
   glUniform4f(gResIndex, GLYPH_WIDTH, GLYPH_HEIGHT, 1.f/GLYPH_WIDTH, 1.f/GLYPH_HEIGHT);
@@ -123,7 +122,6 @@ void text_writer_c::draw_string(char const *text, float x, float y, float h) con
         glBindTexture(GL_TEXTURE_2D, _glyphTextures[glyph_index(*text)]);
         glBindVertexArray(_va);
         glUniform4f(_pIndex, x+ox, y+oy, w, h);
-        glUniform1i(_pValue, *text);
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
         glBindVertexArray(0);
         ox += w;

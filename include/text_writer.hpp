@@ -17,7 +17,6 @@ class text_writer_c {
 
   /* uniforms */
   GLint _pIndex;
-  GLint _pValue;
 
   void _generate_glyphs(void);
   void _init_shader(void);
