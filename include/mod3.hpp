@@ -10,11 +10,10 @@ namespace {
 
 class mod3_c {
   /* text writer */
-  /* TODO: to move away */
-  text_writer_c _writer;
+  text_writer_c &_writer;
 
 public :
-  mod3_c();
+  mod3_c(text_writer_c &writer);
   ~mod3_c();
 
   void render(float time);

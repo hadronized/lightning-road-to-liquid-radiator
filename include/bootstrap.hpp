@@ -7,9 +7,13 @@
 #include "mod1.hpp"
 #include "mod2.hpp"
 #include "mod3.hpp"
+#include "text_writer.hpp"
 
 class bootstrap_c {
   window_c *_pWin;
+
+  /* text writer, to write glyphs :) */
+  text_writer_c *_textWriter;
 
   /* all the mods go here */
   mod0_c *_mod0;

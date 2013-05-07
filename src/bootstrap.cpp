@@ -7,6 +7,7 @@ using namespace std;
 
 bootstrap_c::bootstrap_c() :
     _pWin(nullptr)
+  , _textWriter(nullptr)
   , _mod0(nullptr)
   , _mod1(nullptr)
   , _mod2(nullptr)
@@ -29,6 +30,7 @@ bootstrap_c::~bootstrap_c() {
   delete _mod1;
   delete _mod2;
   delete _mod3;
+  delete _textWriter;
   delete _pWin;
   FMOD_System_Release(_sndsys);
 }
@@ -51,12 +53,14 @@ void bootstrap_c::_advance_track(float t) {
 
 void bootstrap_c::init() {
   /* init the lol */
-  _pWin = new window_c(WIDTH, HEIGHT, FULLSCREEN);
+  //_pWin = new window_c(WIDTH, HEIGHT, FULLSCREEN);
+  /* init the text writer */
+  _textWriter = new text_writer_c;
   /* init the mods */
-  _mod0 = new mod0_c;
+  _mod0 = new mod0_c(*_textWriter);
   _mod1 = new mod1_c;
   _mod2 = new mod2_c(_mod0->cube_program(), _mod0->cube());
-  _mod3 = new mod3_c;
+  _mod3 = new mod3_c(*_textWriter);
   glEnable(GL_DEPTH_TEST);
   /* init the softsynth */
   FMOD_System_CreateStream(_sndsys, TRACK_PATH.c_str(), FMOD_HARDWARE | FMOD_LOOP_OFF | FMOD_2D, 0, &_track);
@@ -66,7 +70,7 @@ void bootstrap_c::init() {
 void bootstrap_c::run() {
   float time;
 
-  _advance_track(135.5f);
+  //_advance_track(135.5f);
   while ((time = _track_cursor()) <= 159.f && treat_events()) {
     cout << "time: " << time << endl;
     if (time < 27.5f) {

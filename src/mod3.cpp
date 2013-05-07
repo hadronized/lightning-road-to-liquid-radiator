@@ -7,7 +7,8 @@
 
 using namespace std;
 
-mod3_c::mod3_c() {
+mod3_c::mod3_c(text_writer_c &writer) :
+    _writer(writer) {
 }
 
 mod3_c::~mod3_c() {

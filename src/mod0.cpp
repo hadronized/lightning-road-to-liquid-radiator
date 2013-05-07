@@ -11,12 +11,13 @@
 
 using namespace std;
 
-mod0_c::mod0_c() :
-  _stdVS(GL_VERTEX_SHADER),
-  _stdTCS(GL_TESS_CONTROL_SHADER),
-  _stdTES(GL_TESS_EVALUATION_SHADER),
-  _stdFS(GL_FRAGMENT_SHADER),
-  _ppFS(GL_FRAGMENT_SHADER) {
+mod0_c::mod0_c(text_writer_c &writer) :
+    _writer(writer)
+  , _stdVS(GL_VERTEX_SHADER)
+  , _stdTCS(GL_TESS_CONTROL_SHADER)
+  , _stdTES(GL_TESS_EVALUATION_SHADER)
+  , _stdFS(GL_FRAGMENT_SHADER)
+  , _ppFS(GL_FRAGMENT_SHADER) {
 #if 0
   _stdVS.source(load_source(STD_VS_PATH).c_str());
 #endif
@@ -193,14 +194,22 @@ void mod0_c::render(float time) {
   glBindVertexArray(_cube);
   glDrawElements(GL_PATCHES, 36, GL_UNSIGNED_INT, 0);
   glBindVertexArray(0);
-  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
   /* post-process */
   glUseProgram(_ppP.id());
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
   glUniform1f(_ppTimeIndex, time);
   glBindTexture(GL_TEXTURE_2D, _offtex);
   glRectf(-1.f, 1.f, 1.f, -1.f);
   glUseProgram(0); /* end of frame */
+
+  if (time < 50.f) {
+    _writer.start_draw();
+    glClear(GL_DEPTH_BUFFER_BIT);
+    _writer.draw_string("skypers is proud to present...", 1.f-time/1.4f, 0.8f, 0.1f);
+    _writer.draw_string("...his very first release...", -8.f+time/1.4f, -0.8f, 0.1f);
+    _writer.end_draw();
+  }
 }
 
 program_c & mod0_c::cube_program() {

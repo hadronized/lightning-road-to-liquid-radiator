@@ -4,6 +4,7 @@
 #include "gl.hpp"
 #include "matrix.hpp"
 #include "shader.hpp"
+#include "text_writer.hpp"
 
 namespace {
   float const CUBE_VERTICES[] = {
@@ -39,6 +40,9 @@ namespace {
 }
 
 class mod0_c {
+  /* text writer */
+  text_writer_c &_writer;
+
   /* shader stuff */
   shader_c _stdVS;
   shader_c _stdTCS;
@@ -74,7 +78,7 @@ class mod0_c {
   void _setup_tessellation();
 
 public :
-  mod0_c();
+  mod0_c(text_writer_c &writer);
   ~mod0_c();
 
   void render(float time);
