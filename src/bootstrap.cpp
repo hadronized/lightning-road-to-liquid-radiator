@@ -72,7 +72,9 @@ void bootstrap_c::run() {
 
   //_advance_track(80.0f);
   while ((time = _track_cursor()) <= 159.f && treat_events()) {
+#if DEBUG
     cout << "time: " << time << endl;
+#endif
     if (time < 27.5f) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       _mod0->render(time);

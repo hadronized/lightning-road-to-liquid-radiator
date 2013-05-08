@@ -66,6 +66,7 @@ window_c::window_c(unsigned width, unsigned height, bool full) {
       &black, &black, 0, 0);
   XDefineCursor(_pDisp, _win, invisibleCursor);
   XFreeCursor(_pDisp, invisibleCursor);
+  XFreePixmap(_pDisp, bitmapNoData);
 }
 
 window_c::~window_c() {

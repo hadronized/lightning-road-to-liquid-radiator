@@ -35,14 +35,16 @@ void text_writer_c::_generate_glyphs() {
       continue;
 
     /* unpack texels */
-    std::cout << "processing glyph " << i << std::endl;
     _unpack_texels(*(FNT_glyphs[i]), texels);
+#if DEBUG
+    std::cout << "processing glyph " << i << std::endl;
     std::cout << "glyph is:" << std::endl;
     for (int i = 0; i < 8; ++i) {
       for (int j = 0; j < 6; ++j)
         std::cout << (texels[i*6+j] ? 'X' : '_');
       std::cout << std::endl;
     }
+#endif
     glBindTexture(GL_TEXTURE_2D, _glyphTextures[i]);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);

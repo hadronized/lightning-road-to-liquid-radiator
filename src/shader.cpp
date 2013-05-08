@@ -3,8 +3,7 @@
 
 /* =====================================
  * SHADER STAGE
- * =====================================
- */
+ * ===================================== */
 shader_c::shader_c(GLenum type) :
   _(glCreateShader(type)) {
 }
@@ -46,8 +45,7 @@ std::string shader_c::compile_log() const {
 
 /* =====================================
  * SHADER PROGRAM
- * =====================================
- */
+ * ===================================== */
 program_c::program_c() :
   _(glCreateProgram()) {
 }
@@ -89,7 +87,9 @@ std::string program_c::link_log() const {
 
 GLint program_c::map_uniform(char const *name) const {
   auto l = glGetUniformLocation(_, name);
+#if DEBUG
   if (l != -1)
     std::cout << "'" << name << "' is active" << std::endl;
+#endif
   return l;
 }

@@ -163,6 +163,7 @@ void mod1_c::_setup_offscreen() {
     glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _rdbf);
     glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _offtex[i], 0);
 
+#if DEBUG
     auto ok = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
     switch (ok) {
       case GL_FRAMEBUFFER_COMPLETE :
@@ -172,6 +173,7 @@ void mod1_c::_setup_offscreen() {
       default :
         cerr << "framebuffer incomplete" << endl;
     }
+#endif
   }
 
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
