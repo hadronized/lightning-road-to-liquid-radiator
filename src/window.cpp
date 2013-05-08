@@ -39,15 +39,9 @@ window_c::window_c(unsigned width, unsigned height, bool full) {
   winAttr.colormap     = cmap;
   winAttr.border_pixel = 0;
   winAttr.event_mask   = ExposureMask           |
-    VisibilityChangeMask   |
     KeyPressMask           |
     KeyReleaseMask         |
-    //ButtonPressMask        |
-    //ButtonReleaseMask      |
-    //PointerMotionMask      |
-    StructureNotifyMask    |
-    SubstructureNotifyMask |
-    FocusChangeMask;
+    SubstructureNotifyMask;
 
   _win = XCreateWindow(_pDisp, rootwin, 0, 0, width, height, 0, pVI->depth, InputOutput, pVI->visual, 
                        CWBorderPixel | CWColormap | CWEventMask, &winAttr );
@@ -59,6 +53,19 @@ window_c::window_c(unsigned width, unsigned height, bool full) {
   glXMakeCurrent(_pDisp, _win, _cntx);
 
   XMapWindow(_pDisp, _win);
+
+  /* hide the cursor */
+  Cursor invisibleCursor;
+  Pixmap bitmapNoData;
+  XColor black;
+  static char noData[] = { 0,0,0,0,0,0,0,0 };
+  black.red = black.green = black.blue = 0;
+
+  bitmapNoData = XCreateBitmapFromData(_pDisp, _win, noData, 8, 8);
+  invisibleCursor = XCreatePixmapCursor(_pDisp, bitmapNoData, bitmapNoData, 
+      &black, &black, 0, 0);
+  XDefineCursor(_pDisp, _win, invisibleCursor);
+  XFreeCursor(_pDisp, invisibleCursor);
 }
 
 window_c::~window_c() {
