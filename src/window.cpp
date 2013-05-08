@@ -2,7 +2,7 @@
 #include "common.hpp"
 
 namespace {
-  char const TITLE[] = "Lightning Road To Liquid Sun";
+  char const TITLE[] = "Lightning Road To Liquid Radiator";
   int /* const */ DOUBLE_BUFF_VISUAL[] = {
       GLX_RGBA
     , GLX_DEPTH_SIZE, 24
