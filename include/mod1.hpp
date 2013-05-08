@@ -32,17 +32,17 @@ class mod1_c {
   GLuint _offtex[3];
   GLuint _rdbf;
   GLuint _fbo[3];
-  void _setup_offscreen(void);
+  void _setup_offscreen(float width, float height);
 
   /* swap lines */
   shader_c _swapLinesFS;
   program_c _swapLinesP;
   GLint _swapLinesTimeIndex;
 
-  void _init_uniforms(void);
+  void _init_uniforms(float width, float height);
 
 public :
-  mod1_c(text_writer_c &writer);
+  mod1_c(float width, float height, text_writer_c &writer);
   ~mod1_c(void);
 
   void render(float time);

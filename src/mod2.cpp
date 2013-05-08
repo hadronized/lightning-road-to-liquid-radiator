@@ -8,7 +8,7 @@
 
 using namespace std;
 
-mod2_c::mod2_c(text_writer_c &writer, program_c &cubeP, GLuint cube) :
+mod2_c::mod2_c(float width, float height, text_writer_c &writer, program_c &cubeP, GLuint cube) :
     _textWriter(writer)
   , _stdFS(GL_FRAGMENT_SHADER)
   , _cubeP(cubeP)
@@ -48,14 +48,14 @@ mod2_c::mod2_c(text_writer_c &writer, program_c &cubeP, GLuint cube) :
     exit(2);
   }
 
-  _init_uniforms();
-  _setup_offscreen();
+  _init_uniforms(width, height);
+  _setup_offscreen(width, height);
 }
 
 mod2_c::~mod2_c() {
 }
 
-void mod2_c::_setup_offscreen() {
+void mod2_c::_setup_offscreen(float width, float height) {
   /* prepare the offscreen texture */
   glGenTextures(1, &_offtex);
   glBindTexture(GL_TEXTURE_2D, _offtex);
@@ -63,13 +63,13 @@ void mod2_c::_setup_offscreen() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
 
   /* prepare the renderbuffer */
   glGenRenderbuffers(1, &_rdbf);
   glBindRenderbuffer(GL_RENDERBUFFER, _rdbf);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
   /* prepare the FBO */
@@ -93,13 +93,13 @@ void mod2_c::_setup_offscreen() {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 }
 
-void mod2_c::_init_uniforms() {
+void mod2_c::_init_uniforms(float width, float height) {
   /* lava */
   glUseProgram(_stdP.id());
   _stdTimeIndex = _stdP.map_uniform("time");
   _stdRes = _stdP.map_uniform("res");
   _stdFovy = _stdP.map_uniform("fovy");
-  glUniform4f(_stdRes, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
+  glUniform4f(_stdRes, width, height, 1.f/width, 1.f/height);
   glUniform1f(_stdFovy, FOVY);
 
   /* cube */
@@ -112,7 +112,7 @@ void mod2_c::_init_uniforms() {
   auto rgbaResIndex = _rgbaP.map_uniform("res");
   _rgbaTimeIndex = _rgbaP.map_uniform("time");
   glUniform1i(rgbaOfftexIndex, 0);
-  glUniform4f(rgbaResIndex, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
+  glUniform4f(rgbaResIndex, width, height, 1.f/width, 1.f/height);
 }
 
 void mod2_c::render(float time) {

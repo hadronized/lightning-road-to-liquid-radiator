@@ -56,8 +56,8 @@ class mod0_c {
   GLuint _offtex;
   GLuint _rdbf;
   GLuint _fbo;
-  void _gen_offscreen_tex();
-  void _gen_rdbf();
+  void _gen_offscreen_tex(float width, float height);
+  void _gen_rdbf(float width, float height);
   void _gen_framebuffer();
   void _setup_offscreen();
 
@@ -73,12 +73,12 @@ class mod0_c {
   GLuint _stdTimeIndex;
   GLuint _ppResIndex;
   GLuint _ppTimeIndex;
-  void _init_uniforms();
+  void _init_uniforms(float width, float height);
 
   void _setup_tessellation();
 
 public :
-  mod0_c(text_writer_c &writer);
+  mod0_c(float width, float height, text_writer_c &writer);
   ~mod0_c();
 
   void render(float time);

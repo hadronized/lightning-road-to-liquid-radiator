@@ -22,11 +22,11 @@ class mod3_c {
   GLint _plasmaTimeIndex;
 
   void _init_shader(void);
-  void _init_offscreen(void);
-  void _init_uniforms(void);
+  void _init_offscreen(float width, float height);
+  void _init_uniforms(float width, float heihgt);
 
 public :
-  mod3_c(text_writer_c &writer);
+  mod3_c(float width, float height, text_writer_c &writer);
   ~mod3_c();
 
   void render(float time);

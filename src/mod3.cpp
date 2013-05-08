@@ -8,18 +8,18 @@
 
 using namespace std;
 
-mod3_c::mod3_c(text_writer_c &writer) :
+mod3_c::mod3_c(float width, float height, text_writer_c &writer) :
     _writer(writer)
   , _plasmaFS(GL_FRAGMENT_SHADER) {
   _init_shader();
-  _init_uniforms();
-  _init_offscreen();
+  _init_uniforms(width, height);
+  _init_offscreen(width, height);
 }
 
 mod3_c::~mod3_c() {
 }
 
-void mod3_c::_init_offscreen() {
+void mod3_c::_init_offscreen(float width, float height) {
   /* prepare the offscreen texture */
   glGenTextures(1, &_offtex);
   glBindTexture(GL_TEXTURE_2D, _offtex);
@@ -27,13 +27,13 @@ void mod3_c::_init_offscreen() {
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
 
   /* prepare the renderbuffer */
   glGenRenderbuffers(1, &_rdbf);
   glBindRenderbuffer(GL_RENDERBUFFER, _rdbf);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
   /* prepare the FBO */
@@ -72,13 +72,13 @@ void mod3_c::_init_shader() {
   }
 }
 
-void mod3_c::_init_uniforms() {
+void mod3_c::_init_uniforms(float width, float height) {
   glUseProgram(_plasmaSP.id());
   _plasmaTimeIndex = _plasmaSP.map_uniform("time");
   auto plasmaResIndex = _plasmaSP.map_uniform("res");
   auto plasmaTexIndex = _plasmaSP.map_uniform("tex");
 
-  glUniform2f(plasmaResIndex, IWIDTH, IHEIGHT);
+  glUniform2f(plasmaResIndex, 1.f/width, 1.f/height);
   glUniform1i(plasmaTexIndex, 0);
 }
 

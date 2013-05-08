@@ -11,7 +11,7 @@
 
 using namespace std;
 
-mod0_c::mod0_c(text_writer_c &writer) :
+mod0_c::mod0_c(float width, float height, text_writer_c &writer) :
     _writer(writer)
   , _stdVS(GL_VERTEX_SHADER)
   , _stdTCS(GL_TESS_CONTROL_SHADER)
@@ -81,15 +81,15 @@ mod0_c::mod0_c(text_writer_c &writer) :
     exit(2);
   }
   /* offscreen */
-  _gen_offscreen_tex();
-  _gen_rdbf();
+  _gen_offscreen_tex(width, height);
+  _gen_rdbf(width, height);
   _gen_framebuffer();
   _setup_offscreen();
   /* cube generation */
   _gen_buffers();
   _gen_cube();
   /* uniforms */
-  _init_uniforms();
+  _init_uniforms(width, height);
   /* tessellation */
   _setup_tessellation();
 }
@@ -97,21 +97,21 @@ mod0_c::mod0_c(text_writer_c &writer) :
 mod0_c::~mod0_c() {
 }
 
-void mod0_c::_gen_offscreen_tex() {
+void mod0_c::_gen_offscreen_tex(float width, float height) {
   glGenTextures(1, &_offtex);
   glBindTexture(GL_TEXTURE_2D, _offtex);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
   glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, 0);
   glBindTexture(GL_TEXTURE_2D, 0);
 }
 
-void mod0_c::_gen_rdbf() {
+void mod0_c::_gen_rdbf(float width, float height) {
   glGenRenderbuffers(1, &_rdbf);
   glBindRenderbuffer(GL_RENDERBUFFER, _rdbf);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
@@ -168,8 +168,8 @@ void mod0_c::_gen_cube() {
   glBindVertexArray(0);
 }
 
-void mod0_c::_init_uniforms() {
-  auto p = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
+void mod0_c::_init_uniforms(float width, float height) {
+  auto p = gen_perspective(FOVY, width/height, ZNEAR, ZFAR);
 
   glUseProgram(_stdP.id());
   _projIndex = _stdP.map_uniform("proj");
@@ -180,7 +180,7 @@ void mod0_c::_init_uniforms() {
   _offtexIndex = _ppP.map_uniform("offtex");
   _ppResIndex = _ppP.map_uniform("res");
   _ppTimeIndex = _ppP.map_uniform("time");
-  glUniform4f(_ppResIndex, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
+  glUniform4f(_ppResIndex, width, height, 1.f/width, 1.f/height);
   glUniform1i(_offtexIndex, 0);
 }
 

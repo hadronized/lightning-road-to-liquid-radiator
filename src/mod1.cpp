@@ -21,7 +21,7 @@ namespace {
   int const BLUR_PASSES = 5;
 }
 
-mod1_c::mod1_c(text_writer_c &writer) :
+mod1_c::mod1_c(float width, float height, text_writer_c &writer) :
     _textWriter(writer)
   , _tunFS(GL_FRAGMENT_SHADER)
   , _thunVS(GL_VERTEX_SHADER)
@@ -129,15 +129,15 @@ mod1_c::mod1_c(text_writer_c &writer) :
     exit(2);
   }
 
-  _init_uniforms();
+  _init_uniforms(width, height);
   _init_thunders();
-  _setup_offscreen();
+  _setup_offscreen(width, height);
 }
 
 mod1_c::~mod1_c() {
 }
 
-void mod1_c::_setup_offscreen() {
+void mod1_c::_setup_offscreen(float width, float height) {
   /* prepare the offscreen texture */
   glGenTextures(3, _offtex);
   for (int i = 0; i < 3; ++i) {
@@ -146,14 +146,14 @@ void mod1_c::_setup_offscreen() {
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_FLOAT, 0);
   }
   glBindTexture(GL_TEXTURE_2D, 0);
 
   /* prepare the renderbuffer */
   glGenRenderbuffers(1, &_rdbf);
   glBindRenderbuffer(GL_RENDERBUFFER, _rdbf);
-  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
   glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
   /* prepare the FBO */
@@ -185,19 +185,19 @@ void mod1_c::_init_thunders() {
   glBindVertexArray(0);
 }
 
-void mod1_c::_init_uniforms() {
+void mod1_c::_init_uniforms(float width, float height) {
   /* tunnel uniforms init */
   GLint tunResIndex;
 
   glUseProgram(_tunP.id());
   _tunTimeIndex = _tunP.map_uniform("time");
   tunResIndex = _tunP.map_uniform("res");
-  glUniform4f(tunResIndex, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
+  glUniform4f(tunResIndex, width, height, 1.f/width, 1.f/height);
 
   /* thunders field init */
   glUseProgram(_thunP.id());
   auto projIndex = _thunP.map_uniform("proj");
-  auto p = gen_perspective(FOVY, RATIO, ZNEAR, ZFAR);
+  auto p = gen_perspective(FOVY, width/height, ZNEAR, ZFAR);
 
   glUniformMatrix4fv(projIndex, 1, GL_FALSE, p._);
   _thunTimeIndex = _thunP.map_uniform("time");
@@ -206,7 +206,7 @@ void mod1_c::_init_uniforms() {
   glUseProgram(_thunBlurP.id());
   auto texBlurIndex = _thunBlurP.map_uniform("offtex");
   auto thunBlurResIndex = _thunBlurP.map_uniform("res");
-  glUniform4f(thunBlurResIndex, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
+  glUniform4f(thunBlurResIndex, width, height, 1.f/width, 1.f/height);
   glUniform1i(texBlurIndex, 0);
 
   /* swap lines */
@@ -214,7 +214,7 @@ void mod1_c::_init_uniforms() {
   auto swapLinesRes = _swapLinesP.map_uniform("res");
   auto swapLinesOfftexIndex = _swapLinesP.map_uniform("offtex");
   _swapLinesTimeIndex = _swapLinesP.map_uniform("time");
-  glUniform4f(swapLinesRes, WIDTH, HEIGHT, IWIDTH, IHEIGHT);
+  glUniform4f(swapLinesRes, width, height, 1.f/width, 1.f/height);
   glUniform1i(swapLinesOfftexIndex, 0);
 }
 

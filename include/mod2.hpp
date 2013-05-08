@@ -30,12 +30,12 @@ class mod2_c {
   GLuint _offtex;
   GLuint _rdbf;
   GLuint _fbo;
-  void _setup_offscreen();
 
-  void _init_uniforms();
+  void _setup_offscreen(float width, float height);
+  void _init_uniforms(float width, float height);
 
 public :
-  mod2_c(text_writer_c &writer, program_c &cubeP, GLuint cube);
+  mod2_c(float width, float height, text_writer_c &writer, program_c &cubeP, GLuint cube);
   ~mod2_c();
 
   void render(float time);

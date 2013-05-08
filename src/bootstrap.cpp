@@ -5,8 +5,10 @@
 
 using namespace std;
 
-bootstrap_c::bootstrap_c() :
-    _pWin(nullptr)
+bootstrap_c::bootstrap_c(float width, float height, bool full) :
+    _width(width)
+  , _height(height)
+  , _pWin(nullptr)
   , _textWriter(nullptr)
   , _mod0(nullptr)
   , _mod1(nullptr)
@@ -14,7 +16,7 @@ bootstrap_c::bootstrap_c() :
   , _mod3(nullptr) {
   GLubyte const *glstr;
 
-  _pWin = new window_c(WIDTH, HEIGHT, FULLSCREEN);
+  _pWin = new window_c(width, height, full);
   cout << "init window" << endl;
 
   glstr = glGetString(GL_VERSION);
@@ -57,10 +59,10 @@ void bootstrap_c::init() {
   /* init the text writer */
   _textWriter = new text_writer_c;
   /* init the mods */
-  _mod0 = new mod0_c(*_textWriter);
-  _mod1 = new mod1_c(*_textWriter);
-  _mod2 = new mod2_c(*_textWriter, _mod0->cube_program(), _mod0->cube());
-  _mod3 = new mod3_c(*_textWriter);
+  _mod0 = new mod0_c(_width, _height, *_textWriter);
+  _mod1 = new mod1_c(_width, _height, *_textWriter);
+  _mod2 = new mod2_c(_width, _height, *_textWriter, _mod0->cube_program(), _mod0->cube());
+  _mod3 = new mod3_c(_width, _height, *_textWriter);
   glEnable(GL_DEPTH_TEST);
   /* init the softsynth */
   FMOD_System_CreateStream(_sndsys, TRACK_PATH.c_str(), FMOD_HARDWARE | FMOD_LOOP_OFF | FMOD_2D, 0, &_track);

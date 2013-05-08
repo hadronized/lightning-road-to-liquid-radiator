@@ -10,6 +10,10 @@
 #include "text_writer.hpp"
 
 class bootstrap_c {
+  /* size */
+  float _width;
+  float _height;
+
   window_c *_pWin;
 
   /* text writer, to write glyphs :) */
@@ -31,7 +35,7 @@ class bootstrap_c {
   void _advance_track(float t);
 
 public :
-  bootstrap_c(void);
+  bootstrap_c(float width, float height, bool full);
   ~bootstrap_c(void);
 
   bool treat_events(void);
