@@ -4,13 +4,13 @@
 #include <iostream>
 #include <string>
 
-int const WIDTH = 1920;
-int const HEIGHT = 1080;
+int const WIDTH = 800;
+int const HEIGHT = 600;
 float const IWIDTH = 1.f / WIDTH;
 float const IHEIGHT = 1.f / HEIGHT;
 float const RATIO = 1.f * WIDTH / HEIGHT;
 int const DEPTH = 32;
-bool const FULLSCREEN = true;
+bool const FULLSCREEN = false;
 float const PI = 3.14159265359;
 float const FOVY = 75.*PI/180.;
 float const ZNEAR = 0.01f;

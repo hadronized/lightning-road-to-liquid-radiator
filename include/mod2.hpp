@@ -2,8 +2,12 @@
 #define __MOD2_HPP
 
 #include "shader.hpp"
+#include "text_writer.hpp"
 
 class mod2_c {
+  /* text writer */
+  text_writer_c &_textWriter;
+
   /* lava part */
   shader_c _stdFS;
   program_c _stdP;
@@ -31,7 +35,7 @@ class mod2_c {
   void _init_uniforms();
 
 public :
-  mod2_c(program_c &cubeP, GLuint cube);
+  mod2_c(text_writer_c &writer, program_c &cubeP, GLuint cube);
   ~mod2_c();
 
   void render(float time);

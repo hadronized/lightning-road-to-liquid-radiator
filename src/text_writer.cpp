@@ -108,6 +108,7 @@ void text_writer_c::draw_string(char const *text, float x, float y, float h) con
   auto w = h * GLYPH_RATIO;
 
   for (float ox = 0.f, oy = 0.f; *text; ++text) {
+    std::cout << "Rendering character: " << *text << " -> " << static_cast<int>(*text) << std::endl;
     switch (*text) {
       case ' ' :
         ox += w;

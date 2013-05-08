@@ -8,8 +8,9 @@
 
 using namespace std;
 
-mod2_c::mod2_c(program_c &cubeP, GLuint cube) :
-    _stdFS(GL_FRAGMENT_SHADER)
+mod2_c::mod2_c(text_writer_c &writer, program_c &cubeP, GLuint cube) :
+    _textWriter(writer)
+  , _stdFS(GL_FRAGMENT_SHADER)
   , _cubeP(cubeP)
   , _cube(cube)
   , _rgbaFS(GL_FRAGMENT_SHADER) {
@@ -123,7 +124,7 @@ void mod2_c::render(float time) {
   glUniform1f(_stdTimeIndex, time);
   glRectf(-1.f, 1.f, 1.f, -1.f);
 
-  if (time >= 109.7) { /* WOOUH THAT'S DIRTY! DO YOU THINK SO, WELL I BETTER NOT SHOW YOU WHERE’S THE LIMONADE IS MADE, SWEET LIMONADE */
+  if (time >= 109.7f) { /* WOOUH THAT'S DIRTY! DO YOU THINK SO, WELL I BETTER NOT SHOW YOU WHERE’S THE LIMONADE IS MADE, SWEET LIMONADE */
     glPatchParameteri(GL_PATCH_VERTICES, 3);
     glUseProgram(_cubeP.id());
     glUniform1f(_cubeTimeIndex, time);
@@ -131,7 +132,14 @@ void mod2_c::render(float time) {
     glBindVertexArray(_cube);
     glDrawElements(GL_PATCHES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-  }
+  } else if (time >= 82.3f && time <= 96.1f) {
+    /* credits */
+    _textWriter.start_draw();
+    glClear(GL_DEPTH_BUFFER_BIT);
+    _textWriter.draw_string("100111010 : skypers", -0.71f, 0.7f, 0.05f);
+    _textWriter.draw_string("\036 \037 \036     : xtrium", -0.71f, 0.6f, 0.05f);
+    _textWriter.end_draw();
+  } 
 
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
