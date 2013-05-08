@@ -232,7 +232,7 @@ void mod1_c::render(float time) {
   /* thunders render */
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[0]);
   glUseProgram(_thunP.id());
-  glPatchParameteri(GL_PATCH_VERTICES, 2);
+  glPatchParameteriARB(GL_PATCH_VERTICES, 2);
   glUniform1f(_thunTimeIndex, time);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   glBindVertexArray(_thunders);
