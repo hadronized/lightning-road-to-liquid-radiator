@@ -186,7 +186,7 @@ void mod0_c::_init_uniforms() {
 
 void mod0_c::_setup_tessellation() {
   glUseProgram(_stdP.id());
-  glPatchParameteri(GL_PATCH_VERTICES, 3);
+  glPatchParameteriARB(GL_PATCH_VERTICES, 3);
 }
 
 void mod0_c::render(float time) {

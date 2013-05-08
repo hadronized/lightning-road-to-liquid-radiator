@@ -2,7 +2,8 @@
 #define __CUBE_TCS_HPP
 
 char const *SHD_CUBE_TCS =
-"#version 400 core\n"
+"#version 330\n"
+"#extension GL_ARB_tessellation_shader : enable\n"
 "layout(vertices=3)out;"
 "in vec3 gpos[];"
 "out vec3 tpos[];"

@@ -139,7 +139,7 @@ void mod2_c::render(float time) {
     _textWriter.start_draw();
     glClear(GL_DEPTH_BUFFER_BIT);
     _textWriter.draw_string("100111010 : skypers", -0.71f, 0.7f, 0.05f);
-    _textWriter.draw_string("\036 \037 \036     : xtrium", -0.71f, 0.6f, 0.05f);
+    _textWriter.draw_string("\036 \037 \036 \036 \037 : xtrium", -0.71f, 0.6f, 0.05f);
     _textWriter.end_draw();
   } 
 

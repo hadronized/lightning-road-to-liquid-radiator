@@ -7,5 +7,10 @@
 #else /* win32 */
 #endif
 
+/* ==================
+ *  OPENGL EXTENSION
+ * ================== */
+extern PFNGLPATCHPARAMETERIPROC glPatchParameteriARB;
+
 #endif /* guard */
 

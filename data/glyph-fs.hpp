@@ -2,7 +2,7 @@
 #define __GLYPH_FS_HPP
 
 char const *SHD_GLYPH_FS =
-"#version 330\n"
+"#version 330 core\n"
 "in vec2 uv;"
 "out vec4 frag;"
 "uniform vec4 gres;" /* glyph resolution */

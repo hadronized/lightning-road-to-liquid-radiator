@@ -2,7 +2,8 @@
 #define __THUN_TCS_HPP
 
 char const *SHD_THUN_TCS =
-"#version 400 core\n"
+"#version 330\n"
+"#extension GL_ARB_tessellation_shader : enable\n"
 "layout(vertices=2)out;"
 "in vec3 gpos[];"
 "out vec3 tpos[];"

@@ -2,7 +2,8 @@
 #define __CUBE_TES_HPP
 
 char const *SHD_CUBE_TES =
-"#version 400 core\n"
+"#version 330\n"
+"#extension GL_ARB_tessellation_shader : enable\n"
 "layout(triangles,equal_spacing,cw)in;"
 "in vec3 tpos[];"
 "out vec3 pos;"

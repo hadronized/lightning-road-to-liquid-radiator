@@ -1,9 +1,9 @@
 #ifndef __THUN_TES_HPP
 #define __THUN_TES_HPP
 
-
 char const *SHD_THUN_TES =
-"#version 400 core\n"
+"#version 330\n"
+"#extension GL_ARB_tessellation_shader : enable\n"
 "layout(isolines,equal_spacing,cw)in;"
 "in vec3 tpos[];"
 "out vec3 pos;"
