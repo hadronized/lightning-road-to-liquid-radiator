@@ -4,22 +4,93 @@
 
 /* shader sources */
 #include "data/final-fs.hpp"
+#include "data/final-colors-fs.hpp"
 
 using namespace std;
 
 mod3_c::mod3_c(text_writer_c &writer) :
-    _writer(writer) {
+    _writer(writer)
+  , _plasmaFS(GL_FRAGMENT_SHADER) {
+  _init_shader();
+  _init_uniforms();
+  _init_offscreen();
 }
 
 mod3_c::~mod3_c() {
+}
+
+void mod3_c::_init_offscreen() {
+  /* prepare the offscreen texture */
+  glGenTextures(1, &_offtex);
+  glBindTexture(GL_TEXTURE_2D, _offtex);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+  glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+  glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, WIDTH, HEIGHT, 0, GL_RGBA, GL_FLOAT, 0);
+  glBindTexture(GL_TEXTURE_2D, 0);
+
+  /* prepare the renderbuffer */
+  glGenRenderbuffers(1, &_rdbf);
+  glBindRenderbuffer(GL_RENDERBUFFER, _rdbf);
+  glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, WIDTH, HEIGHT);
+  glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+  /* prepare the FBO */
+  glGenFramebuffers(1, &_fbo);
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+  glFramebufferRenderbuffer(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, _rdbf);
+  glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, _offtex, 0);
+
+#if DEBUG
+    auto ok = glCheckFramebufferStatus(GL_DRAW_FRAMEBUFFER);
+    switch (ok) {
+      case GL_FRAMEBUFFER_COMPLETE :
+        std::cout << "framebuffer complete" << std::endl;
+        break;
+
+      default :
+        std::cerr << "framebuffer incomplete" << std::endl;
+    }
+#endif
+
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+}
+
+void mod3_c::_init_shader() {
+  _plasmaFS.source(SHD_FINAL_COLORS_FS);
+  _plasmaFS.compile();
+  if (!_plasmaFS.compiled()) {
+    std::cerr << "Final colors fragment shader failed to compile\n:" << _plasmaFS.compile_log() << std::endl;
+    exit(1);
+  }
+  _plasmaSP.attach(_plasmaFS);
+  _plasmaSP.link();
+  if (!_plasmaSP.linked()) {
+    std::cerr << "Final colors fragment shader failed to compile:\n" << _plasmaSP.link_log() << std::endl;
+    exit(2);
+  }
+}
+
+void mod3_c::_init_uniforms() {
+  glUseProgram(_plasmaSP.id());
+  _plasmaTimeIndex = _plasmaSP.map_uniform("time");
+  auto plasmaResIndex = _plasmaSP.map_uniform("res");
+  auto plasmaTexIndex = _plasmaSP.map_uniform("tex");
+
+  glUniform2f(plasmaResIndex, IWIDTH, IHEIGHT);
+  glUniform1i(plasmaTexIndex, 0);
 }
 
 void mod3_c::render(float time) {
   float const h = 0.05f;
 
   float t = time - 137.2f;
-  _writer.start_draw();
 
+  /* offscreen */
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
+  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  _writer.start_draw();
   if (time < 150.9f) {
     /* :: greetings */
     _writer.draw_string(":: greetings ::", -0.45f, std::min(0.2f, t-1.f), h+0.03f);
@@ -35,6 +106,13 @@ void mod3_c::render(float time) {
                         "Eersel, North Brabant, The Netherlands",
                         -0.9f, -0.8f, h);
   }
-
   _writer.end_draw();
+  
+  /* colored texts */
+  glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+  glBindTexture(GL_TEXTURE_2D, _offtex);
+  glUseProgram(_plasmaSP.id());
+  glUniform1f(_plasmaTimeIndex, time);
+  glRectf(-1., 1.f, 1.f, -1.f);
+  glBindTexture(GL_TEXTURE_2D, 0);
 }
