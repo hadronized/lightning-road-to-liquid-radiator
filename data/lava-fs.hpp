@@ -31,12 +31,13 @@ char const *SHD_LAVA_FS =
     "if(p.y<=(plasma(p.xz/20.)-3.)){"
       "return s;"
     "}"
-    "d*=1.018;"
+    //"d*=1.008;"
+    "d=0.75*sqrt(s);" /* increase the factor makes the lava faster */
   "}"
   "return 0.;"
 "}"
 "float sweep(float d,float dl,float t){"
-  "float a=80.*(mod(max(-1.,time-dl),6.82));"
+  "float a=80.*(mod(max(-1.,time-dl),6.84));" /* 6.82 */
   "float r=abs(d-a);"
   "return max(t-r,0.);"
 "}"
