@@ -1,6 +1,6 @@
 CXX= g++
 CXXFLAGS= -W -Wall -pedantic -DGL_GLEXT_PROTOTYPES -I./include -I./ -std=c++11 -ffast-math -Os
-LDFLAGS= -lX11 -lGL -L/usr/lib/nvidia-bumblebee -lfmodex
+LDFLAGS= -lX11 -lGL -lfmodex
 OBJ=main.o gl.o window.o text_writer.o common.o shader.o matrix.o bootstrap.o mod0.o mod1.o mod2.o mod3.o
 INTRO_NAME= lr2lr# Lightning Road To Liquid Radiator
 EXEC= $(INTRO_NAME).bin
@@ -14,6 +14,7 @@ all: $(OBJ)
 
 intro: all
 	strip -s $(EXEC)
+	sstrip -z $(EXEC)
 	cp packer $(PACKER)
 	xz -$(COMPRESS_LVL)ck $(EXEC) >> $(PACKER)
 	chmod +x $(PACKER)

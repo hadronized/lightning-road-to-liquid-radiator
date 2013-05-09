@@ -31,7 +31,7 @@ char const *SHD_LAVA_FS =
     "if(p.y<=(plasma(p.xz/20.)-3.)){"
       "return s;"
     "}"
-    "d*=1.008;"
+    "d*=1.018;"
   "}"
   "return 0.;"
 "}"

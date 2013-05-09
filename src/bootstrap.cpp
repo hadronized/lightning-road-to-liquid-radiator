@@ -73,7 +73,7 @@ void bootstrap_c::run() {
   float time;
 
 #if DEBUG
-  _advance_track(135.0f);
+  _advance_track(54.0f);
 #endif
   while ((time = _track_cursor()) <= 159.f && treat_events()) {
 #if DEBUG
