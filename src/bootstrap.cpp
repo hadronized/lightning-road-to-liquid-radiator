@@ -27,6 +27,7 @@ Ne::Mixer *mixer;
 Ne::Wavetable *wavetbl;
 unsigned int NSD_TEMPO;
 Ne::AudioDevice *ad;
+float cursor;
 
 bootstrap_c::bootstrap_c(float width, float height, bool full) :
     _width(width)
@@ -44,11 +45,6 @@ bootstrap_c::bootstrap_c(float width, float height, bool full) :
 
   glstr = glGetString(GL_VERSION);
   cout << "OpenGL Version String: " << glstr << endl;
-
-  mixer = new Ne::Mixer;
-  wavetbl = new Ne::Wavetable;
-  nsd_prepare(mixer, wavetbl);
-  cout << "init softsynth" << endl;
 }
 
 bootstrap_c::~bootstrap_c() {
@@ -63,7 +59,7 @@ bootstrap_c::~bootstrap_c() {
 #endif
 }
 
-void bootstrap_c::_init_softsynth() {
+void * track_play_routine(void*) {
   unsigned int nTracks = ((unsigned int*)nsd_data)[0];
   unsigned int loadOffset = 4;
 
@@ -104,13 +100,19 @@ void bootstrap_c::_init_softsynth() {
   ad = Ne::AudioDevice::getInstance();
   ad->setSongLength(165 * 44100);
   ad->open();
-}
+  cout << "init softsynth" << endl;
 
-void * track_play_routine(void*) {
+  mixer = new Ne::Mixer;
+  wavetbl = new Ne::Wavetable;
+  nsd_prepare(mixer, wavetbl);
+
   bool continuePlaying  = true;
   unsigned int curTick  = 0;
   unsigned int curFrame = 0;
   unsigned short blankTicks = 1024;
+  //float step = 0.98571f / 44100.f;
+  float step = 1.f / 44100.f;
+  cursor = 0.f;
 
   float* pulseBuffer = new float[FRAMES_PER_PULSE * 2];
   while(continuePlaying || blankTicks)
@@ -147,8 +149,9 @@ void * track_play_routine(void*) {
         }
       }
 
-      mixer->process(float(curFrame) / 44100.0f, pulseBuffer[frame], pulseBuffer[frame + 1]);
+      mixer->process(cursor, pulseBuffer[frame], pulseBuffer[frame + 1]);
       ++curFrame;
+      cursor += step;
     }
 
     // write buffer to audio device
@@ -175,7 +178,7 @@ float bootstrap_c::_track_cursor() {
   FMOD_Channel_GetPosition(_chan, &i, FMOD_TIMEUNIT_MS);
   return i / 1000.f;
 #endif
-  return 0.f;
+  return cursor;
 }
 
 #if FMOD_SYNTH
@@ -206,7 +209,7 @@ void bootstrap_c::init() {
   FMOD_System_CreateStream(_sndsys, TRACK_PATH.c_str(), FMOD_HARDWARE | FMOD_LOOP_OFF | FMOD_2D, 0, &_track);
   FMOD_System_PlaySound(_sndsys, FMOD_CHANNEL_FREE, _track, 0, &_chan);
 #endif
-  _init_softsynth();
+  //_init_softsynth();
 }
 
 void bootstrap_c::run() {
@@ -215,7 +218,7 @@ void bootstrap_c::run() {
   /* launch the track */
   _launch_track();
 #if DEBUG
-  _advance_track(54.0f);
+  //_advance_track(54.0f);
 #endif
   while ((time = _track_cursor()) <= 159.f && treat_events()) {
 #if DEBUG
@@ -237,7 +240,7 @@ void bootstrap_c::run() {
   }
 
   /* wait for the end of the track */
-  pthread_join(_trackThread, NULL);
+  //pthread_join(_trackThread, NULL);
 }
 
 bool bootstrap_c::treat_events() {
