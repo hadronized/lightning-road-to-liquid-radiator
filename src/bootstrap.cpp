@@ -2,6 +2,7 @@
 #include "common.hpp"
 #include "bootstrap.hpp"
 #include "gl.hpp"
+#include <chrono>
 
 /* xtrium stuff */
 #include <vector> 
@@ -213,22 +214,26 @@ void bootstrap_c::init() {
 }
 
 void bootstrap_c::run() {
+  using namespace chrono;
   float time;
 
   /* launch the track */
   _launch_track();
+  high_resolution_clock::time_point startTime = high_resolution_clock::now();
 #if DEBUG
   //_advance_track(54.0f);
 #endif
-  while ((time = _track_cursor()) <= 150.f && treat_events()) {
+  while (/*(time = _track_cursor()) <= 150.f &&*/ treat_events()) {
+    high_resolution_clock::time_point t = high_resolution_clock::now();
+    time = duration_cast<duration<float>>(t - startTime).count();
 #if DEBUG
     cout << "time: " << time << endl;
 #endif
     if (time < 27.5f) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       _mod0->render(time);
-    //} else if (time < 54.8732f) {
-    } else if (time < 55.2f) {
+    } else if (time < 54.8732f) {
+    //} else if (time < 55.2f) {
       _mod1->render(time);
     } else if (time < 137.2f) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
