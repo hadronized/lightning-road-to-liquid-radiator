@@ -112,7 +112,7 @@ void * track_play_routine(void*) {
   unsigned short blankTicks = 1024;
   //float step = 0.98571f / 44100.f;
   float step = 1.f / 44100.f;
-  cursor = 0.f;
+  cursor = 0.;
 
   float* pulseBuffer = new float[FRAMES_PER_PULSE * 2];
   while(continuePlaying || blankTicks)
@@ -220,14 +220,15 @@ void bootstrap_c::run() {
 #if DEBUG
   //_advance_track(54.0f);
 #endif
-  while ((time = _track_cursor()) <= 159.f && treat_events()) {
+  while ((time = _track_cursor()) <= 150.f && treat_events()) {
 #if DEBUG
     cout << "time: " << time << endl;
 #endif
     if (time < 27.5f) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       _mod0->render(time);
-    } else if (time < 54.8732f) {
+    //} else if (time < 54.8732f) {
+    } else if (time < 55.f) {
       _mod1->render(time);
     } else if (time < 137.2f) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
