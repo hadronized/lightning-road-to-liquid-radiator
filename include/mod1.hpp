@@ -25,8 +25,10 @@ class mod1_c {
   void _init_thunders(void);
 
   /* thunders blur program */
-  shader_c _thunBlurFS;
-  program_c _thunBlurP;
+  shader_c _thunHBlurFS;
+  program_c _thunHBlurP;
+  shader_c _thunVBlurFS;
+  program_c _thunVBlurP;
 
   /* offscreen */ 
   GLuint _offtex[3];

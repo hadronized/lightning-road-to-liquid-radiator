@@ -10,7 +10,8 @@
 #include "data/thun-tcs.hpp"
 #include "data/thun-tes.hpp"
 #include "data/thun-fs.hpp"
-#include "data/thun-blur-fs.hpp"
+#include "data/thun-hblur-fs.hpp"
+#include "data/thun-vblur-fs.hpp"
 #include "data/swap_lines-fs.hpp"
 
 using namespace std;
@@ -18,7 +19,7 @@ using namespace std;
 namespace {
   int const THUNDERS_NB = 50;
   int const THUNDERS_VERTICES_NB = THUNDERS_NB*2; 
-  int const BLUR_PASSES = 5;
+  int const BLUR_PASSES = 3;
 }
 
 mod1_c::mod1_c(float width, float height, text_writer_c &writer) :
@@ -29,7 +30,8 @@ mod1_c::mod1_c(float width, float height, text_writer_c &writer) :
   , _thunTES(GL_TESS_EVALUATION_SHADER)
   , _thunGS(GL_GEOMETRY_SHADER)
   , _thunFS(GL_FRAGMENT_SHADER)
-  , _thunBlurFS(GL_FRAGMENT_SHADER)
+  , _thunHBlurFS(GL_FRAGMENT_SHADER)
+  , _thunVBlurFS(GL_FRAGMENT_SHADER)
   , _swapLinesFS(GL_FRAGMENT_SHADER) {
   /* tunnel setup */
 #if 0
@@ -99,16 +101,28 @@ mod1_c::mod1_c(float width, float height, text_writer_c &writer) :
 #if 0
   _thunBlurFS.source(load_source(THUN_BLUR_FS_PATH).c_str());
 #endif
-  _thunBlurFS.source(SHD_THUN_BLUR_FS);
-  _thunBlurFS.compile();
-  if (!_thunBlurFS.compiled()) {
-    cerr << "Thunder blur fragment shader failed to compile:\n" << _thunBlurFS.compile_log() << endl;
+  _thunHBlurFS.source(SHD_THUN_HBLUR_FS);
+  _thunHBlurFS.compile();
+  if (!_thunHBlurFS.compiled()) {
+    cerr << "Thunder horizontal blur fragment shader failed to compile:\n" << _thunHBlurFS.compile_log() << endl;
     exit(1);
   }
-  _thunBlurP.attach(_thunBlurFS);
-  _thunBlurP.link();
-  if (!_thunBlurP.linked()) {
-    cerr << "Thunder blur program failed to link:\n" << _thunBlurP.link_log() << endl;
+  _thunHBlurP.attach(_thunHBlurFS);
+  _thunHBlurP.link();
+  if (!_thunHBlurP.linked()) {
+    cerr << "Thunder horizontal blur program failed to link:\n" << _thunHBlurP.link_log() << endl;
+    exit(2);
+  }
+  _thunVBlurFS.source(SHD_THUN_VBLUR_FS);
+  _thunVBlurFS.compile();
+  if (!_thunVBlurFS.compiled()) {
+    cerr << "Thunder vertical blur shader failed to compile:\n" << _thunVBlurFS.compile_log() << endl;
+    exit(1);
+  }
+  _thunVBlurP.attach(_thunVBlurFS);
+  _thunVBlurP.link();
+  if (!_thunVBlurP.linked()) {
+    cerr << "Thunder vertical blur program failed to link:\n" << _thunVBlurP.link_log() << endl;
     exit(2);
   }
 
@@ -203,11 +217,16 @@ void mod1_c::_init_uniforms(float width, float height) {
   _thunTimeIndex = _thunP.map_uniform("time");
 
   /* thunders blur init */
-  glUseProgram(_thunBlurP.id());
-  auto texBlurIndex = _thunBlurP.map_uniform("offtex");
-  auto thunBlurResIndex = _thunBlurP.map_uniform("res");
+  glUseProgram(_thunHBlurP.id());
+  auto texBlurIndex = _thunHBlurP.map_uniform("offtex");
+  auto thunBlurResIndex = _thunHBlurP.map_uniform("res");
   glUniform4f(thunBlurResIndex, width, height, 1.f/width, 1.f/height);
   glUniform1i(texBlurIndex, 0);
+  glUseProgram(_thunVBlurP.id());
+  auto texVBlurIndex = _thunVBlurP.map_uniform("offtex");
+  auto thunVBlurResIndex = _thunVBlurP.map_uniform("res");
+  glUniform4f(thunVBlurResIndex, width, height, 1.f/width, 1.f/height);
+  glUniform1i(texVBlurIndex, 0);
 
   /* swap lines */
   glUseProgram(_swapLinesP.id());
@@ -239,11 +258,18 @@ void mod1_c::render(float time) {
   glDrawArrays(GL_PATCHES, 0, THUNDERS_VERTICES_NB);
   glBindVertexArray(0);
 
-  /* thuneders blur */
-  glUseProgram(_thunBlurP.id());
+  /* thunders blur */
   for (int i = 0, id = 0; i < BLUR_PASSES; ++i) {
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[1 - id]);
-    glBindTexture(GL_TEXTURE_2D, _offtex[id]);
+    /* horizontal blur */
+    glUseProgram(_thunHBlurP.id());
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[1]);
+    glBindTexture(GL_TEXTURE_2D, _offtex[0]);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glRectf(-1.f, 1.f, 1.f, -1.f);
+    /* vertical blur */
+    glUseProgram(_thunVBlurP.id());
+    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[0]);
+    glBindTexture(GL_TEXTURE_2D, _offtex[1]);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glRectf(-1.f, 1.f, 1.f, -1.f);
     id = 1 - id;
@@ -251,7 +277,7 @@ void mod1_c::render(float time) {
 
   /* combine blurred thunders to already rendered tunnel */
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo[2]);
-  glBindTexture(GL_TEXTURE_2D, _offtex[(BLUR_PASSES-1) & 1]);
+  glBindTexture(GL_TEXTURE_2D, _offtex[1]);
   glClear(GL_DEPTH_BUFFER_BIT);
   glRectf(-1.f, 1.f, 1.f, -1.f);
 
