@@ -134,7 +134,7 @@ void mod2_c::render(float time) {
     glBindVertexArray(_cube);
     glDrawElements(GL_PATCHES, 36, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
-  } else if (time >= 82.3f && time <= 96.1f) {
+  } else if (time >= 82.7f && time <= 96.4f) {
     /* credits */
     _textWriter.start_draw();
     glClear(GL_DEPTH_BUFFER_BIT);

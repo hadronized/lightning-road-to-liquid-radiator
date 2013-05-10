@@ -12,7 +12,7 @@ char const *SHD_LAVA_RGBA_FS =
 "}"
 "void main(){"
   "vec2 uv=get_uv();"
-  "vec2 step2=0.5*res.zw/mod(max(0.01,time-54.8732),13.7150);"
+  "vec2 step2=0.5*res.zw/mod(max(0.01,time-55.2),13.7150);"
   "frag=vec4("
     "texture2D(offtex,uv).r,"
     "texture2D(offtex,vec2(uv.x+step2.y,uv.y)).g,"

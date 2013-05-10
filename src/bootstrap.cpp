@@ -228,7 +228,7 @@ void bootstrap_c::run() {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
       _mod0->render(time);
     //} else if (time < 54.8732f) {
-    } else if (time < 55.f) {
+    } else if (time < 55.2f) {
       _mod1->render(time);
     } else if (time < 137.2f) {
       glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
