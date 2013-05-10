@@ -36,7 +36,7 @@ char const *SHD_LAVA_FS =
     "if(p.y<=(plasma(p.xz/20.)-3.+sweep(s,72.0071,6.))){"
       "return s;"
     "}"
-    "d=0.75*sqrt(s);" /* increase the factor makes the lava faster */
+    "d=0.5*sqrt(s);" /* increase the factor makes the lava faster */
   "}"
   "return 0.;"
 "}"
