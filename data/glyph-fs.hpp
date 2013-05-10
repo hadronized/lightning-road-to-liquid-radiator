@@ -8,8 +8,7 @@ char const *SHD_GLYPH_FS =
 "uniform vec4 gres;" /* glyph resolution */
 "uniform sampler2D tex;" /* texture of the glyph */
 "void main(){"
-  "float f=texture2D(tex,vec2(uv.x,(1.-uv.y)));"
-  "frag=vec4(f,f,f,1.);"
+  "frag=texture2D(tex,vec2(uv.x,(1.-uv.y)));"
 "}";
 
 #endif /* guard */
