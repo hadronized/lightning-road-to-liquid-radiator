@@ -91,7 +91,7 @@ void mod3_c::render(float time) {
   glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _fbo);
   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
   _writer.start_draw();
-  if (time < 150.9f) {
+  if (time < 150.5f) {
     /* greetings */
     _writer.draw_string(":: greetings ::", -0.45f, std::min(0.2f, t-1.f), h+0.03f);
     _writer.draw_string("xtrium, XT95, rez, latortue, sam", std::min(-0.6f, t-3.f), 0.1f, h);
