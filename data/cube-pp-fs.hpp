@@ -8,7 +8,7 @@ char const *SHD_CUBE_PP_FS =
 "uniform vec4 res;"
 "uniform float time;"
 "vec2 uv_tex(){"
-  "float f=max(1.,min(70.,70.-(time-13.00)*80.));"
+  "float f=max(1.,min(70.,70.-(time-13.50)*80.));"
   "vec2 uv=vec2(floor(gl_FragCoord.x/f)/(res.x/f),floor(gl_FragCoord.y/f)/(res.y/f));"
   "return uv;"
 "}"
